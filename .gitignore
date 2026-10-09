@@ -1,0 +1,18 @@
+# WorkBuddy 会话数据（项目相关，但含个人工作日志，不入库）
+.workbuddy/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.bak
