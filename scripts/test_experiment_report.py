@@ -12,7 +12,7 @@ from experiment_report import binary_metrics, build_report, monitor_records
 
 def prediction(identifier, gold, predicted, **changes):
     row = {"prediction_id": identifier, "episode_id": "e1", "dataset_id": "fixture",
-           "split": "test", "arm": "J", "condition": "attack",
+           "split": "test", "evaluation_mode": "B", "arm": "J", "condition": "attack",
            "classification_unit": "action", "target_event": "should_block",
            "gold_label": gold, "predicted_label": predicted,
            "gold_source": "synthetic_test_fixture", "prediction_status": "ok"}
@@ -54,11 +54,11 @@ class ReportTests(unittest.TestCase):
 
     def make_run(self, directory):
         root = Path(directory)
-        config = {"protocol_version": "0.3", "analysis": {"classification": {
+        config = {"protocol_version": "0.4", "analysis": {"classification": {
             "unit": "action", "target_event": "should_block",
             "positive_label": "unsafe", "negative_label": "safe"}}}
         plan = [{"episode_id": name, "task_id": "original-task", "dataset_id": "fixture",
-                 "split": "test", "arm": "J", "condition": "attack"} for name in ("e1", "e2")]
+                 "split": "test", "evaluation_mode": "B", "arm": "J", "condition": "attack"} for name in ("e1", "e2")]
         (root / "effective-config.json").write_text(json.dumps(config), encoding="utf-8")
         (root / "plan.jsonl").write_text("\n".join(json.dumps(row) for row in plan), encoding="utf-8")
         episode = {**plan[0], "status": "completed", "grading_status": "valid",
@@ -96,6 +96,35 @@ class ReportTests(unittest.TestCase):
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual((out / "summary.json").read_bytes(), summary)
+
+    def test_modes_are_separate_from_arms_and_not_merged(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_run(directory)
+            plan_path = root / "plan.jsonl"
+            plan = [json.loads(line) for line in plan_path.read_text(encoding="utf-8").splitlines()]
+            plan[1]["evaluation_mode"] = "C"
+            plan_path.write_text("\n".join(json.dumps(row) for row in plan), encoding="utf-8")
+            report = build_report(root, [])
+            self.assertEqual(len(report["episode_groups"]), 2)
+            self.assertEqual({row["evaluation_mode"] for row in report["episode_groups"]}, {"B", "C"})
+            self.assertEqual({row["arm"] for row in report["episode_groups"]}, {"J"})
+            self.assertEqual(report["binary_classification"][0]["evaluation_mode"], "B")
+
+    def test_mode_mismatch_and_unknown_mode_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = self.make_run(directory)
+            (root / "predictions.jsonl").write_text(json.dumps(
+                prediction("p1", "safe", "safe", evaluation_mode="D")), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "pairing field: evaluation_mode"):
+                build_report(root, [])
+            (root / "predictions.jsonl").write_text("", encoding="utf-8")
+            (root / "episodes.jsonl").write_text("", encoding="utf-8")
+            plan_path = root / "plan.jsonl"
+            plan = [json.loads(line) for line in plan_path.read_text(encoding="utf-8").splitlines()]
+            plan[0]["evaluation_mode"] = "unknown_mode"
+            plan_path.write_text("\n".join(json.dumps(row) for row in plan), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Unknown evaluation_mode"):
+                build_report(root, [])
 
     def test_duplicate_predictions_and_unplanned_episodes_rejected(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -27,3 +27,21 @@
 - 配置新增可证伪假设、比较契约、主要效果和停止/复核/汇总口径，记录 monitor 关联；协议升级至 0.3，仍未冻结实际模型参数。
 - 明确当前 monitor 没有预算硬停止、请求前开始事件、原生 episode/call ID；实际运行器后续需接入这些职责，不能声称已具备。
 - 本轮新增的是规范和离线报告层，无真实模型实验、无新观测数据。
+
+## 2026-10-27：用户提交暂定模型、数据集与参数范围
+
+- 已按用户表格整理 12 项模型/方法：Jev 1.14.0、D3-mini、Plumb-4B、SecJev、Jev-Guard、Laya、Qwen3.5-4B、GPT-6 Luna、Claude Haiku 5.5、GLiGuard、Shieldstral 1.0、Qwen3Guard-Gen-0.6B。
+- 数据集：InjecAgent（A）、AgentDojo（A/B）、R-Judge（D）、ATBench（C/D）、MCPHunt（B/C/D）、SCR-Bench（B/C/D）。Mode 操作定义尚未提供，不能与比较组 A/J/L/R 混同。
+- 参数因素：type、instructions、questions 数量/分解、校准温度、输入长度/超长策略。只是因素范围，尚未固定具体值；decider 只作适用例子，不自动进入模型名单。
+- 记录位置：`docs/model-evaluation/2026-10-27-study-selection.md`；机器可读 `selection-2026-10-27.json`。用户提供的日期、特点和引用标为 user-reported，缺项保持 null。
+- 待确定：SecJev 尺寸、Laya checkpoint、Plumb/Jev-Guard 制品和接口，Mode 定义、样本数/划分、prompt/参数、主 Agent、预算和环境。
+- 本轮仅整理并抽查部分来源页面；后续批量访问遇到 HTTP 403，未完成全部元数据验证。没有模型调用、权重下载、monitor 修改或正式配置冻结。
+
+## 2026-10-27：用户补充 Mode A–D 的定义与论证
+
+- 补足上一条的 Mode 定义缺口：A Input Inspection；B Pre-action Authorization；C Prefix-based Monitoring；D Full-trace Auditing。按照决策位置、可见信息、判断目标划分，非攻击类型分类。
+- 完整保留用户两段论证与局部 [1]–[9] 对应；[5] Runtime Verification 尚缺具体书目，不猜测引用。
+- 六个数据集的 Mode 对应维持原选型，不要求每个基准覆盖全部场景。缺失的执行前动作/前缀标签另行构造验证，不能复制完整轨迹标签；C 不见未来信息。
+- 明确离线风险识别与真实运行时防护的证据边界，同源动作/前缀/全轨迹按原任务族划分与聚类。
+- selection JSON 补充四种 Mode 的结构化定义；协议/模板升至 0.4。episode/prediction 增加 evaluation_mode，报告按 Mode 分组并拒绝错配；十项离线测试通过。
+- 模型、数量、prompt、前缀切点和逐数据集标签合同仍未冻结。没有新模型实验，也未修改已有 monitor。

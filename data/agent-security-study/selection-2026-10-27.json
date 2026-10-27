@@ -1,0 +1,340 @@
+{
+  "schema_version": "1.1",
+  "record_kind": "user_selection_not_observation",
+  "recorded_date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "status": "user_provisional_not_frozen",
+  "source_kind": "user_message",
+  "documentation": "docs/model-evaluation/2026-10-27-study-selection.md",
+  "metadata_verification": "user_reported_unless_explicitly_qualified",
+  "counts": {"models_or_methods": 12, "datasets": 6, "parameter_factors": 5},
+  "models_or_methods": [
+    {
+      "id": "jev-1.14.0",
+      "name": "Jev 1.14.0",
+      "group": "decision_model",
+      "release_date_user_reported": "2026-10-14",
+      "source_user_reported": "TypeSafe 官方 API",
+      "source_urls": ["https://docs.typesafe.ai/models"],
+      "source_url_origin": "existing_project_reference",
+      "features_user_reported": "Decision model (closed API)",
+      "notes_user_reported": "最知名的 jev 模型",
+      "selected_runtime_config": null
+    },
+    {
+      "id": "d3-mini",
+      "name": "D3-mini",
+      "group": "decision_model",
+      "release_date_user_reported": "2026-10-17",
+      "source_urls": ["https://huggingface.co/vllm-sr/d3-mini"],
+      "features_user_reported": "Decision model (open source)",
+      "citation_user_reported": {"key": "d3_mini_2026", "title": "d3-mini: A Multimodal Foundation Decision Model", "author": "vLLM Semantic Router Team", "year": 2026},
+      "selected_runtime_config": null
+    },
+    {
+      "id": "plumb-4b",
+      "name": "Plumb-4B",
+      "group": "decision_model",
+      "release_date_user_reported": null,
+      "source_user_reported": null,
+      "historical_locator_urls": ["https://huggingface.co/crh225/plumb-4b", "https://github.com/crh225/plumb"],
+      "features_user_reported": null,
+      "notes": "Historical locators do not select a checkpoint, service version or readout.",
+      "selected_runtime_config": null
+    },
+    {
+      "id": "secjev",
+      "name": "SecJev",
+      "group": "security_specialized_decision_model",
+      "release_date_user_reported": "2026-10-14",
+      "source_urls": ["https://arxiv.org/html/2610.03073v2"],
+      "features_user_reported": "Decision model (open source)",
+      "notes_user_reported": "有 arXiv 文章，将 Jev 微调到安全领域",
+      "notes": "Verify backbone, checkpoint/adapter, head, size and custom license; does not imply fine-tuning closed TypeSafe weights.",
+      "selected_size": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "jev-guard",
+      "name": "Jev-Guard",
+      "group": "policy_tree_routing_auditing_and_gate_system",
+      "release_date_user_reported": "2026-10-13",
+      "release_date_kind_user_reported": "paper_first_release",
+      "source_urls": ["https://arxiv.org/html/2610.18326v1"],
+      "features_user_reported": "Decision model (open source)",
+      "notes_user_reported": "Qwen3.5-2B + LoRA + 预测头；结合策略树。适合完整安全流水线比较；权重接入待核实。",
+      "notes": "Classifier, policy-tree routing and execution gate must be distinct configurations.",
+      "selected_runtime_config": null
+    },
+    {
+      "id": "laya",
+      "name": "Laya",
+      "group": "small_encoder_decision_model",
+      "release_date_user_reported": null,
+      "source_user_reported": null,
+      "historical_locator_urls": ["https://huggingface.co/convaiinnovations/laya"],
+      "features_user_reported": null,
+      "selected_checkpoint": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "qwen3.5-4b",
+      "name": "Qwen3.5-4B",
+      "group": "general_purpose_llm",
+      "release_date_user_reported": "2026-03",
+      "source_urls": ["https://huggingface.co/Qwen/Qwen3.5-4B"],
+      "features_user_reported": "开源 LLM；开放权重通用模型；支持本地部署",
+      "selected_runtime_config": null
+    },
+    {
+      "id": "gpt-6-luna",
+      "name": "GPT-6 Luna",
+      "group": "general_purpose_llm",
+      "release_date_user_reported": "2026-09",
+      "source_urls": ["https://developers.openai.com/api/docs/models"],
+      "features_user_reported": "闭源 LLM；快速、新型 LLM",
+      "selected_api_mode": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "claude-haiku-5.5",
+      "name": "Claude Haiku 5.5",
+      "group": "general_purpose_llm",
+      "release_date_user_reported": "2026-10-07",
+      "source_urls": ["https://platform.claude.com/docs/en/models/haiku-5-5/overview"],
+      "features_user_reported": "闭源 LLM；面向分类、提取、路由等低延迟任务",
+      "selected_runtime_config": null
+    },
+    {
+      "id": "gliguard",
+      "name": "GLiGuard",
+      "group": "specialized_safety_model",
+      "release_date_user_reported": "2026-05-08",
+      "release_date_kind_user_reported": "paper_first_release",
+      "source_urls": ["https://huggingface.co/fastino/gliguard-LLMGuardrails-300M"],
+      "features_user_reported": "300M 非自回归安全分类器",
+      "notes_user_reported": "优先候选；低资源效率对照；实际参数量待核对",
+      "selected_runtime_config": null
+    },
+    {
+      "id": "shieldstral-1.0",
+      "name": "Shieldstral 1.0",
+      "group": "specialized_safety_model",
+      "release_date_user_reported": "2026-08-04",
+      "source_urls": ["https://docs.mistral.ai/models/shieldstral-1-0"],
+      "features_user_reported": "3.8B；支持自然语言政策问题与 yes/no 判别",
+      "notes_user_reported": "优先候选；较新的可配置安全模型",
+      "selected_runtime_config": null
+    },
+    {
+      "id": "qwen3guard-gen-0.6b",
+      "name": "Qwen3Guard-Gen-0.6B",
+      "group": "specialized_safety_model",
+      "release_date_user_reported": "2026-10-16",
+      "source_urls": ["https://huggingface.co/Qwen/Qwen3Guard-Gen-0.6B"],
+      "features_user_reported": "Security model",
+      "selected_runtime_config": null
+    }
+  ],
+  "evaluation_mode_definition_source": "user_message_2026-10-27_followup",
+  "evaluation_mode_documentation": "docs/model-evaluation/agent-security-evaluation-modes.md",
+  "evaluation_mode_definitions": {
+    "A": {
+      "name": "Input Inspection",
+      "name_zh": "输入检查",
+      "decision_position": "external_content_reception",
+      "observable_information": "指定不可信输入、来源和当时可用的可信任务/策略上下文",
+      "judgment_target": "识别不可信输入及间接提示注入风险",
+      "unit": "input_item_or_content_block",
+      "forbidden_information": ["future_agent_behavior", "attack_gold", "grader_results"],
+      "dataset_adapter_contract": null
+    },
+    "B": {
+      "name": "Pre-action Authorization",
+      "name_zh": "动作执行前授权判断",
+      "decision_position": "before_proposed_tool_execution",
+      "observable_information": "拟执行工具及参数、截至当前的历史、可信任务/策略及已验证授权",
+      "judgment_target": "当前拟执行动作的授权及政策合规性",
+      "unit": "pending_action_with_pre_action_state",
+      "forbidden_information": ["proposed_action_execution_result", "future_events", "action_gold"],
+      "dataset_adapter_contract": null
+    },
+    "C": {
+      "name": "Prefix-based Monitoring",
+      "name_zh": "基于前缀的监测",
+      "decision_position": "during_execution_at_recorded_cutoff",
+      "observable_information": "仅截至切点已经发生的执行历史，及当时可用的可信任务/策略",
+      "judgment_target": "从可见前缀识别跨步骤安全风险",
+      "unit": "source_trace_id_and_prefix_cutoff",
+      "forbidden_information": ["events_after_cutoff", "full_trace_outcome_as_input", "prefix_gold"],
+      "dataset_adapter_contract": null
+    },
+    "D": {
+      "name": "Full-trace Auditing",
+      "name_zh": "完整轨迹审计",
+      "decision_position": "after_trace_termination",
+      "observable_information": "完整 Agent 交互及执行记录",
+      "judgment_target": "对完整已发生轨迹进行事后安全判断",
+      "unit": "full_trace_or_episode",
+      "forbidden_information": ["audit_gold", "grader_results_as_input"],
+      "dataset_adapter_contract": null
+    }
+  },
+  "evaluation_mode_note": "Framework is based on decision timing, observable information and judgment target, not attack taxonomy. Mode codes differ from comparison arm IDs A/J/L/R. Dataset-specific contracts remain unfrozen.",
+  "mode_adaptation_rules": [
+    "Do not require every benchmark to cover every mode.",
+    "Construct and validate missing action/prefix labels separately from native full-trace labels.",
+    "For C record the source trace, cutoff and visible input; never reveal future events.",
+    "Split original task/trace families before constructing actions, prefixes and full-trace variants.",
+    "Separate offline risk recognition from live intervention effects and include cumulative monitoring cost."
+  ],
+  "framework_citation_number_mapping_user_reported": {
+    "1": "Agent Security Bench (ASB)",
+    "2": "InjecAgent",
+    "3": "AgentDojo",
+    "4": "CaMeL",
+    "5": "Runtime Verification: specific bibliographic entry not supplied",
+    "6": "R-Judge",
+    "7": "ATBench",
+    "8": "MCPHunt",
+    "9": "SCR-Bench"
+  },
+  "datasets": [
+    {
+      "id": "injecagent",
+      "name": "InjecAgent",
+      "evaluation_mode_codes": ["A"],
+      "rationale_user_reported": "提供不可信工具返回和攻击者目标，检验输入端的间接提示注入检测。",
+      "citation_user_reported": "Zhan et al., ACL 2024",
+      "source_urls": ["https://aclanthology.org/2024.findings-acl.624/"],
+      "selected_version": null,
+      "original_item_count": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null
+    },
+    {
+      "id": "agentdojo",
+      "name": "AgentDojo",
+      "evaluation_mode_codes": ["A", "B"],
+      "rationale_user_reported": "提供真实 Agent 工具执行环境，将输入判断与执行前防护、攻击结果联系起来。",
+      "citation_user_reported": "Debenedetti et al., NeurIPS 2024",
+      "source_urls": ["https://arxiv.org/abs/2406.13352"],
+      "selected_version": null,
+      "original_item_count": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null
+    },
+    {
+      "id": "r-judge",
+      "name": "R-Judge",
+      "evaluation_mode_codes": ["D"],
+      "rationale_user_reported": "包含多类别 Agent 交互风险及原生轨迹级标签，适合行为安全基线。",
+      "citation_user_reported": "Yuan et al., EMNLP 2024",
+      "source_urls": ["https://aclanthology.org/2024.findings-emnlp.79/"],
+      "selected_version": null,
+      "original_item_count": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null
+    },
+    {
+      "id": "atbench",
+      "name": "ATBench",
+      "evaluation_mode_codes": ["C", "D"],
+      "rationale_user_reported": "包含长轨迹和延迟触发的安全风险，适合考察历史信息与完整轨迹之间的差异。",
+      "citation_user_reported": "Li et al., COLM 2026",
+      "source_urls": ["https://arxiv.org/abs/2604.02022"],
+      "selected_version": null,
+      "original_item_count": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null
+    },
+    {
+      "id": "mcphunt",
+      "name": "MCPHunt",
+      "evaluation_mode_codes": ["B", "C", "D"],
+      "rationale_user_reported": "提供跨 MCP 服务器的信息传播案例，区分正常任务执行与违反政策的数据传输。",
+      "citation_user_reported": "Li et al., 2026",
+      "source_urls": ["https://arxiv.org/abs/2604.27819"],
+      "selected_version": null,
+      "original_item_count": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null
+    },
+    {
+      "id": "scr-bench",
+      "name": "SCR-Bench",
+      "evaluation_mode_codes": ["B", "C", "D"],
+      "rationale_user_reported": "专门评估单独安全、组合后危险的 Skill 调用路径，覆盖能力传递、信任转移和授权混淆。",
+      "citation_user_reported": "Xie et al., 2026",
+      "source_urls": ["https://arxiv.org/abs/2606.15242"],
+      "selected_version": null,
+      "original_item_count": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null
+    }
+  ],
+  "parameter_factors": [
+    {
+      "id": "decision_type",
+      "request_field": "type",
+      "candidate_values_user_reported": ["noul", "choice", "score"],
+      "meaning_user_reported": "二元概率、互斥选择或有序评分",
+      "applicable_examples_user_reported": ["Jev", "Plumb", "decider", "d3", "SecJev"],
+      "source_urls": ["https://arxiv.org/html/2610.19118v1"],
+      "constraint": "Keep target event and evidence as consistent as possible; verify support per implementation.",
+      "selected_value": null
+    },
+    {
+      "id": "instructions",
+      "request_field": "instructions",
+      "meaning_user_reported": "定义模型需要回答的问题",
+      "applicable_examples_user_reported": ["Jev", "Plumb", "decider", "d3", "SecJev"],
+      "source_urls": ["https://arxiv.org/html/2609.33209v1"],
+      "ablation_factors_user_reported": ["问题极性", "否定表达", "语言", "措辞"],
+      "selected_prompt_file": null
+    },
+    {
+      "id": "question_count_and_decomposition",
+      "request_field": "questions",
+      "meaning_user_reported": "将复合判断拆为多个原子问题",
+      "applicability_user_reported": "支持多问题请求的模型",
+      "source_urls": ["https://arxiv.org/html/2610.17820v1"],
+      "constraint": "Freeze combination rules; HTTP requests are not equivalent to model forward passes.",
+      "selected_question_count": null,
+      "selected_decomposition": null,
+      "selected_aggregation_rule": null
+    },
+    {
+      "id": "calibration_temperature",
+      "meaning_user_reported": "调整候选概率分布的尖锐程度",
+      "applicable_examples_user_reported": ["Plumb", "decider", "SecJev 发布包包含温度"],
+      "source_urls": ["https://arxiv.org/html/2610.03073v2", "https://arxiv.org/html/2609.33401v3"],
+      "constraint": "Separate from generative sampling temperature; verify release values or fit only on calibration data.",
+      "selected_value": null,
+      "value_source": null
+    },
+    {
+      "id": "input_length_and_overflow_policy",
+      "meaning_user_reported": "控制可接收上下文及超长处理方式",
+      "applicability_user_reported": "各自部署模型；官方 Jev 有上下文限制及扩展选项",
+      "source_urls": [],
+      "constraint": "Parameter names depend on implementation; record truncation, chunking/aggregation and errors separately.",
+      "selected_maximum_length": null,
+      "length_unit_and_tokenizer": null,
+      "selected_overflow_policy": null
+    }
+  ],
+  "selection_notes": [
+    "decider appears in parameter applicability examples only and is not added to the selected model list.",
+    "All task support, license, exact model variants and deployed interfaces require verification before freezing.",
+    "Dates and citation metadata are user-reported, not fully independently verified.",
+    "This selection does not start execution or modify the preserved resource monitor."
+  ],
+  "source_check_scope": {
+    "opened_pages": ["https://huggingface.co/vllm-sr/d3-mini", "https://arxiv.org/html/2610.03073v2", "https://arxiv.org/html/2610.18326v1", "https://huggingface.co/Qwen/Qwen3.5-4B"],
+    "level": "page_access_spot_check_not_full_metadata_audit",
+    "remaining_checks": "not_completed_after_subsequent_batch_request_returned_http_403"
+  },
+  "frozen_at": null,
+  "execution_started": false
+}

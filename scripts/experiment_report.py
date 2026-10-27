@@ -14,6 +14,9 @@ import math
 from pathlib import Path
 import uuid
 
+GROUP_FIELDS = ("dataset_id", "split", "evaluation_mode", "arm", "condition")
+EVALUATION_MODES = {"A", "B", "C", "D"}
+
 
 def read_rows(path: Path) -> list[dict]:
     if not path.exists():
@@ -123,15 +126,17 @@ def build_report(run_dir: Path, monitor_paths: list[Path]) -> dict:
         if identifier not in plan:
             raise ValueError("Result or prediction references an unplanned episode")
         expected = plan[identifier]
-        for key in ("dataset_id", "split", "arm", "condition"):
+        for key in GROUP_FIELDS:
             if not expected.get(key) or row.get(key) != expected[key]:
                 raise ValueError(f"Missing or mismatched pairing field: {key}")
 
     groups = defaultdict(list)
     for row in plan.values():
-        keys = ("dataset_id", "split", "arm", "condition")
+        keys = GROUP_FIELDS
         if any(not row.get(key) for key in keys):
-            raise ValueError("Plan must identify dataset_id, split, arm and condition")
+            raise ValueError("Plan must identify dataset_id, split, evaluation_mode, arm and condition")
+        if row["evaluation_mode"] not in EVALUATION_MODES:
+            raise ValueError("Unknown evaluation_mode; use A, B, C or D")
         groups[tuple(row[key] for key in keys)].append(row)
     coverage = []
     for key, planned in sorted(groups.items()):
@@ -139,7 +144,7 @@ def build_report(run_dir: Path, monitor_paths: list[Path]) -> dict:
         task_ids = {row.get("task_id") for row in planned}
         if None in task_ids or "" in task_ids:
             raise ValueError("Plan requires original task_id for unique task counts")
-        result = dict(zip(("dataset_id", "split", "arm", "condition"), key))
+        result = dict(zip(GROUP_FIELDS, key))
         result.update(planned_episodes=len(planned), original_tasks=len(task_ids),
                       recorded_episodes=len(present), unrecorded_episodes=len(planned) - len(present),
                       statuses=dict(Counter(row.get("status", "unknown") for row in present)))
@@ -159,10 +164,10 @@ def build_report(run_dir: Path, monitor_paths: list[Path]) -> dict:
 
     classification = config.get("analysis", {}).get("classification", {})
     grouped_predictions = defaultdict(list)
-    classification_keys = ("dataset_id", "split", "arm", "condition", "classification_unit", "target_event")
+    classification_keys = (*GROUP_FIELDS, "classification_unit", "target_event")
     for row in predictions:
         if any(not row.get(key) for key in classification_keys):
-            raise ValueError("Predictions require dataset, split, arm, condition, unit and target")
+            raise ValueError("Predictions require dataset, split, evaluation_mode, arm, condition, unit and target")
         if (row["classification_unit"] != classification.get("unit") or
                 row["target_event"] != classification.get("target_event")):
             raise ValueError("Prediction semantics differ from the frozen classification contract")
@@ -223,10 +228,10 @@ def markdown(report: dict) -> str:
              "## 记录缺口", ""]
     lines.extend([f"- {issue}" for issue in report["issues"]] or ["- 本工具检查范围内未发现缺口。"])
     lines += ["", "## 二分类基础计数", "",
-              "| 数据集 / split / 组 / 条件 | 记录数 | 有效数 | TP | FP | TN | FN |",
+              "| 数据集 / split / Mode / 组 / 条件 | 记录数 | 有效数 | TP | FP | TN | FN |",
               "|---|---:|---:|---:|---:|---:|---:|"]
     for row in report["binary_classification"]:
-        name = "/".join(str(row[key]) for key in ("dataset_id", "split", "arm", "condition"))
+        name = "/".join(str(row[key]) for key in GROUP_FIELDS)
         name = name.replace("|", "\\|").replace("\n", " ")
         lines.append("| " + name + " | " + " | ".join(str(row[key]) for key in
                      ("recorded_n", "valid_n", "TP", "FP", "TN", "FN")) + " |")

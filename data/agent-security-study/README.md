@@ -5,10 +5,12 @@
 - [执行规范](../../docs/model-evaluation/agent-security-experiment-protocol.md)：研究对象、固定项、指标、失败和数据完整性规则。
 - `protocol.template.json`：未冻结模板；所有 null 均需在对应阶段解决或有依据地标记不适用。模型配置需包含准确标识、provider、实际支持参数、模板与预算。
 - `decisions.md`：范围、已定约定、未决参数及下一步。
+- [2026-10-27 用户暂定选型](../../docs/model-evaluation/2026-10-27-study-selection.md)及 [JSON 清单](selection-2026-10-27.json)：12 个模型/方法、6 个数据集、5 类参数；Mode 概念定义已补充，具体版本、适配、数量和值尚未冻结。
+- [Mode A–D 定义](../../docs/model-evaluation/agent-security-evaluation-modes.md)：输入检查、执行前授权、前缀监测、完整轨迹审计；与比较组 arm 分开。保留用户论证原文和待核验的引用编号。
 - [report.template.md](report.template.md)：每次实验必须完成的报告；数据集与数量、时间/费用、基础计数、模型完整配置、prompt/请求和复现入口。
 - `episode-columns.csv`、`call-columns.csv`、`prediction-columns.csv`：后续分析导出列约定；只有表头，无模拟数据。prediction 表为适用的逐条分类记录，支持从 gold 与预测重算 TP/FP/TN/FN。JSONL 原始账本及嵌套 usage / 错误详情仍是事实来源。
 
-新全链路运行器尚未实现。现有相邻项目的 `jev_skill.monitor` 保留；[离线报告工具](../../scripts/experiment_report.py)已实现并通过八个离线测试，读取事实记录与原 monitor 汇总，不调用模型。职责与用法见[框架说明](../../docs/infrastructure/experiment-framework.md)。正式开跑前需做真实 pilot、冻结配置及验收；模板本身不会阻止错误执行。确认 run 进入独立的 `runs/<run-id>/`，禁止覆盖历史结果。
+新全链路运行器尚未实现。现有相邻项目的 `jev_skill.monitor` 保留；[离线报告工具](../../scripts/experiment_report.py)已实现并通过十个离线测试，读取事实记录与原 monitor 汇总，按 Mode 分组，不调用模型。职责与用法见[框架说明](../../docs/infrastructure/experiment-framework.md)。正式开跑前需做真实 pilot、冻结配置及验收；模板本身不会阻止错误执行。确认 run 进入独立的 `runs/<run-id>/`，禁止覆盖历史结果。
 
 `unknown`/空值必须附原因，不能转成 0；费用要注明 measured / provider_reported / price_estimated / unknown。每个派生表关联原始记录与分析版本。人工复核和 AI 审核分别记录。
 

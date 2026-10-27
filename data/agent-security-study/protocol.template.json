@@ -1,11 +1,22 @@
 {
-  "schema_version": "0.3",
+  "schema_version": "0.4",
   "record_kind": "planning_template_not_observation",
   "status": "draft_not_frozen",
   "study_id": "jev-llm-agent-security",
-  "protocol_version": "0.3",
+  "selection_record": "data/agent-security-study/selection-2026-10-27.json",
+  "protocol_version": "0.4",
   "created_date": "2026-10-25",
   "timezone": "Asia/Shanghai",
+  "evaluation": {
+    "mode_code": null,
+    "definitions_record": "data/agent-security-study/selection-2026-10-27.json",
+    "observation_manifest": null,
+    "prefix_or_pre_action_cutoff_policy": null,
+    "label_contract": null,
+    "native_or_derived_label_provenance": null,
+    "derived_label_review_manifest": null,
+    "evidence_type_offline_or_live": null
+  },
   "research_question": "Can Jev replace an LLM in the same agent safety role while meeting prespecified security and utility requirements, and at what end-to-end time and resource cost?",
   "primary_comparison": ["J", "L"],
   "scientific_contract": {

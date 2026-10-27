@@ -49,8 +49,8 @@ python scripts/experiment_report.py --run-dir data/agent-security-study/runs/<ru
 
 续跑可重复传 `--monitor-summary`，每个 run ID 只能传一次。工具读取 effective-config、plan、episodes、可选 predictions 与 monitor 原始汇总，生成新的 `analysis/<version>/summary.json` 和 `audit-report.md`。`--out-dir` 必须是新目录，不覆盖旧数据。
 
-plan 每个 episode 必须有 dataset_id、split、arm、condition、task_id；结果匹配计划。predictions 额外包含 prediction_id、classification_unit、target_event、gold_label、gold_source、predicted_label、prediction_status。二分类配置给出不同的 positive_label / negative_label。非法输出 status 不能写 ok；错误回退不算模型预测。
+plan 每个 episode 必须有 dataset_id、split、evaluation_mode、arm、condition、task_id；结果匹配计划。evaluation_mode 为 A/B/C/D，与 arm 分开；统计分别按 Mode 分组，模式错配或未知 Mode 报错。predictions 额外包含 prediction_id、classification_unit、target_event、gold_label、gold_source、predicted_label、prediction_status。二分类配置给出不同的 positive_label / negative_label。非法输出 status 不能写 ok；错误回退不算模型预测。前缀/动作输入边界和 gold 合同仍需独立验证，新增分组检查本身不验证未来信息泄漏。
 
 工具重算二分类计数和派生指标，检查重复 ID、未知 episode、组别/语义错配、部分覆盖、零分母和 monitor 重复引用。多分类拒绝混入二分类路径。完整模型配置、统计功效、gold 正确性、调用真实性和账单仍需对应验收。结构检查通过不等于科学验证。
 
-本次八个新增离线测试通过，包含命令行导出和拒绝覆盖检查；fixture 仅存临时目录，不是实验数据。当前新增的是报告层，不能称新全链路运行器已完成。
+2026-10-27 更新后十个离线测试通过，包含命令行导出、拒绝覆盖和 Mode 分组/错配检查；fixture 仅存临时目录，不是实验数据。当前新增的是报告层，不能称新全链路运行器已完成。
