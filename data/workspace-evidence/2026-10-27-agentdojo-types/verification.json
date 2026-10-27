@@ -1,0 +1,9 @@
+{
+  "status": "passed",
+  "frozen_samples": 500,
+  "effective_cells": 1500,
+  "original_evaluations": 1500,
+  "repair_evaluations": 30,
+  "remaining_errors": 0,
+  "checked": "record hashes, state hashes, returned model, response parsing, repair lineage and independently recomputed metrics"
+}

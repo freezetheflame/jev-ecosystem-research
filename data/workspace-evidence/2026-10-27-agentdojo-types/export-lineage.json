@@ -1,0 +1,22 @@
+{
+  "source": "Existing local Jev workspace run, exported without new inference",
+  "export_date": "2026-10-27",
+  "restricted_artifacts": "Full dataset text, expanded state, raw response/attempt logs remain local. Public sample IDs, labels, state hashes and aggregate counts are retained.",
+  "source_original_artifact_sha256": {
+    "summary.json": "9af6a58a1ff64fe7050f33b786979b5d7e9a31b815364cce6e035c6bbb866535",
+    "resources.json": "b48cbab3dfe0c9f3f0dd2106a284c8284132736c78b2cce9940d1df90f0ecbed",
+    "repair-audit.json": "41b8af57e05f49258fdf482f832402966ecb82d7ca1d7635a4f4f6d37a422ce6",
+    "verification.json": "60d80eea63ce6e85e4df8368400f2298b723c7af14e897ad1146b57c0e6cc1a1"
+  },
+  "public_transformations": [
+    "resources.json and sample-manifest.json replace loopback address with localhost and explicitly record sanitization. All measurements are unchanged."
+  ],
+  "exported_artifact_sha256": {
+    "summary.json": "0885a0761210b13621cb8cefa9b5d18f88bbbae39daca294413c496b3335fff2",
+    "resources.json": "76bc467167a1a23e92992c9b541f3b0e5f540947cffa4f3112f6babc006335af",
+    "repair-audit.json": "17b6de600028d1d153dc1840023c075fc14008e356934c83df37440d0cc74c47",
+    "verification.json": "0bfd39e8a498c207e22ac40b9dedde469dde45b8c615e5a074721ba34bb87c97",
+    "sample-manifest.json": "1e17b2e798a878c3f08d30ecb7d10fcf8a2d8cfdf883c3282ad02348503c309a"
+  },
+  "public_export_hash_basis": "UTF-8 LF bytes; source_original hashes identify the unmodified source files, not these sanitized public exports."
+}

@@ -16,3 +16,12 @@ Thumbs.db
 # 临时文件
 *.tmp
 *.bak
+
+# Credentials and local benchmark artifacts
+.env
+.env.*
+!.env.example
+framework/runs/
+framework/telemetry/
+data/workspace-evidence/**/predictions.jsonl
+data/workspace-evidence/**/repairs.jsonl

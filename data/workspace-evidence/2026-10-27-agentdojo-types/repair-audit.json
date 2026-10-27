@@ -1,0 +1,9 @@
+{
+  "reason": "Retry all failed transport cells with unchanged model, question, state, proxy and key selector",
+  "original_failed_cells": 30,
+  "repair_evaluations": 30,
+  "remaining_failed_cells": 0,
+  "repair_implementation_sha256": "3aa39dc4ea77ed8710a30856f44431dbd09defbe9ceac87da209e0eb96aca4fe",
+  "original_predictions_sha256": "d2b68e0210aff8f902df8dc02eea9029479c5a539de43a59c1caa5b390889fd0",
+  "repairs_sha256": "4d701b213076c1a12e7609ba51cc391b11d2c8f3cc733157a7c394c4ac6f1c53"
+}
