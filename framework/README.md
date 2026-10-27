@@ -1,6 +1,6 @@
 # Jev 静态评测框架导出
 
-2026-10-27：从已有 Jev 工作区导出三种 type 配对、故障补测与时间/费用统计代码；导出后的验证是离线测试，**没有为发布再次调用模型**。真实观测见[500 条结果](../docs/model-evaluation/2026-10-27-agentdojo-type-comparison.md)。
+2026-10-27：从已有 Jev 工作区导出三种 type 配对、故障补测与时间/费用统计代码；导出及 PR 审查后的验证是离线测试，**没有为发布再次调用模型**。审查后框架八项、既有报告层十项测试通过。真实观测见[500 条结果](../docs/model-evaluation/2026-10-27-agentdojo-type-comparison.md)。
 
 ## 职责与依赖
 
@@ -49,6 +49,8 @@ python -m framework.run --workspace <jev-workspace> compare --model jev-1.14.0 -
 没有将 Jev 的 temperature/seed 等未发送参数伪装成固定参数。seed 只控制本地抽样与调度。服务端默认值未知；请求只含 model、state、questions。默认超时 30 秒，每个分片临时失败最多重试两次；401/402/403/451 触发停止。已在途的调用可能先完成，故停止不等于零额外成本。
 
 ## 故障恢复和分析
+
+权限/余额/地区错误停止批量任务时，取消尚未开始的任务，并继续收集所有已在途调用的结果；不能在首次错误后退出结果循环而丢失已完成响应。PR 审查增加了这一修复及离线回归；已有历史观测不重算、不改写，新代码必须使用新输出目录。
 
 ```powershell
 python -m framework.run --workspace <jev-workspace> repair --out reports/new-type-run

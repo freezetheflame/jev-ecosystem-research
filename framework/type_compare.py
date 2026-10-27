@@ -301,18 +301,23 @@ def main():
             jobs = [(r, t) for r, t in jobs if r['uid'] != chosen[0]['uid']]
         with ThreadPoolExecutor(max_workers=args.workers) as pool:
             futures = [pool.submit(work, job) for job in jobs]
+            permission_stop_requested = False
             for future in as_completed(futures):
+                if future.cancelled():
+                    continue
                 row = future.result()
                 fh.write(json.dumps(row, ensure_ascii=False) + '\n')
                 fh.flush()
                 rows.append(row)
                 if len(rows) % 30 == 0 or args.pilot or 'error' in row:
                     print(f"done={len(rows)}/{len(chosen)*3} type={row['type']} {row.get('error', 'OK')}", flush=True)
-                if any(f'HTTP {code}' in row.get('error', '') for code in (401, 402, 403, 451)):
+                if not permission_stop_requested and any(f'HTTP {code}' in row.get('error', '') for code in (401, 402, 403, 451)):
+                    permission_stop_requested = True
                     for pending in futures:
                         pending.cancel()
                     print('Stopping bulk run after permission/credit/region error', flush=True)
-                    break
+                    # Cancellation cannot stop requests already in flight. Keep
+                    # draining them so every paid/completed result is retained.
     report(args.out, manifest, rows)
 
 

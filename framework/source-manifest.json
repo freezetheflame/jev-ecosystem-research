@@ -7,8 +7,8 @@
       "source": "bench/type_compare.py",
       "source_sha256": "64f8f0897fccfcd91af7689b4edbd21cc87619cf1cbad07d75d36750dcf400f8",
       "export": "framework/type_compare.py",
-      "export_sha256": "87f8895a10794b3504ea01a17f0e69b061fb49375a817d5c330a27715e18a640",
-      "changes": "Package imports and external workspace root; no change to sample selection, questions, thresholds or response mapping. New outputs required after code changes. CLI defaults now model 1.14, limit 100, required new --out; no new run executed."
+      "export_sha256": "533cb2b17e49992e7e122aa8627de0e53b3420e131ea5a9dae7034effc5c8cdb",
+      "changes": "Package imports and external workspace root; no change to sample selection, questions, thresholds or response mapping. New outputs required after code changes. CLI defaults now model 1.14, limit 100, required new --out; no new run executed. PR review fix: on permission/credit/region stop, cancel queued jobs and drain in-flight results into the original append-only log. Offline regression added; historical measurements are unchanged."
     },
     {
       "source": "bench/type_compare_repair.py",
