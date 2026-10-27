@@ -1,0 +1,103 @@
+{
+  "status": "complete",
+  "planned_records": 1500,
+  "effective_failed_cells": 0,
+  "repair_evaluations": 30,
+  "model": "jev-1.14.0",
+  "proxy": "http://localhost:7890",
+  "pricing": {
+    "input_usd_per_million": 0.042,
+    "output_usd_per_million": 0,
+    "source": "https://docs.typesafe.ai/models",
+    "verified_date": "2026-10-27",
+    "basis": "Official Jev 1.14 list price; estimate from reported usage, not a bill"
+  },
+  "started_at_shanghai": "2026-10-27T15:22:17.228480+08:00",
+  "last_record_finished_at_shanghai": "2026-10-27T15:40:22.384255+08:00",
+  "request_phase_wall_seconds": 1085.155775,
+  "manifest_sha256": "aa43f2fbdfbf58ac48de77ec4c3b506b444e5b7f6460a15638e5daa783734846",
+  "predictions_sha256": "d2b68e0210aff8f902df8dc02eea9029479c5a539de43a59c1caa5b390889fd0",
+  "repairs_sha256": "4d701b213076c1a12e7609ba51cc391b11d2c8f3cc733157a7c394c4ac6f1c53",
+  "analysis_implementation_sha256": "318f106cf5c4e652353ea2213f5bea146decc77132019add4656309a456f60bb",
+  "overall": {
+    "records": 1530,
+    "failed_records": 30,
+    "response_count": 1515,
+    "attempt_count": 1628,
+    "failed_attempts": 113,
+    "missing_usage_responses": 0,
+    "input_tokens": 4649653,
+    "output_tokens": 40400,
+    "known_estimated_cost_usd": 0.195285426,
+    "latency_ms": {
+      "mean": 2690.0496426143636,
+      "p50": 2198.9462000001367,
+      "p95": 3359.297235000484,
+      "min": 1499.397300001874,
+      "max": 21337.859899998875
+    },
+    "cumulative_record_seconds": 4115.775953199976
+  },
+  "by_type": {
+    "choice": {
+      "records": 510,
+      "failed_records": 10,
+      "response_count": 505,
+      "attempt_count": 542,
+      "failed_attempts": 37,
+      "missing_usage_responses": 0,
+      "input_tokens": 1555271,
+      "output_tokens": 17675,
+      "known_estimated_cost_usd": 0.06532138200000001,
+      "latency_ms": {
+        "mean": 2660.6952531372085,
+        "p50": 2167.6661999990756,
+        "p95": 3189.2560800000833,
+        "min": 1554.3289999986882,
+        "max": 21337.859899998875
+      },
+      "cumulative_record_seconds": 1356.9545790999764
+    },
+    "noul": {
+      "records": 510,
+      "failed_records": 10,
+      "response_count": 505,
+      "attempt_count": 542,
+      "failed_attempts": 37,
+      "missing_usage_responses": 0,
+      "input_tokens": 1547191,
+      "output_tokens": 12120,
+      "known_estimated_cost_usd": 0.064982022,
+      "latency_ms": {
+        "mean": 2655.7565876471,
+        "p50": 2174.7255999998742,
+        "p95": 2990.034730000843,
+        "min": 1499.397300001874,
+        "max": 21287.726099999418
+      },
+      "cumulative_record_seconds": 1354.435859700021
+    },
+    "score": {
+      "records": 510,
+      "failed_records": 10,
+      "response_count": 505,
+      "attempt_count": 544,
+      "failed_attempts": 39,
+      "missing_usage_responses": 0,
+      "input_tokens": 1547191,
+      "output_tokens": 10605,
+      "known_estimated_cost_usd": 0.064982022,
+      "latency_ms": {
+        "mean": 2753.6970870587825,
+        "p50": 2234.729050000169,
+        "p95": 3492.211664999377,
+        "min": 1508.2365999987815,
+        "max": 21297.418900001503
+      },
+      "cumulative_record_seconds": 1404.385514399979
+    }
+  },
+  "public_export_transformations": [
+    "Loopback address replaced with localhost; timing, usage, counts, prices and original source hashes unchanged."
+  ]
+}

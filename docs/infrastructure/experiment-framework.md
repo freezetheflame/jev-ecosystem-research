@@ -54,3 +54,12 @@ plan 每个 episode 必须有 dataset_id、split、evaluation_mode、arm、condi
 工具重算二分类计数和派生指标，检查重复 ID、未知 episode、组别/语义错配、部分覆盖、零分母和 monitor 重复引用。多分类拒绝混入二分类路径。完整模型配置、统计功效、gold 正确性、调用真实性和账单仍需对应验收。结构检查通过不等于科学验证。
 
 2026-10-27 更新后十个离线测试通过，包含命令行导出、拒绝覆盖和 Mode 分组/错配检查；fixture 仅存临时目录，不是实验数据。当前新增的是报告层，不能称新全链路运行器已完成。
+
+
+## 5. 2026-10-27 静态跑测经验与代码导出
+
+新增[实践经验](jev-benchmark-lessons.md)、[静态三种 type 框架](../../framework/README.md)与[500 条结果](../model-evaluation/2026-10-27-agentdojo-type-comparison.md)。新增部分是既有静态实现的导出适配，不是新的全链路环境运行器。
+
+导出入口 `framework.run` 使用外部原 monitor 的 `monitored_run`，调用层继续使用原 `post_json` 上已有的 `monitored_call`，不复制或修改 monitor。新调用的遥测与价格快照独立保存；历史500条入口没有激活monitor，其时间/费用由已有日志离线重算，不能宣称补回了缺失的监控事件。
+
+本轮未运行付费API，源monitor哈希与既有记录一致；外部依赖和导出模块哈希见 `framework/source-manifest.json`。原有 `scripts/experiment_report.py` 的全链路报告合同和Mode分组保持独立。

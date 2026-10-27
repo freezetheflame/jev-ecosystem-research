@@ -1,0 +1,77 @@
+{
+  "export_date": "2026-10-27",
+  "source_repository": "https://github.com/freezetheflame/jev-skill-security",
+  "source_kind": "current working-tree source, including uncommitted files; HEAD alone does not reproduce this export",
+  "exports": [
+    {
+      "source": "bench/type_compare.py",
+      "source_sha256": "64f8f0897fccfcd91af7689b4edbd21cc87619cf1cbad07d75d36750dcf400f8",
+      "export": "framework/type_compare.py",
+      "export_sha256": "533cb2b17e49992e7e122aa8627de0e53b3420e131ea5a9dae7034effc5c8cdb",
+      "changes": "Package imports and external workspace root; no change to sample selection, questions, thresholds or response mapping. New outputs required after code changes. CLI defaults now model 1.14, limit 100, required new --out; no new run executed. PR review fix: on permission/credit/region stop, cancel queued jobs and drain in-flight results into the original append-only log. Offline regression added; historical measurements are unchanged."
+    },
+    {
+      "source": "bench/type_compare_repair.py",
+      "source_sha256": "3aa39dc4ea77ed8710a30856f44431dbd09defbe9ceac87da209e0eb96aca4fe",
+      "export": "framework/type_compare_repair.py",
+      "export_sha256": "be703fbb19b5ed28d100e37562eb385ccc79e46f97212de6a1de1ced40f6f189",
+      "changes": "Package imports and external workspace root; no change to sample selection, questions, thresholds or response mapping. New outputs required after code changes."
+    },
+    {
+      "source": "bench/type_compare_resources.py",
+      "source_sha256": "318f106cf5c4e652353ea2213f5bea146decc77132019add4656309a456f60bb",
+      "export": "framework/type_compare_resources.py",
+      "export_sha256": "d7eb5347718e7dbf22af525711f22971d78a5e0671be3889cc2ba45bb4c1eccc",
+      "changes": "Package imports and external workspace root; no change to sample selection, questions, thresholds or response mapping. New outputs required after code changes."
+    }
+  ],
+  "external_dependencies": [
+    {
+      "path": "jev_skill/monitor.py",
+      "sha256": "f1f3d220f87681e79d65d9baf91e7b1e30733f80312c60b4129a42be8fc00c67"
+    },
+    {
+      "path": "jev_skill/client.py",
+      "sha256": "7578206d18cff6987d80dd9bec8fa96a13845d637c55322e01fd8f599d0747ba"
+    },
+    {
+      "path": "jev_skill/config.py",
+      "sha256": "cd8556e9c29b177b82ba57fc1369e9938824508965c947f4f2be67ac04244214"
+    },
+    {
+      "path": "jev_skill/input.py",
+      "sha256": "3f557656840c8025e4bf86b9804d5349f62cf851e3283df4fb9ac43c6d055513"
+    },
+    {
+      "path": "jev_skill/scanner.py",
+      "sha256": "2a3bedad1bb8c9a920152fea7158a1a477844173a8537b29f410d1fddf7c311e"
+    },
+    {
+      "path": "bench/engines.py",
+      "sha256": "74b2fe9789f901898446e62f4b15fcaa87b20fce0e29239d5130ebfafbf0f486"
+    },
+    {
+      "path": "bench/scan.py",
+      "sha256": "bf3cb6c0f8a70d03fcdbb20b09374779921ddc3fb1c022db0ff752b9d02ac16f"
+    },
+    {
+      "path": "bench/analyze.py",
+      "sha256": "c6b1589a7c9887e088b54b90a912cb94a4ff8ad80e179f518f83414f87c6a286"
+    },
+    {
+      "path": "bench/adapters/base.py",
+      "sha256": "d07960123ea048a9db9e29a24da4f22fdb9a2b74b8bcb5b58b4554c350482ec2"
+    },
+    {
+      "path": "config/jev-stage-s4-v2.json",
+      "sha256": "7dce3f8d4cff3233c9851f270eb8d4b07f80e600b495270b897ed2f1cad7759a"
+    },
+    {
+      "path": "config/prompts/jev-stage-s4-v2.txt",
+      "sha256": "f1931ff64a66a64fd802fd1d66c83f89430725abe2709d73e29610b1fd3d782f"
+    }
+  ],
+  "monitor_policy": "External dependency, original implementation/interface retained, not copied into this repository.",
+  "source_head": "3cb9758de7e00aeb5c97c7f5b3a729efa0e33445",
+  "export_hash_basis": "UTF-8 LF bytes; original source and external dependencies retain their original byte hashes"
+}

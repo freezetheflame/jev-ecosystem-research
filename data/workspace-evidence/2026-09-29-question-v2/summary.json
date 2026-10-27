@@ -1,0 +1,58 @@
+{
+  "sampleSha256": "c82e8533251eb1ee37846aaae65c9fcd8f862920b4b207b43edc76db679c174f",
+  "profileHashes": {
+    "v1": "d36c873034bc485c205cbf4b74c90844861d14d8ef3391fe9928a54ae4314c04",
+    "v2": "605b8f66179ea0f02bdb832b58f87b505635fd5bac52cd2ff0cf51fe81b62f75"
+  },
+  "planned": 100,
+  "commonSuccess": 100,
+  "positive": 20,
+  "negative": 80,
+  "threshold": 0.5,
+  "metrics": {
+    "v1": {
+      "n": 100,
+      "tp": 13,
+      "fn": 7,
+      "fp": 12,
+      "tn": 68,
+      "precision": 0.52,
+      "recall": 0.65,
+      "fpr": 0.15,
+      "f1": 0.5777777777777777,
+      "auroc": 0.774375
+    },
+    "v2": {
+      "n": 100,
+      "tp": 1,
+      "fn": 19,
+      "fp": 0,
+      "tn": 80,
+      "precision": 1.0,
+      "recall": 0.05,
+      "fpr": 0.0,
+      "f1": 0.09523809523809523,
+      "auroc": 0.7790625
+    }
+  },
+  "pairedFlips": {
+    "benignFalsePositivesRemoved": 12,
+    "benignFalsePositivesAdded": 0,
+    "maliciousDetectionsGained": 0,
+    "maliciousDetectionsLost": 12
+  },
+  "meanV2MinusV1RiskByLabel": {
+    "0": -0.27999999999999997,
+    "1": -0.358
+  },
+  "resources": {
+    "cachedV2": 18,
+    "newAttemptedIds": 82,
+    "newAttempts": 82,
+    "newSuccessfulCalls": 82,
+    "newInputTokens": 192732,
+    "newEstimatedCostUSD": 0.008094744000000001,
+    "interruptedFullOutputAttempts": 5308,
+    "priorV1OutputAttempts": 9771
+  }
+}

@@ -101,3 +101,15 @@ python scripts/fetch_jevbench.py --version v1.4.2.1
 ## 许可证
 
 代码与文档为 **MIT**。但请注意：报告中提到的模型权重各有其独立条款（Gemma / Qwen / LFM 等），**与本文档的许可证无关**，商用前请单独确认（见 `docs/03-obtainability-and-licensing.md`）。
+
+
+## 跑测实践与框架代码（2026-10-27）
+
+本地 Jev 安全工作区的已有实践现已整理入仓：
+
+- [实践总结：接口、标签、提示词、阈值、抽样、分片、失败与计费](docs/infrastructure/jev-benchmark-lessons.md)
+- [静态评测框架与离线测试](framework/README.md)：三种 type 配对、失败补测、时间/费用统计；复用原 monitor，不复制其实现。
+- [AgentDojo 500 条、Jev 1.14 三 type 结果](docs/model-evaluation/2026-10-27-agentdojo-type-comparison.md)：每次单问题、同批样本，三臂准确率97.8%–98.2%，不是完整agent ASR。
+- [历史证据索引与受限数据边界](data/workspace-evidence/README.md)。
+
+本次导出只做离线验证，没有再次请求模型。框架依赖另行准备的源工作区、精确版本与授权数据，不能仅凭本仓库克隆恢复付费观测。既有全链路研究协议仍属独立计划，不因静态实验而变成已完成。
