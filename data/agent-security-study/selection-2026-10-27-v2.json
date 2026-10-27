@@ -1,0 +1,209 @@
+{
+  "schema_version": "2.0",
+  "record_kind": "user_selection_not_observation",
+  "recorded_date": "2026-10-27",
+  "timezone": "Asia/Shanghai",
+  "status": "user_selected_scope_runtime_not_frozen",
+  "source_kind": "user_supplied_table_image_and_followup",
+  "source_image_filename": "codex-clipboard-c8f2f081-9b72-4aa3-9a1a-94005f630d07.png",
+  "documentation": "docs/model-evaluation/2026-10-27-study-selection-v2.md",
+  "supersedes_selection_record": "data/agent-security-study/selection-2026-10-27.json",
+  "counts": {
+    "models_or_methods": 11,
+    "datasets": 4
+  },
+  "models_or_methods": [
+    {
+      "id": "jev-1.14.0",
+      "name": "Jev 1.14.0",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": "1.14.0",
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "d3-mini",
+      "name": "D3-Mini",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "laya",
+      "name": "Laya",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "secjev",
+      "name": "SecJev",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "jev-guard",
+      "name": "Jev-Guard",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "gliguard",
+      "name": "GLiGuard",
+      "table_group": "specialized_safety_models",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "shieldstral",
+      "name": "Shieldstral",
+      "table_group": "specialized_safety_models",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "qwen3guard-gen",
+      "name": "Qwen3Guard-Gen",
+      "table_group": "specialized_safety_models",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "qwen3.5-4b",
+      "name": "Qwen3.5-4B",
+      "table_group": "general_purpose_llms",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "gpt-6-luna",
+      "name": "GPT-6-Luna",
+      "table_group": "general_purpose_llms",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "claude-haiku-5.5",
+      "name": "Claude-Haiku-5.5",
+      "table_group": "general_purpose_llms",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    }
+  ],
+  "datasets": [
+    {
+      "id": "agentdojo",
+      "name": "AgentDojo",
+      "year_user_reported": 2024,
+      "evaluation_mode_codes": [
+        "A2"
+      ],
+      "selected_version": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null
+    },
+    {
+      "id": "agentharm",
+      "name": "AgentHarm",
+      "year_user_reported": 2025,
+      "evaluation_mode_codes": [
+        "A1"
+      ],
+      "selected_version": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null
+    },
+    {
+      "id": "mcphunt",
+      "name": "MCPHunt",
+      "year_user_reported": 2026,
+      "evaluation_mode_codes": [
+        "B"
+      ],
+      "selected_version": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null
+    },
+    {
+      "id": "atbench",
+      "name": "ATBench",
+      "year_user_reported": 2026,
+      "evaluation_mode_codes": [
+        "C"
+      ],
+      "selected_version": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null
+    }
+  ],
+  "evaluation_mode_namespace": "selection_2026_10_27_v2_pending_definition",
+  "evaluation_mode_codes": [
+    "A1",
+    "A2",
+    "B",
+    "C"
+  ],
+  "evaluation_mode_definitions": {
+    "A1": null,
+    "A2": null,
+    "B": null,
+    "C": null
+  },
+  "evaluation_mode_note": "User followup: meanings are not yet decided; retain image codes provisionally, subject to later adjustment. No mapping to legacy A/B/C/D is approved.",
+  "legacy_mode_reference": "docs/model-evaluation/agent-security-evaluation-modes.md",
+  "changes_from_previous": {
+    "removed_models": [
+      "plumb-4b"
+    ],
+    "removed_datasets": [
+      "injecagent",
+      "r-judge",
+      "scr-bench"
+    ],
+    "added_datasets": [
+      "agentharm"
+    ],
+    "unspecified_variants_not_carried_forward": [
+      "Shieldstral 1.0",
+      "Qwen3Guard-Gen-0.6B"
+    ]
+  },
+  "parameter_factors_reference": "data/agent-security-study/selection-2026-10-27.json",
+  "parameter_factors_note": "Previous five parameter factors were not changed by this image; references to removed models are historical examples, not selected models.",
+  "unresolved": [
+    "Mode semantics and legacy mapping",
+    "Backend and Tasks columns are blank in image",
+    "Exact checkpoints, endpoints, versions and effective run parameters",
+    "Dataset versions, item IDs/counts, splits and exposure audit",
+    "Prompts, graders, thresholds, budgets and stopping rules"
+  ],
+  "frozen_at": null,
+  "execution_started": false
+}

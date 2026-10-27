@@ -105,10 +105,13 @@ python scripts/fetch_jevbench.py --version v1.4.2.1
 
 ## 跑测实践与框架代码（2026-10-27）
 
+当前研究范围见[第二版选型](docs/model-evaluation/2026-10-27-study-selection-v2.md)：11 项模型/方法与 AgentDojo、AgentHarm、MCPHunt、ATBench 四个数据集。新 Mode A1/A2/B/C 的含义尚未确定，具体运行配置未冻结。
+
 本地 Jev 安全工作区的已有实践现已整理入仓：
 
 - [实践总结：接口、标签、提示词、阈值、抽样、分片、失败与计费](docs/infrastructure/jev-benchmark-lessons.md)
 - [静态评测框架与离线测试](framework/README.md)：三种 type 配对、失败补测、时间/费用统计；复用原 monitor，不复制其实现。
+- [通用 Jev / LLM 静态配对入口](docs/infrastructure/paired-static-runner.md)：标准化 JSONL、显式配置、完整记录与原 monitor 关联；已做离线验证，尚未实际模型联调或接入原生基准/Agent 闭环。
 - [AgentDojo 500 条、Jev 1.14 三 type 结果](docs/model-evaluation/2026-10-27-agentdojo-type-comparison.md)：每次单问题、同批样本，三臂准确率97.8%–98.2%，不是完整agent ASR。
 - [历史证据索引与受限数据边界](data/workspace-evidence/README.md)。
 

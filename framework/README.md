@@ -1,5 +1,9 @@
 # Jev 静态评测框架导出
 
+2026-10-27 增补：[通用 Jev / LLM 静态配对入口](../docs/infrastructure/paired-static-runner.md)已实现，使用标准化 JSONL 与显式模型配置，独立保存完整实验记录，保留原 monitor。入口为 `python -m framework.paired`；不再绑定下面历史入口的 AgentDojo 数据路径。新入口只做了离线测试；原生数据集转换、各模型真实调用及完整 Agent 闭环尚未验收。
+
+当前[第二版选型](../docs/model-evaluation/2026-10-27-study-selection-v2.md)的 Mode A1/A2/B/C 语义未定。paired 入口仅接受显式历史 A/B/C/D 命名空间，不把新 B/C 视为旧 B/C；模板保留 null，待新定义确定后再适配。
+
 2026-10-27：从已有 Jev 工作区导出三种 type 配对、故障补测与时间/费用统计代码；导出及 PR 审查后的验证是离线测试，**没有为发布再次调用模型**。审查后框架八项、既有报告层十项测试通过。真实观测见[500 条结果](../docs/model-evaluation/2026-10-27-agentdojo-type-comparison.md)。
 
 ## 职责与依赖

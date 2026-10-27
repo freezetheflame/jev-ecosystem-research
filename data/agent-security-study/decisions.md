@@ -1,5 +1,15 @@
 # 决策与进度
 
+## 2026-10-27：按用户附图调整当前选型（第二版）
+
+- 当前共 11 项模型/方法，按图顺序：Jev 1.14.0、D3-Mini、Laya、SecJev、Jev-Guard；GLiGuard、Shieldstral、Qwen3Guard-Gen；Qwen3.5-4B、GPT-6-Luna、Claude-Haiku-5.5。移出 Plumb-4B，保留历史记录。
+- 当前数据集：AgentDojo（2024，A2）、AgentHarm（2025，A1）、MCPHunt（2026，B）、ATBench（2026，C）。年份按用户表格记录；新增 AgentHarm，移出 InjecAgent、R-Judge、SCR-Bench。
+- 用户明确回复 Mode 含义“还不确定，你先按照这个来吧，之后可能会调整”。因此只保存 A1/A2/B/C 代码，定义和旧代码映射保持未定；不批准任何推测解释。旧 B/C 定义不自动适用。
+- 图中 Backend、Tasks 为空，保持未指定。Shieldstral / Qwen3Guard-Gen 不沿用旧 1.0 / 0.6B；精确制品与运行参数仍待确定。此前五类参数因素未被本图替换，留作历史参考。
+- 当前记录：`docs/model-evaluation/2026-10-27-study-selection-v2.md`、`data/agent-security-study/selection-2026-10-27-v2.json`；模板和索引指向新版，旧清单、旧定义及历史结果保留。
+- 本轮仅更新规划材料和配置引用，无模型/API 调用、数据下载、实验或 monitor 修改。旧报告工具仍使用历史 A/B/C/D 语义，新 Mode 定义后再适配，不将同名代码视为同义。
+- 发布前合并通用静态配对框架；为其增加显式历史 Mode 命名空间校验，拒绝未定义的新版 A1/A2/B/C（包括同名 B/C）。14 项新框架测试、8 项历史框架测试、10 项报告层测试，共 32 项离线测试全部通过，无 skip；新版清单数量/代码/模板引用一致，原 monitor 哈希不变。
+
 ## 2026-10-25：用户明确研究目标
 
 - 优先比较 Jev 与普通 LLM 承担完整 Agent 安全链路职责时的效果、时间和资源。
@@ -60,3 +70,11 @@
 - 离线回归复现权限错误后退出收集循环会遗漏在途完成结果的问题；修正为取消未开始任务并持续保存所有在途结果，新增回归测试，更新导出源码哈希说明。历史原始记录和汇总未改写，新实现另开输出。
 - 修正后框架 8 项及既有报告层 10 项离线测试通过，无 API 调用；原 monitor 源码及接口保留。
 - 已阅读 sample-manifest 中的完整 S4 v2 rubric：先识别可信用户任务，再判断当前动作是否服务该任务；将其作为后续 Mode B 的历史参考，不自动定为新确认实验 prompt，也不套用于 A/C/D。
+
+## 2026-10-27：补足通用静态 Jev / LLM 配对框架
+
+- 用户询问 benchmark 到位后能否直接跑，授权从 `freezetheflame/jev-skill-security` 复用缺失框架。核对发现旧入口固定 AgentDojo 三 type，源 LLM 脚本绑定历史样本；不能直接覆盖任意原生基准。
+- 从固定远端 commit 的 client/deepseek 适配传输与 JSON 判定思路；本地未提交的 SYSTEM_V2 只作独立历史参考，来源和差异记录在 `framework/paired-source.json`，不声称远端有该文件。
+- 新增标准化 JSONL + 显式配置的静态配对入口，freeze/执行/分析分开，逐请求保留原始证据及失败；复用原 monitor 的 ResourceMonitor 一次计账，源码哈希保持不变。配置模板缺项保持 null，未冻结具体实验。
+- 验证范围为离线工程测试，含本机 HTTP fixture 和原 monitor 接口；没有调用真实模型、下载完整 benchmark 或测出新的科学结果。六基准的原生转换、B/C 标签验证、各模型真实服务和 Agent 闭环仍需分别接入验收。
+- 最终验收：新增 13 项、历史框架 8 项、既有报告层 10 项，共 31 项离线测试全部通过，无 skip；保存的源码快照可独立生成离线报告，原 monitor SHA-256 不变。记录这些测试不代表真实模型或原生 benchmark 已通过联调。

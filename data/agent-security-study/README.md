@@ -5,8 +5,9 @@
 - [执行规范](../../docs/model-evaluation/agent-security-experiment-protocol.md)：研究对象、固定项、指标、失败和数据完整性规则。
 - `protocol.template.json`：未冻结模板；所有 null 均需在对应阶段解决或有依据地标记不适用。模型配置需包含准确标识、provider、实际支持参数、模板与预算。
 - `decisions.md`：范围、已定约定、未决参数及下一步。
-- [2026-10-27 用户暂定选型](../../docs/model-evaluation/2026-10-27-study-selection.md)及 [JSON 清单](selection-2026-10-27.json)：12 个模型/方法、6 个数据集、5 类参数；Mode 概念定义已补充，具体版本、适配、数量和值尚未冻结。
-- [Mode A–D 定义](../../docs/model-evaluation/agent-security-evaluation-modes.md)：输入检查、执行前授权、前缀监测、完整轨迹审计；与比较组 arm 分开。保留用户论证原文和待核验的引用编号。
+- [当前选型（第二版）](../../docs/model-evaluation/2026-10-27-study-selection-v2.md)及 [JSON 清单](selection-2026-10-27-v2.json)：11 个模型/方法、4 个数据集；Mode A1/A2/B/C 先按用户表格保存，含义暂缓确定。具体运行配置未冻结。
+- [历史选型](../../docs/model-evaluation/2026-10-27-study-selection.md)及 [原 JSON](selection-2026-10-27.json)：保留此前 12 项模型/方法、6 个数据集和五类参数因素供溯源。
+- [历史 Mode A–D 定义](../../docs/model-evaluation/agent-security-evaluation-modes.md)：保留旧定义、用户论证原文和待核验引用；新代码不自动继承旧定义，现有报告工具仍按旧命名空间验证。
 - [report.template.md](report.template.md)：每次实验必须完成的报告；数据集与数量、时间/费用、基础计数、模型完整配置、prompt/请求和复现入口。
 - `episode-columns.csv`、`call-columns.csv`、`prediction-columns.csv`：后续分析导出列约定；只有表头，无模拟数据。prediction 表为适用的逐条分类记录，支持从 gold 与预测重算 TP/FP/TN/FN。JSONL 原始账本及嵌套 usage / 错误详情仍是事实来源。
 
