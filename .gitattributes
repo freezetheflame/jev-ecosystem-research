@@ -1,2 +1,18 @@
 framework/** text eol=lf
 data/workspace-evidence/** text eol=lf
+vendor/preserved-monitor/jev_skill/monitor.py -text
+security_bench/** -text
+configs/** -text
+requirements/security-bench-py312.lock.txt -text
+data/model-adapter-sources/** -text
+data/workspace-evidence/2026-10-27-security-bench*/** -text
+data/workspace-evidence/2026-10-28-agentharm-a1-adapter/** -text
+data/workspace-evidence/2026-10-28-all-model-adapters/** -text
+data/workspace-evidence/2026-10-28-maliciousskillbench-selection/** -text
+data/workspace-evidence/2026-10-28-mode-a-ordinal/** -text
+data/workspace-evidence/2026-10-28-machine-handoff/** -text
+scripts/download_selected_security_datasets.py -text
+scripts/inventory_selected_security_datasets.py -text
+scripts/package_selected_security_datasets.py -text
+scripts/prepare_maliciousskillbench.py -text
+scripts/verify_security_bench.py -text

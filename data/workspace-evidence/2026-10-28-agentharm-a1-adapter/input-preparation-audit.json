@@ -1,0 +1,30 @@
+{
+  "record_kind": "offline_input_preparation_audit_not_experiment",
+  "status": "passed",
+  "preparation_manifest_sha256": "72a2440d08efcd30e1451a50b78a74c223abc47e083e4059a58237e6ab99c466",
+  "items": 64,
+  "families": 8,
+  "counts": [
+    {
+      "split": "validation",
+      "partition": "benign",
+      "items": 32
+    },
+    {
+      "split": "validation",
+      "partition": "harmful",
+      "items": 32
+    }
+  ],
+  "all_source_and_artifact_hashes_matched": true,
+  "model_view_fields": [
+    "user_request"
+  ],
+  "jev_type": "choice",
+  "options": [
+    "safe",
+    "unsafe"
+  ],
+  "model_calls": 0,
+  "performance_results": "not_run"
+}

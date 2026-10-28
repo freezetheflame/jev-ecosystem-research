@@ -1,0 +1,123 @@
+{
+  "record_kind": "dataset_acquisition_inventory_not_experiment",
+  "generated_at_utc": "2026-10-27T09:12:37.129308+00:00",
+  "script": "scripts/inventory_selected_security_datasets.py",
+  "script_sha256": "0a51423509b1adce3a35039c0d346e29cc8d4404402870aacd16c50b3457de6f",
+  "datasets": {
+    "agentdojo": {
+      "source": "https://github.com/ethz-spylab/agentdojo",
+      "revision": "089ed468cf3ed0322acc66b0211f26d9d90dbf60",
+      "local_snapshot": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\agentdojo\\snapshot",
+      "manifest": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\agentdojo\\manifest.json",
+      "manifest_sha256": "f8ae92df7af114f6c21e556b62362fcf0dc06535801d35a487a337473301f6cd",
+      "verified_files": 36860,
+      "verified_bytes": 428502698,
+      "status": "downloaded_and_file_hashes_verified",
+      "suites": [
+        "banking",
+        "slack",
+        "travel",
+        "workspace"
+      ],
+      "input_contract": "Official tasks/environments/attacks/graders; historical static TS-Bench fragments are not the benchmark input.",
+      "environment_execution_verified": false
+    },
+    "agentharm": {
+      "source": "https://huggingface.co/datasets/ai-safety-institute/AgentHarm",
+      "revision": "e23b3fe60a0da9037314b88e5ee3a0c054970dad",
+      "local_snapshot": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\agentharm\\snapshot",
+      "manifest": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\agentharm\\manifest.json",
+      "manifest_sha256": "e21bccc618bcb73404ccbfc35ff214dafd1b2c159971b0243b961e5378ff0970",
+      "verified_files": 8,
+      "verified_bytes": 347661,
+      "status": "downloaded_and_file_hashes_verified",
+      "counts_by_public_file": {
+        "benign_behaviors_test_public.json": 176,
+        "benign_behaviors_validation.json": 32,
+        "chat_public_test.json": 44,
+        "chat_validation.json": 8,
+        "harmful_behaviors_test_public.json": 176,
+        "harmful_behaviors_validation.json": 32
+      },
+      "count_note": "Augmented behaviors and chat variants are not independent base tasks; private test not publicly available."
+    },
+    "mcphunt": {
+      "source": "https://huggingface.co/datasets/lihaonan0716/mcphunt-agent-traces",
+      "revision": "8f05fed6face78aa48b10edcf3357c9aadfe71f5",
+      "local_snapshot": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\mcphunt\\snapshot",
+      "manifest": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\mcphunt\\manifest.json",
+      "manifest_sha256": "81c8c95ebd04935e9ffe15e3e1f580e204fce0488e7c504adddad3c6dd8c9118",
+      "verified_files": 33,
+      "verified_bytes": 593522305,
+      "status": "downloaded_and_file_hashes_verified",
+      "trace_counts_by_stratum": {
+        "main": {
+          "files": {
+            "deepseek_v4_flash.json": 723,
+            "gemini_3_1_pro_preview.json": 723,
+            "gpt_5_2.json": 723,
+            "gpt_5_4.json": 723,
+            "MiniMax_M2_7.json": 723
+          },
+          "total": 3615
+        },
+        "mitigation": {
+          "files": {
+            "deepseek_m0_rv1.json": 147,
+            "deepseek_m1_rv1.json": 147,
+            "deepseek_m2_rv1.json": 147,
+            "deepseek_m3_rv1.json": 147,
+            "gpt54_m0.json": 384,
+            "gpt54_m1.json": 381,
+            "gpt54_m2.json": 381,
+            "gpt54_m3.json": 384,
+            "minimax_m0_rv1.json": 147,
+            "minimax_m1_rv1.json": 147,
+            "minimax_m2_rv1.json": 147,
+            "minimax_m3_rv1.json": 147
+          },
+          "total": 2706
+        },
+        "live_guard_defense": {
+          "files": {
+            "deepseek_v4_flash.json": 387
+          },
+          "total": 387
+        },
+        "browser_replication": {
+          "files": {
+            "deepseek_v4_flash_baseline.json": 39,
+            "deepseek_v4_flash_defense.json": 39
+          },
+          "total": 78
+        }
+      },
+      "all_released_traces": 6786,
+      "publisher_croissant_hashes_matched": 31
+    },
+    "mcphunt-source": {
+      "source": "https://github.com/lihaonan0716/MCPHunt",
+      "revision": "48e0f42f0820f15c9e88edb0ba461c615b908ecb",
+      "local_snapshot": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\mcphunt-source\\snapshot",
+      "manifest": "D:\\projects\\jev_research\\data\\agent-security-study\\datasets\\2026-10-27\\mcphunt-source\\manifest.json",
+      "manifest_sha256": "4432fed4a3c9b89fe6cb97f437a9037e604ab91e4f1390ae82eb412e20a924c4",
+      "verified_files": 77,
+      "verified_bytes": 1956033,
+      "status": "downloaded_and_file_hashes_verified"
+    },
+    "atbench": {
+      "status": "existing_raw_file_verified_against_historical_manifest",
+      "path": "D:\\projects\\jev\\data\\atbench-test.json",
+      "rows": 1000,
+      "sha256": "80c534b5f3517c872b528a2e6b64e34495206968edd184f4aed563d39f0cca09",
+      "bytes": 18335079,
+      "source_revision": "4476ef92ed8f85c8d58d8a5b9dfdf55aa7893138",
+      "provenance": "D:/projects/jev/data/agent-safety-full-manifest.json"
+    }
+  },
+  "limitations": [
+    "Downloaded revision is not an approved frozen evaluation configuration.",
+    "No benchmark environment, grader or model was run.",
+    "Mode semantics, sample selection, exposure audit and split remain unresolved."
+  ]
+}

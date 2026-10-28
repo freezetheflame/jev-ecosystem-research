@@ -1,0 +1,18 @@
+{
+  "record_kind": "machine_handoff_artifact_inventory_not_experiment",
+  "artifacts": [
+    {
+      "path": "artifacts/dataset-bundles/jev-agent-security-datasets-2026-10-27-v1.zip",
+      "bytes": 195826416,
+      "sha256": "af7168c40d3b547bd25e66ed901e5f28650342e75ded94f3f5c27dab84049269"
+    },
+    {
+      "path": "artifacts/dataset-bundles/maliciousskillbench-2026-10-28-v1.zip",
+      "bytes": 29967885,
+      "sha256": "2a8d1e62029fd64c90928d46b74818ed70ed8ff1e9349bd09469cd36a0eebd65"
+    }
+  ],
+  "maliciousskillbench_archive_verified_files": 14,
+  "model_calls": 0,
+  "git_policy": "Dataset ZIPs remain local/Box artifacts; not committed to Git."
+}

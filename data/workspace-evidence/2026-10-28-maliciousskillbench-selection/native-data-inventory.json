@@ -1,0 +1,15 @@
+{
+  "record_kind": "native_source_inventory_not_experiment",
+  "dataset": "MaliciousSkillBench",
+  "source_revision": "d4b42ce5766a6e0359c987cf59c1007cb3795a90",
+  "rows": 9740,
+  "unique_ids": 9740,
+  "labels": {
+    "1": 7505,
+    "0": 2235
+  },
+  "withheld_original_rows": 5,
+  "primary_sha256": "1d6382017f259bde0b699d402318f3c03f16b2e8ed2363a346b77a5465f06a06",
+  "model_calls": 0,
+  "frozen_evaluation_item_count": null
+}

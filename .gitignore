@@ -1,10 +1,14 @@
 # WorkBuddy 会话数据（项目相关，但含个人工作日志，不入库）
 .workbuddy/
 
+# 本机 API 凭据（禁止入库）
+.env.local
+
 # Python
 __pycache__/
 *.py[cod]
 .venv/
+.venv-benchmark/
 venv/
 
 # 编辑器 / 系统
@@ -23,5 +27,11 @@ Thumbs.db
 !.env.example
 framework/runs/
 framework/telemetry/
+
+# Downloaded upstream benchmark snapshots; acquisition index is tracked separately.
+data/agent-security-study/datasets/
+artifacts/dataset-bundles/
+data/agent-security-study/runs/
+data/agent-security-study/preparations/
 data/workspace-evidence/**/predictions.jsonl
 data/workspace-evidence/**/repairs.jsonl

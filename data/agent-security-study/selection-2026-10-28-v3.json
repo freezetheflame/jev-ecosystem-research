@@ -1,0 +1,267 @@
+{
+  "schema_version": "2.1",
+  "record_kind": "user_selection_not_observation",
+  "recorded_date": "2026-10-28",
+  "timezone": "Asia/Shanghai",
+  "status": "user_selected_scope_runtime_not_frozen",
+  "source_kind": "user_dataset_replacement_and_mode_followup",
+  "source_image_filename": null,
+  "documentation": "docs/model-evaluation/2026-10-28-study-selection-v3.md",
+  "supersedes_selection_record": "data/agent-security-study/selection-2026-10-27-v2.json",
+  "counts": {
+    "models_or_methods": 11,
+    "datasets": 4
+  },
+  "models_or_methods": [
+    {
+      "id": "jev-1.14.0",
+      "name": "Jev 1.14.0",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": "1.14.0",
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "d3-mini",
+      "name": "D3-Mini",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "laya",
+      "name": "Laya",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "secjev",
+      "name": "SecJev",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "jev-guard",
+      "name": "Jev-Guard",
+      "table_group": "decision_methods",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "gliguard",
+      "name": "GLiGuard",
+      "table_group": "specialized_safety_models",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "shieldstral",
+      "name": "Shieldstral",
+      "table_group": "specialized_safety_models",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "qwen3guard-gen",
+      "name": "Qwen3Guard-Gen",
+      "table_group": "specialized_safety_models",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "qwen3.5-4b",
+      "name": "Qwen3.5-4B",
+      "table_group": "general_purpose_llms",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "gpt-6-luna",
+      "name": "GPT-6-Luna",
+      "table_group": "general_purpose_llms",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    },
+    {
+      "id": "claude-haiku-5.5",
+      "name": "Claude-Haiku-5.5",
+      "table_group": "general_purpose_llms",
+      "version_explicit_in_image": null,
+      "backend": null,
+      "tasks": null,
+      "selected_runtime_config": null
+    }
+  ],
+  "datasets": [
+    {
+      "id": "maliciousskillbench",
+      "name": "MaliciousSkillBench",
+      "evaluation_mode_codes": [
+        "A2"
+      ],
+      "base_mode": "A",
+      "source_urls": [
+        "https://huggingface.co/datasets/ProtectSkills/MaliciousSkillBench",
+        "https://github.com/protectskills/MaliciousSkillBench"
+      ],
+      "selected_version": null,
+      "available_local_revision": "d4b42ce5766a6e0359c987cf59c1007cb3795a90",
+      "original_item_count": 9740,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null
+    },
+    {
+      "id": "agentharm",
+      "name": "AgentHarm",
+      "year_user_reported": 2025,
+      "evaluation_mode_codes": [
+        "A1"
+      ],
+      "selected_version": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null,
+      "base_mode": "A"
+    },
+    {
+      "id": "mcphunt",
+      "name": "MCPHunt",
+      "year_user_reported": 2026,
+      "evaluation_mode_codes": [
+        "B"
+      ],
+      "selected_version": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null
+    },
+    {
+      "id": "atbench",
+      "name": "ATBench",
+      "year_user_reported": 2026,
+      "evaluation_mode_codes": [
+        "C"
+      ],
+      "selected_version": null,
+      "selected_item_count": null,
+      "sample_and_split_manifest": null,
+      "label_contract": null
+    }
+  ],
+  "evaluation_mode_namespace": "selection_2026_10_27_v2",
+  "evaluation_mode_codes": [
+    "A1",
+    "A2",
+    "B",
+    "C"
+  ],
+  "evaluation_mode_definitions": {
+    "A1": {
+      "name": "Input Inspection",
+      "name_zh": "输入检查",
+      "decision_position": "external_content_reception",
+      "observable_information": "指定不可信输入、来源和当时可用的可信任务/策略上下文",
+      "judgment_target": "识别不可信输入及间接提示注入风险",
+      "unit": "input_item_or_content_block",
+      "forbidden_information": [
+        "future_agent_behavior",
+        "attack_gold",
+        "grader_results"
+      ],
+      "dataset_adapter_contract": null,
+      "base_mode": "A",
+      "ordinal": 1,
+      "ordinal_meaning": "sequence_number_only_not_a_distinct_mode",
+      "definition_confirmed_date": "2026-10-28",
+      "definition_source": "user_message"
+    },
+    "A2": {
+      "name": "Input Inspection",
+      "name_zh": "输入检查",
+      "decision_position": "external_content_reception",
+      "observable_information": "指定不可信输入、来源和当时可用的可信任务/策略上下文",
+      "judgment_target": "识别不可信输入及间接提示注入风险",
+      "unit": "input_item_or_content_block",
+      "forbidden_information": [
+        "future_agent_behavior",
+        "attack_gold",
+        "grader_results"
+      ],
+      "dataset_adapter_contract": null,
+      "base_mode": "A",
+      "ordinal": 2,
+      "ordinal_meaning": "sequence_number_only_not_a_distinct_mode",
+      "definition_confirmed_date": "2026-10-28",
+      "definition_source": "user_message"
+    },
+    "B": null,
+    "C": null
+  },
+  "evaluation_mode_note": "A1/A2 inherit original Mode A input inspection; ordinals only. Current assignments AgentHarm=A1 and MaliciousSkillBench=A2. B/C remain unresolved.",
+  "legacy_mode_reference": "docs/model-evaluation/agent-security-evaluation-modes.md",
+  "changes_from_previous": {
+    "removed_datasets": [
+      "agentdojo"
+    ],
+    "added_datasets": [
+      "maliciousskillbench"
+    ],
+    "models_unchanged": true,
+    "reason": "User replacement for Mode A input inspection; previous AgentDojo gate implementation did not implement Mode A. AgentDojo itself can support input inspection with a different adapter."
+  },
+  "parameter_factors_reference": "data/agent-security-study/selection-2026-10-27.json",
+  "parameter_factors_note": "Previous five parameter factors were not changed by this image; references to removed models are historical examples, not selected models.",
+  "unresolved": [
+    "B/C mode semantics and legacy mapping; dataset-specific input/label contracts",
+    "Backend and Tasks columns are blank in image",
+    "Exact checkpoints, endpoints, versions and effective run parameters",
+    "Dataset versions, item IDs/counts, splits and exposure audit",
+    "Prompts, graders, thresholds, budgets and stopping rules"
+  ],
+  "frozen_at": null,
+  "execution_started": false,
+  "main_agent_selection": {
+    "family": "DeepSeek",
+    "status": "user_provisional_pending_confirmation",
+    "model_id": null,
+    "endpoint": null,
+    "runtime_config": null,
+    "note": "Separate main-agent role, not added to the eleven evaluated safety methods."
+  },
+  "jev_request_selection": {
+    "type": "choice",
+    "option_order": [
+      "safe",
+      "unsafe"
+    ],
+    "prediction_mapping": {
+      "safe": 0,
+      "unsafe": 1
+    },
+    "probability_threshold": "not_applicable_direct_choice",
+    "source": "user_message_2026-10-27",
+    "status": "user_selected_type_prompts_and_run_config_not_frozen"
+  }
+}

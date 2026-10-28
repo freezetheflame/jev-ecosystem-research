@@ -1,0 +1,83 @@
+{
+  "record_kind": "offline_engineering_verification_not_experiment",
+  "finished_at_utc": "2026-10-28T06:33:52.046023+00:00",
+  "status": "passed",
+  "network_model_calls": 0,
+  "benchmark_performance_results": "not_run",
+  "fixture_policy": "Synthetic responses/rates in unit tests only; temporary directories removed.",
+  "checks": [
+    {
+      "name": "unit-tests",
+      "command": [
+        "D:\\projects\\jev_research\\.venv-benchmark\\Scripts\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "security_bench/tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "environment",
+      "command": [
+        "D:\\projects\\jev_research\\.venv-benchmark\\Scripts\\python.exe",
+        "-m",
+        "security_bench",
+        "check-environment",
+        "--config",
+        "configs/security-bench-agentdojo.template.json",
+        "--benchmark-version",
+        "v1.2.2"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "dependency-check",
+      "command": [
+        "D:\\projects\\jev_research\\.venv-benchmark\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "passed": true
+    },
+    {
+      "name": "template-preflight",
+      "command": [
+        "D:\\projects\\jev_research\\.venv-benchmark\\Scripts\\python.exe",
+        "-m",
+        "security_bench",
+        "doctor",
+        "--skip-key-check"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "passed": true
+    }
+  ],
+  "source_hashes": {
+    "security_bench/__init__.py": "9ae1dcd2a9edeeef7340909045d7982fd5c3bb1e02e49ac42c0bd628e01c2ae5",
+    "security_bench/__main__.py": "56f9180867d77c651a66f4677125bb2ce16c59895b1ecb63c943da24ed0886b8",
+    "security_bench/common.py": "653db7e9271842f3520b0a5a8bdb1804daa475f3d70a300643f873f09c1e9c84",
+    "security_bench/config.py": "1caef57234f947f9f177f61d9286a8fba7bf69e852ed6546aff3c7d443519767",
+    "security_bench/datasets.py": "02144aa2a7a7b6dc4f2cd87c202e85620efe6114900a460a728e218f51239251",
+    "security_bench/dojo.py": "e480e0332c0f46c9507a6a1ba1c8bd1f0e3d32982a01ce2a5e10e01b14c2884c",
+    "security_bench/models.py": "d6457f50fe8036dac767e677420f7fc8342607471199d96978ed4376e726db3d",
+    "security_bench/report.py": "8356c3780e0696f5cec48e55021113ce3a60b3ad8332e1558343cf34ebb6c8c5",
+    "security_bench/runner.py": "1749aca4b47924d5977a29b3eda8affe9e5f325e8b7992a48fa98aec7c639fae",
+    "security_bench/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "security_bench/tests/test_msb.py": "f4d1e49ce58897854952660bc12f831f93ffcb2beba81781b275bff542c94589",
+    "security_bench/tests/test_safety.py": "08ab5eb83af26e4e356afc2b51677038103e34ed908f0c26a2200aeeaa78856d",
+    "security_bench/tests/test_workflow.py": "d5ffe2d1fe12a4cfb01d06f613e632891ade7404d7a7b690039c4eb484b96f98"
+  },
+  "monitor_sha256": "f1f3d220f87681e79d65d9baf91e7b1e30733f80312c60b4129a42be8fc00c67",
+  "dependency_lock_sha256": "5f79acf21148f3661ce0485bb5a46175964535b3924f73bab87546ef600b7457"
+}

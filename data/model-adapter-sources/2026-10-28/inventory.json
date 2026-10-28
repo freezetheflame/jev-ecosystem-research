@@ -1,0 +1,153 @@
+{
+  "record_kind": "public_source_inventory_not_model_execution",
+  "files": [
+    {
+      "file": "convaiinnovations--laya.README.md",
+      "bytes": 23187,
+      "sha256": "00355613796b3f5860b0d5b20392381d26580ec242e04a1fd150c7f116858602",
+      "source_url": "https://huggingface.co/convaiinnovations/laya/raw/main/README.md",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "d3-metadata.json",
+      "bytes": 20621,
+      "sha256": "4a8e67dd3ffe5cae5dff6c952e6b93c1df0d2db770e4a3a42b7b8f22420f4753",
+      "source_url": "https://huggingface.co/api/models/vllm-sr/d3-mini",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "fastino--gliguard-LLMGuardrails-300M.README.md",
+      "bytes": 10158,
+      "sha256": "9a8e17dd5bdc04c9e001faf4038b497f935287ccc9139992adb88b417d2047de",
+      "source_url": "https://huggingface.co/fastino/gliguard-LLMGuardrails-300M/raw/main/README.md",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "gliguard-tree.json",
+      "bytes": 1307,
+      "sha256": "7f38fafd069dc4c493a1ae68edd20c77f8013ac40102d0d3b23432da7d323d88",
+      "source_url": "https://api.github.com/repos/fastino-ai/GLiGuard/git/trees/9703378a15c66e1515ea0e8124f26cdb1927a81d",
+      "source_url_status": "recorded_from_api_payload"
+    },
+    {
+      "file": "jevguard-paper.html",
+      "bytes": 357203,
+      "sha256": "b5a89ac80dd33706f77e5412e4b9e725512609746d7719d6e258cfb2e1e0f342",
+      "source_url": "https://arxiv.org/html/2610.18326v1",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "laya-agent.py",
+      "bytes": 126751,
+      "sha256": "fe569b96e6640508599e983d6d68b41c0993c52cdc959f3f4c03ff60c4a18831",
+      "source_url": "https://raw.githubusercontent.com/NandhaKishorM/laya/109084f1c2d62e2ea85e4331fd51915d8f288c7b/laya/agent.py",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "laya-tree.json",
+      "bytes": 649188,
+      "sha256": "28e476a680e1e30e5bcd334d809b5f01b287aa100ea0471f330ce567d1653c02",
+      "source_url": "https://api.github.com/repos/NandhaKishorM/laya/git/trees/109084f1c2d62e2ea85e4331fd51915d8f288c7b",
+      "source_url_status": "recorded_from_api_payload"
+    },
+    {
+      "file": "openai-text.html",
+      "bytes": 502358,
+      "sha256": "1b86a5494d5b7fc73de0fbe1394242a82827596c61cec7e4b6fd41da2b29351d",
+      "source_url": "https://developers.openai.com/api/docs/guides/text",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "openjev-tree.json",
+      "bytes": 700358,
+      "sha256": "ae148dce9eb45b7d1ac02a5416658825dd91c604f824e47c2603c31af9217007",
+      "source_url": "https://api.github.com/repos/Zefan-Cai/Open-Jev/git/trees/bd4118882f733574a3250a4b65fe4d884130c08b",
+      "source_url_status": "recorded_from_api_payload"
+    },
+    {
+      "file": "Qwen--Qwen3.5-4B.README.md",
+      "bytes": 77661,
+      "sha256": "1406be1b6b8fd8a6545870da516912804756593628a1d0fb0a7965211e82a7bb",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.5-4B/raw/main/README.md",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "Qwen--Qwen3Guard-Gen-0.6B.README.md",
+      "bytes": 9841,
+      "sha256": "3a52042f467261243d949d86a779f08ac8ff9da30ce47fd636db6e1c9c1b7635",
+      "source_url": "https://huggingface.co/Qwen/Qwen3Guard-Gen-0.6B/raw/main/README.md",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "secjev-inference.md",
+      "bytes": 5870,
+      "sha256": "1abe30e5bb13c7a040b5ef16eadc8525ad86412b5bdccadf6bd2da934d34b1ad",
+      "source_url": "https://github.com/UESTC1010/SecJev/blob/24d96fd8e8759db61147a689776619ea2f668498/INFERENCE.md",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "secjev-paper.html",
+      "bytes": 284413,
+      "sha256": "6b3cfab0edfb1f21c18cefeaac04555fc7220cf5eb6f073249e51f2e2cdc702f",
+      "source_url": "https://arxiv.org/html/2610.03073v2",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "secjev-tree.json",
+      "bytes": 32252,
+      "sha256": "b9290ef261a83470b472c8063777eec57889fec72da7e0a74d21457ee934ac8b",
+      "source_url": "https://api.github.com/repos/UESTC1010/SecJev/git/trees/24d96fd8e8759db61147a689776619ea2f668498",
+      "source_url_status": "recorded_from_api_payload"
+    },
+    {
+      "file": "secjev.README.md",
+      "bytes": 13854,
+      "sha256": "6671550bbbebbddf01f5864990035c90e3217087b35c29fa97b5df64776c2d9b",
+      "source_url": "https://github.com/UESTC1010/SecJev/blob/24d96fd8e8759db61147a689776619ea2f668498/README.md",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "shieldstral.html",
+      "bytes": 582824,
+      "sha256": "71f524c03e9fc55d56f6dd3e1781f1b9a7397f87ba4a011efae6754cd4081f9b",
+      "source_url": "https://docs.mistral.ai/models/shieldstral-1-0",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "shieldstral.README.md",
+      "bytes": 23152,
+      "sha256": "b67233168fac38fa63658f70a1b59901da612cfa19cd14cc6ecaf804b9003d9d",
+      "source_url": "https://huggingface.co/mistralai/Shieldstral-1.0/raw/main/README.md",
+      "source_url_status": "recorded"
+    },
+    {
+      "file": "sources.json",
+      "bytes": 2425,
+      "sha256": "3f5efee72a4900220ffcabd28f498c8d899f2e288bdd662ace83e2e9ddbd657b",
+      "source_url": null,
+      "source_url_status": "metadata_payload_contains_origin_or_unresolved"
+    },
+    {
+      "file": "vllm-sr--d3-mini.README.md",
+      "bytes": 17368,
+      "sha256": "57e4fcc4c67283573ee1bd201bb87b0ea9b123d0a6938116fcb3dc7294686b43",
+      "source_url": "https://huggingface.co/vllm-sr/d3-mini/raw/main/README.md",
+      "source_url_status": "recorded"
+    }
+  ],
+  "limitations": [
+    "SecJev infer.py raw fetch failed; inference documentation read instead.",
+    "Claude API page fetch failed; Messages envelope/auth verified against installed official SDK, not a live model.",
+    "Jev-Guard released checkpoint and native interface not established.",
+    "Source main URLs are retrieval snapshots; local hashes bind fetched contents."
+  ],
+  "local_sdk_evidence": {
+    ".venv-benchmark\\Lib\\site-packages\\anthropic\\_client.py": {
+      "sha256": "accc43465818e89a6b9db9479162e74af2576773959040848e6b616be62e6533"
+    },
+    ".venv-benchmark\\Lib\\site-packages\\anthropic\\_constants.py": {
+      "sha256": "e1d9c8069041fa17a521c886f0e3b97e2a684cc61bf8a8f37deadc8085b5e5e2"
+    }
+  },
+  "local_sdk_evidence_note": "Installed anthropic 2.3.0: _api_key_auth uses Authorization Bearer; ANTHROPIC_API_VERSION is 2026-10-21. No live API validation."
+}

@@ -1,0 +1,30 @@
+{
+  "status": "official_environment_loaded_not_model_experiment",
+  "network_calls": 0,
+  "suites": {
+    "banking": {
+      "user_tasks": 16,
+      "injection_tasks": 9,
+      "tools": 11,
+      "environment_type": "BankingEnvironment"
+    },
+    "slack": {
+      "user_tasks": 21,
+      "injection_tasks": 5,
+      "tools": 11,
+      "environment_type": "SlackEnvironment"
+    },
+    "travel": {
+      "user_tasks": 20,
+      "injection_tasks": 7,
+      "tools": 28,
+      "environment_type": "TravelEnvironment"
+    },
+    "workspace": {
+      "user_tasks": 40,
+      "injection_tasks": 14,
+      "tools": 24,
+      "environment_type": "WorkspaceEnvironment"
+    }
+  }
+}

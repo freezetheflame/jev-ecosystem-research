@@ -113,3 +113,7 @@ python scripts/fetch_jevbench.py --version v1.4.2.1
 - [历史证据索引与受限数据边界](data/workspace-evidence/README.md)。
 
 本次导出只做离线验证，没有再次请求模型。框架依赖另行准备的源工作区、精确版本与授权数据，不能仅凭本仓库克隆恢复付费观测。既有全链路研究协议仍属独立计划，不因静态实验而变成已完成。
+
+## Agent 安全 benchmark
+
+[四基准与 11 模型评测入口](security_bench/README.md)提供请求适配、原始记录、时间/API费用与报告；模型部署及实验配置尚待补全。[换机恢复步骤](docs/infrastructure/2026-10-28-machine-handoff.md)说明依赖、原 monitor 和两个数据包。

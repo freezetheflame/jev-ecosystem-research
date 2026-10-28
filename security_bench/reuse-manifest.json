@@ -1,0 +1,39 @@
+{
+  "record_kind": "implementation_provenance_not_experiment",
+  "recorded_date": "2026-10-27",
+  "source_repository": "https://github.com/freezetheflame/jev-skill-security",
+  "local_checkout": "D:/projects/jev",
+  "source_head": "3cb9758de7e00aeb5c97c7f5b3a729efa0e33445",
+  "working_tree_caveat": "Source monitor is untracked in that checkout. Exact file hashes, not HEAD alone, identify the inspected implementation.",
+  "reused_dependencies": [
+    {
+      "file": "jev_skill/monitor.py",
+      "sha256": "f1f3d220f87681e79d65d9baf91e7b1e30733f80312c60b4129a42be8fc00c67",
+      "reuse": "Load original module by explicit workspace path; use ResourceMonitor and record once per transport attempt. No source copy or changes."
+    }
+  ],
+  "inspected_references": [
+    {
+      "file": "bench/adapters/atbench.py",
+      "sha256": "9dcf92741cb5d8e53675ea864e0bb6d6beac7ac943b4dd8588169e40b8f517ab",
+      "reuse": "Data field/label separation and native source location informed the new adapter. No verbatim adapter export; retain complete structured contents/tool calls instead of lossy text flattening."
+    },
+    {
+      "file": "jev_skill/client.py",
+      "sha256": "7578206d18cff6987d80dd9bec8fa96a13845d637c55322e01fd8f599d0747ba",
+      "reuse": "Reference for HTTPS, no redirect and key redaction. New transport handles raw persistence before metering; does not invoke decorated post_json, avoiding double instrumentation."
+    }
+  ],
+  "agentdojo_source_revision": "089ed468cf3ed0322acc66b0211f26d9d90dbf60",
+  "api_documentation_checked": [
+    "https://developers.openai.com/api/docs/guides/text",
+    "https://developers.openai.com/api/docs/guides/function-calling"
+  ],
+  "api_verification_limit": "Generic Responses request/function-calling documentation fetched successfully. This does not verify GPT-6 Luna snapshot, account availability, prices or actual model calls.",
+  "portable_snapshot": {
+    "path": "vendor/preserved-monitor/jev_skill/monitor.py",
+    "sha256": "f1f3d220f87681e79d65d9baf91e7b1e30733f80312c60b4129a42be8fc00c67",
+    "operation": "Byte-identical preservation for user-authorized cross-machine handoff; original source and interface unchanged.",
+    "date": "2026-10-28"
+  }
+}
