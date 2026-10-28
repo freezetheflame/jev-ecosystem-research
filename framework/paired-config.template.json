@@ -1,0 +1,67 @@
+{
+  "run_id": null,
+  "run_kind": "pilot",
+  "purpose": null,
+  "hypothesis": null,
+  "primary_metric": null,
+  "selection_record": "data/agent-security-study/selection-2026-10-27-v2.json",
+  "evaluation_mode_namespace": null,
+  "evaluation_mode": null,
+  "classification_unit": null,
+  "target_event": null,
+  "information_boundary": null,
+  "label_validation": null,
+  "exposure": null,
+  "dataset": {
+    "id": null,
+    "source": null,
+    "revision": null,
+    "split": null,
+    "selection": null,
+    "license": null,
+    "original_count": null,
+    "original_count_reason": null
+  },
+  "question": {
+    "instructions": null,
+    "positive_definition": null,
+    "negative_definition": null
+  },
+  "seed": null,
+  "threshold": null,
+  "max_input_chars": null,
+  "max_calls": null,
+  "max_wall_seconds": null,
+  "pricing": {},
+  "backends": [
+    {
+      "id": "jev",
+      "kind": "jev",
+      "provider": "typesafe",
+      "model": "jev-1.14.0",
+      "endpoint": "https://api.typesafe.ai/v1/systemone",
+      "key_env": "TYPESAFE_API_KEY2",
+      "decision_type": null,
+      "timeout_s": null,
+      "parameters": {},
+      "headers": {},
+      "revision_note": null,
+      "deployment_note": null,
+      "unsent_defaults": null
+    },
+    {
+      "id": "llm",
+      "kind": "openai_chat",
+      "provider": null,
+      "model": null,
+      "endpoint": null,
+      "key_env": "LLM_API_KEY",
+      "timeout_s": null,
+      "parameters": {},
+      "headers": {},
+      "revision_note": null,
+      "deployment_note": null,
+      "unsent_defaults": null
+    }
+  ]
+}

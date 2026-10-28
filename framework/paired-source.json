@@ -1,0 +1,33 @@
+{
+  "source_repository": "https://github.com/freezetheflame/jev-skill-security",
+  "source_commit": "3cb9758de7e00aeb5c97c7f5b3a729efa0e33445",
+  "reviewed_files": [
+    {
+      "path": "jev_skill/client.py",
+      "git_blob_sha": "1b4c061b252928d02be269837429af0fbf3e68ed",
+      "reuse": "Adapted POST/Bearer/no-redirect transport and explicit env-file loading. Added full raw error retention, optional long-context header and response request ID. No automatic credential selection."
+    },
+    {
+      "path": "jev_skill/deepseek.py",
+      "git_blob_sha": "af1b10909458e60919b006523330bef221135d59",
+      "reuse": "Adapted Chat Completions request structure and JSON parsing idea. Removed fixed DeepSeek defaults, historical price assumptions, implicit chunking and provider-specific options."
+    },
+    {
+      "path": "jev_skill/benchmark.py",
+      "git_blob_sha": "c52f9f4fee523d7695e8abed942a0adf29af6b43",
+      "reuse": "Reference for data iteration and metrics; not imported. New entry uses project binary_metrics and original monitor."
+    }
+  ],
+  "local_only_reference": {
+    "path": "bench/deepseek_compare.py",
+    "sha256": "9c7627c3b82eeed4433e60448803dcc70a558686ee69be70588458c67ecf47b4",
+    "symbol": "SYSTEM_V2",
+    "note": "Reviewed in the adjacent source workspace; this file is not at the cited remote commit. Adapted YES/confidence semantics and untrusted-state instruction, generalized explanation language. Historical prompt is development material, not an approved study prompt."
+  },
+  "monitor": {
+    "external_path": "jev_skill/monitor.py",
+    "sha256": "f1f3d220f87681e79d65d9baf91e7b1e30733f80312c60b4129a42be8fc00c67",
+    "note": "Existing external ResourceMonitor implementation/interface preserved, neither copied nor changed. New undecorated transport is recorded exactly once per attempt."
+  },
+  "validation": "Offline engineering tests only; no new paid model observations."
+}

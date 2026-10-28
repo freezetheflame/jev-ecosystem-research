@@ -17,7 +17,7 @@ monitor 原有三个测试已在本次核查中通过，没有修改 monitor、�
 
 ## 2. 接入约定和能力边界
 
-选定实际运行器后，复用 `@monitored_run` 记录每次进程调用，实际 transport/inference 处复用 `@monitored_call`。已覆盖的调用不得再手工 record 一次。同一进程并发独立实验使用不同进程；嵌套入口沿用同一活动 monitor。
+选定实际运行器后，复用 `@monitored_run` 记录每次进程调用，实际 transport/inference 处复用 `@monitored_call`。未装饰的新 transport 也可直接实例化原 `ResourceMonitor` 并每次手工 `record` 一次；两条路径二选一，已覆盖的调用不得再手工 record 一次。同一进程并发独立实验使用不同进程；嵌套入口沿用同一活动 monitor。
 
 每个实验保存对应 monitor run ID 和原始汇总路径。运行前可通过 `JEV_MONITOR_DIR` 将遥测放到该 run 的 `telemetry/`，通过 `JEV_MONITOR_PRICING` 指定该轮冻结价格表。原始 monitor 文件纳入产物清单；续跑分段按 run ID 去重，不重复计费。
 
@@ -63,3 +63,9 @@ plan 每个 episode 必须有 dataset_id、split、evaluation_mode、arm、condi
 导出入口 `framework.run` 使用外部原 monitor 的 `monitored_run`，调用层继续使用原 `post_json` 上已有的 `monitored_call`，不复制或修改 monitor。新调用的遥测与价格快照独立保存；历史500条入口没有激活monitor，其时间/费用由已有日志离线重算，不能宣称补回了缺失的监控事件。
 
 本轮未运行付费API，源monitor哈希与既有记录一致；外部依赖和导出模块哈希见 `framework/source-manifest.json`。原有 `scripts/experiment_report.py` 的全链路报告合同和Mode分组保持独立。
+
+## 6. 通用静态 Jev / LLM 配对入口
+
+新增 [paired 静态运行器](paired-static-runner.md)，从用户指定源仓库适配 Jev / Chat Completions 传输与历史判定合同。它消费完成可见性/标签适配的 JSONL，保存请求前事件、原始请求/响应、配置/代码/数据快照、调用级原 monitor 关联及每轮必备报告。复用既有 `binary_metrics` 和 `monitor_records`，不另写一套费用公式。
+
+此入口的新 transport 未装饰，直接使用原 `ResourceMonitor`，每请求一次计账；原 monitor 不修改、不复制。可进行静态 smoke/pilot 的配对与描述统计，尚未真实服务联调、当前四基准原生适配或 Agent 闭环，不支持正式替代推断。新版 Mode A1/A2/B/C 语义仍待确定，paired 明确检查历史命名空间，拒绝以待定代码冒充旧定义。完整 `episodes/predictions` 报告入口继续按第4节合同独立使用；新静态入口使用 call-level `results.jsonl`，不把一次分类冒充一个完成的 Agent episode。
