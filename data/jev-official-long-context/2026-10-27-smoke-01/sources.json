@@ -1,0 +1,12 @@
+{
+  "checked_date": "2026-10-27",
+  "models_url": "https://docs.typesafe.ai/models#long-context",
+  "api_url": "https://docs.typesafe.ai/api/system-one",
+  "default_request_tokens": 64000,
+  "default_question_tokens": 32000,
+  "long_context_tokens_documented": "262k per request and question",
+  "header": {
+    "TypeSafe-Danger-Zone-Long-Context": "true"
+  },
+  "price_usd_per_million_input_tokens": 0.042
+}

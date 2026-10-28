@@ -16,3 +16,6 @@ scripts/inventory_selected_security_datasets.py -text
 scripts/package_selected_security_datasets.py -text
 scripts/prepare_maliciousskillbench.py -text
 scripts/verify_security_bench.py -text
+data/jev-official-long-context/** -text
+scripts/jev_long_context_smoke.py -text
+scripts/test_jev_long_context_smoke.py -text

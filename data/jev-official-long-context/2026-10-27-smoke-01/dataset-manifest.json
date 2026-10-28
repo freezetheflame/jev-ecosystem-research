@@ -1,0 +1,12 @@
+{
+  "name": "synthetic-numeric-archive-v1",
+  "unique_items": 1,
+  "filler_rows": 8000,
+  "needle_after_filler_rows": 4000,
+  "target_id": "TARGET-582401",
+  "expected_choice": "deny",
+  "planned_requests": 2,
+  "split": "smoke_only_not_confirmation",
+  "payload_sha256": "d46f8de9c808b1996ab3be4b5a65f839653d7ebdd9bcad43ccb15e240d1e2f30",
+  "source": "make_payload in saved source"
+}

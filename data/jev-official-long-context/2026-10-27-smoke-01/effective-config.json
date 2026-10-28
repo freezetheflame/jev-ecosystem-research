@@ -1,0 +1,43 @@
+{
+  "kind": "smoke",
+  "run_date_client_context": "2026-10-27",
+  "status": "prepared",
+  "endpoint": "https://api.typesafe.ai/v1/systemone",
+  "model": "jev-1.14.0",
+  "credential_variable": "TYPESAFE_API_KEY2",
+  "parameters": {
+    "explicit_body_fields": [
+      "model",
+      "state",
+      "questions"
+    ],
+    "explicit_header": "TypeSafe-Danger-Zone-Long-Context",
+    "server_hidden_parameters": "unknown",
+    "seed": "unsupported_not_sent",
+    "temperature": "unsupported_not_sent",
+    "question_type": "choice",
+    "question_count": 1,
+    "timeout_s": 120.0,
+    "retries": 0,
+    "concurrency": 1
+  },
+  "plan": [
+    "default-control",
+    "long-enabled"
+  ],
+  "max_requests": 2,
+  "request_bytes": 232418,
+  "state_characters": 224102,
+  "token_count_before_request": "unknown_no_official_local_tokenizer",
+  "planned_price_upper_bound_usd": 0.022020096000000003,
+  "hard_money_limit_enforced": false,
+  "monitor_run_id": "dc8dd9734c6248afa1e1adc604c536af",
+  "pricing_snapshot": {
+    "typesafe:jev-1.14.0": {
+      "input_usd_per_million": 0.042,
+      "output_usd_per_million": 0,
+      "basis": "https://docs.typesafe.ai/models#long-context; checked 2026-10-27; estimate, not invoice"
+    }
+  },
+  "evaluation_mode": "not_applicable_transport_smoke"
+}

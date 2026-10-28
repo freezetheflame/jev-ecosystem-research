@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "run_id": "dc8dd9734c6248afa1e1adc604c536af",
+  "name": "official-long-context-smoke",
+  "started_at": "2026-10-27T05:43:08.876975+00:00",
+  "status": "completed",
+  "metadata": {
+    "experiment_directory": "D:\\projects\\jev_research\\data\\jev-official-long-context\\2026-10-27-smoke-01",
+    "kind": "smoke"
+  },
+  "pricing_snapshot": {
+    "typesafe:jev-1.14.0": {
+      "input_usd_per_million": 0.042,
+      "output_usd_per_million": 0,
+      "basis": "https://docs.typesafe.ai/models#long-context; checked 2026-10-27; estimate, not invoice"
+    }
+  },
+  "calls_file": "D:\\projects\\jev_research\\data\\jev-official-long-context\\2026-10-27-smoke-01\\telemetry\\dc8dd9734c6248afa1e1adc604c536af.calls.jsonl",
+  "calls": 2,
+  "failed_calls": 1,
+  "call_seconds": 9.314307999999073,
+  "input_tokens": 224375,
+  "output_tokens": 41,
+  "missing_usage_calls": 1,
+  "known_estimated_cost_usd": 0.00942375,
+  "unpriced_calls": 1,
+  "wall_seconds": 9.478061799998613,
+  "estimated_cost_usd": null,
+  "finished_at": "2026-10-27T05:43:18.356643+00:00"
+}

@@ -1,0 +1,13 @@
+{
+  "call_id": "default-control",
+  "method": "POST",
+  "url": "https://api.typesafe.ai/v1/systemone",
+  "headers_without_auth": {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "User-Agent": "jev-research-long-context-smoke/1.0"
+  },
+  "body_file": "request-body.json",
+  "body_sha256": "d46f8de9c808b1996ab3be4b5a65f839653d7ebdd9bcad43ccb15e240d1e2f30",
+  "monitor_run_id": "dc8dd9734c6248afa1e1adc604c536af"
+}

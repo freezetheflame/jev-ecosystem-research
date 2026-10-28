@@ -1,0 +1,2 @@
+python scripts/jev_long_context_smoke.py --out "<NEW_OUTPUT_DIRECTORY>" --source "D:\projects\jev" --timeout 120.0
+Credential must be provided separately in the local .env.local; never copy it into artifacts.
