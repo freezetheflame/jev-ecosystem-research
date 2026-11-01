@@ -3,6 +3,7 @@
 
 # 本机 API 凭据（禁止入库）
 .env.local
+.env
 
 # Python
 __pycache__/

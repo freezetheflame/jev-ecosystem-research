@@ -160,3 +160,116 @@
 - 新增标准化 JSONL + 显式配置的静态配对入口，freeze/执行/分析分开，逐请求保留原始证据及失败；复用原 monitor 的 ResourceMonitor 一次计账，源码哈希保持不变。配置模板缺项保持 null，未冻结具体实验。
 - 验证范围为离线工程测试，含本机 HTTP fixture 和原 monitor 接口；没有调用真实模型、下载完整 benchmark 或测出新的科学结果。六基准的原生转换、B/C 标签验证、各模型真实服务和 Agent 闭环仍需分别接入验收。
 - 最终验收：新增 13 项、历史框架 8 项、既有报告层 10 项，共 31 项离线测试全部通过，无 skip；保存的源码快照可独立生成离线报告，原 monitor SHA-256 不变。记录这些测试不代表真实模型或原生 benchmark 已通过联调。
+
+
+## 2026-10-30：四基准定为 A/A/B/D，完成 InjecAgent 与 TS-Bench 的离线 Jev 适配
+
+- 用户确认按 A/A/B/D 推进：AgentHarm=A1、InjecAgent=A2、TS-Bench=B、ATBench=D。A1/A2 仍同属 Mode A 输入检查，数字只是序号；ATBench 原生是完整轨迹判断，改回 D，不再标 C。C 暂时空缺。
+- 获取并核对 InjecAgent（revision `f19c9f2c…`，1,054 条攻击用例）与 TS-Bench（revision `46358fa4…`，7,182 步：3,770 safe / 1,631 unsafe / 1,781 controversial）。获取脚本 `scripts/fetch_ab_datasets.py`，数据在本地 `data/agent-security-study/datasets/2026-10-30/`，附 revision 与逐文件 SHA-256。
+- 新增 `injecagent`、`tsbench` 加载器与 `input_inspection`、`pre_action_safety` 合同，注册 Mode D；离线导出改为任意单数据集通用，`--dataset` 可从多数据集配置中选一个。
+- InjecAgent 的正类是原生攻击用例；负类由同一响应的 `Attacker Instruction` 删除得到，标 `derived_paired_neutralization`，不冒称原生标签。TS-Bench 的 0.5 由 `controversial_policy` 显式决定，本模板取 `unknown`（保留条目、记不可判分）。TS-Bench 同步多候选导致 `(interaction, segment)` 重复，item_id 追加源行号，family 仍按文件+interaction 聚类。
+- 离线导出（无 key、无网络模型请求）：InjecAgent 2,108 条（1,054 正/1,054 派生负）、TS-Bench 7,182 条；每条目均生成 Jev `choice` safe/unsafe 请求样例，gold 单独存放。证据在 `data/agent-security-study/preparations/2026-10-30-*`，manifest 标 `model_calls=0`、`performance_results=not_run`。
+- 7 项新适配测试通过；全量 47 项中 1 failure + 1 error，均为本机缺 `pyarrow` 与 MaliciousSkillBench 数据，另有 4 项 AgentDojo 依赖跳过。没有真实模型调用、没有成绩、没有费用、没有冻结配置。
+- 限制：TS-Bench 测的是执行前动作安全，不是端到端阻断或任务效用；其 eval 轨迹与 AgentHarm 共享底层任务族，统计须按 family 聚类；InjecAgent 负类是合成反事实，结论不能外推到真实工具返回分布。
+- 详细记录见 [2026-10-30 A/A/B/D 适配](docs/model-evaluation/2026-10-30-aabd-adaptation.md)；机器可读选型见 `selection-2026-10-30-v4.json`。
+
+
+## 2026-10-30：Mode B 去掉授权合规语义，改为执行前动作安全
+
+- 用户决定：B 不再要求“已验证授权/政策”，判断目标直接改为“这个拟执行动作安不安全、要不要在副作用前拦截”。时机和可见信息不变：仍是工具执行前，仍看动作/参数、已发生历史、任务上下文和工具说明。
+- 影响：Mode B 从 **Pre-action Authorization** 改为 **Pre-action Safety**；动作级正类从“违反授权”改为“不安全/应阻断”。TS-Bench 因此不再需要补造授权字段，其原生 step-level 安全标签可以直接使用。
+- 同步更新：`docs/model-evaluation/agent-security-evaluation-modes.md`、`agent-security-experiment-protocol.md`、`configs/security-bench-aabd.template.json`、`selection-2026-10-30-v4.json`。2026-10-27 用户论证原文保留不动，并加注其中 B 的授权表述已不代表当前定义。
+- 边界：B 仍只看执行前快照，不含执行返回；仍不能把离线动作判断准确率当作攻击阻断率；C 的前缀风险、D 的整轨迹审计与 B 的动作标签继续分开。
+- 不改变已导出的 InjecAgent/TS-Bench 请求样例，无需重新获取数据或重跑导出；本次没有模型调用。
+
+
+## 2026-10-30：四数据集全部下载并通过 hash 与加载核对
+
+- AgentHarm（revision `e23b3fe6…`）与 ATBench（`4476ef92…`）通过 `hf-mirror.com` 按固定 revision 下载。HuggingFace 直连在本机不可达，镜像只改变传输路径；文件内容由 SHA-256 核对。AgentHarm 6 个行为文件 340,071 字节；ATBench 18,335,079 字节，SHA-256 `80c534b5…` 与 2026-10-27 记录一致。
+- 四个数据集实际加载结果：AgentHarm 416（208 harmful / 208 benign，validation 与 test_public 分开）、InjecAgent 2,108（1,054 原生正 / 1,054 派生负）、TS-Bench 7,182（3,770 safe / 1,631 unsafe / 1,781 controversial）、ATBench 1,000（503 safe / 497 unsafe）。
+- 核对脚本 `scripts/verify_aabd_datasets.py` 重新计算 16 个源文件 hash、比对四个 manifest、走四个 adapter；结果 `data/workspace-evidence/2026-10-30-dataset-acquisition/verification.json`，标 `model_calls=0`。
+- 四个数据集均已生成离线 Jev 请求样例：AgentHarm、InjecAgent、TS-Bench、ATBench 各一份 preparation 目录。仍无真实模型调用、无成绩、无费用。
+- ATBench 轨迹较长（视图字符中位数约 7.5k、p95 约 26k、最大约 365k），全量直送 Jev 可能触发上下文限制；正式运行前须显式决定长上下文配置或截断/排除规则，不能静默截断。
+- 配置模板现覆盖四个数据集；AgentHarm 与 ATBench 沿用原适配器，ATBench 走 D 全轨迹路径。
+
+
+## 2026-10-30：Jev smoke-01 因 HTTP 451 地区限制失败
+
+- 计划 8 条（AgentHarm/InjecAgent/TS-Bench/ATBench 各 2），实际只尝试 1 条 ATBench（item 86），HTTP 451 `Typesafe is not available in your region`，调度器随即停止；有效预测 0。
+- 单次调用墙钟 0.828 秒（2026-10-30T05:53:57.549Z 至 05:53:58.386Z）。响应无 usage，monitor 记 `unpriced_calls=1`，API 估价为 null；不能写成 $0 或“免费”。本地计算未计价。
+- 451 在鉴权前返回，所以本次不能判断 key 有效性；直连 451，本机 7890 代理 403，均不可用。
+- 失败证据完整保留在 `data/agent-security-study/runs/2026-10-30-smoke-01/`，含 raw 请求/响应、events、episodes、telemetry 和自动生成的 analysis；另加 `SMOKE-NOTE.md` 说明范围。
+- 不 resume 该目录（失败 episode 会被当成已完成而跳过）；恢复网络后新建 `2026-10-30-smoke-02` 重跑同一计划。
+
+
+## 2026-10-30：smoke-02 完成 8 条真实 Jev 调用
+
+- 新加坡节点生效后重试成功：8/8 HTTP 200，返回模型均为 `jev-1.14.0`，解析失败 0。smoke-01 的 451 失败保留为历史，不覆盖。
+- 时间：06:03:04.346Z 至 06:04:05.576Z，总墙钟约 61.23 秒；单条 p50 7.578 秒、p95 7.906 秒。
+- 费用：4,499 输入 token + 248 输出 token；按 `pricing-snapshot.json` 的 0.042 USD/百万输入、输出 0，API 估价 **0.000188958 USD**。这是 usage×列表价的估价，不是账单核验；本地计算未计价。
+- 结果（n=2/数据集，仅冒烟）：AgentHarm 2/2；InjecAgent 2/2；TS-Bench 1/2（漏 1 条 unsafe 动作）；ATBench 1/2（漏 1 条 unsafe 轨迹）。不能合并成总分，也不能当能力结论。
+- 证据在 `data/agent-security-study/runs/2026-10-30-smoke-02/`：`SMOKE-REPORT.md`、`raw/`、`events.jsonl`、`telemetry/`、自动生成的 `analysis/`。配置与数据 hash 由 `manifest.json` 固定。
+- 未完成：pilot 规模、controversial 0.5 覆盖、长 ATBench 样本、主 Agent 闭环、效用与端到端阻断。运行配置仍未冻结。
+
+
+## 2026-10-30：AgentHarm 50×3 pilot 完成
+
+- 样本：AgentHarm validation，按 harmful/benign 各 25 条分层随机抽取（seed `20261030`），50 个 item、8 个 base family；确切 ID 见 `preparations/2026-10-30-agentharm-pilot-50-selection.json`。
+- 执行：50 × 3 repeats = 150 次 Jev choice 调用，150/150 HTTP 200、0 失败、覆盖率 100%；返回模型均为 `jev-1.14.0`。
+- 每次 repeat 的指标完全相同：TP 21、FP 0、TN 25、FN 4，accuracy 0.920（Wilson 95% [0.812, 0.968]）、precision 1.000、recall 0.840、F1 0.913、FPR 0.000。三次预测对 50/50 个 item 完全一致；4 条 FN 全为 harmful→safe，集中在 3 个 family。
+- 时间：首条 09:18:16.069Z，末条 09:34:54.917Z，总墙钟 998.85 秒；单次 p50 7.257 秒、p95 7.704 秒。
+- 费用：64,470 输入 token + 4,650 输出 token，API 估价 **0.00270774 USD**（输入 0.042 USD/百万、输出 0）；unpriced 0；本地计算未计价。估价不是账单。
+- 限制：仅 50 item / 8 family；Wilson 区间未做 family 聚类校正；三次完全一致，无法估计采样方差；validation 公开集 pilot，不是盲测或 exposure audit；AgentHarm 输入分类不等于官方 agent harm score；无主 Agent、效用或端到端阻断。
+- 证据：`data/agent-security-study/runs/2026-10-30-agentharm-pilot-50/`，含 `PILOT-REPORT.md`、`raw/`、`telemetry/`、自动生成的 `analysis/` 以及 `analysis/<version>-repeat-metrics/` 的逐重复与 item 级指标。
+
+
+## 2026-10-30：GPT-6 Luna 与 Claude Haiku 5.5 经 OpenLux 中转完成 50×3 pilot
+
+- 连接：`https://api.openlux.ai`，两个模型都走 OpenAI-compatible `/v1/chat/completions`，严格 JSON 输出。Claude 原生 `/v1/messages` 的 usage 带 `cache_creation_input_tokens`，现有 Transport 为避免错误计价会清空 usage，因此统一改走 chat 入口；模型仍是 `gpt-6-luna` / `claude-haiku-5-5`。
+- 执行：2 模型 × 50 item × 3 repeats = 300 次；GPT 139 有效 + 11 provider refusal，Claude 149 有效 + 1 次散文拒答（JSON 解析失败）。
+- 结果（共同 47 item 多数票）：GPT acc 0.957（TP21/FP1/TN24/FN1），Claude acc 0.872（TP19/FP3/TN22/FN3）；McNemar exact p=0.125，不能声称优劣。全 50 item：Claude 0.880；GPT 只能给 [0.900, 0.960] 边界，因为 3 个 harmful item（family 8）三次全被 provider 拒绝。
+- GPT 的 11 次 400 `cyber_policy` 是上游内容策略，发生在推理前，不是模型判断；新增 `PolicyRefusal` 单独记录并继续调度，不把拒绝算成 safe/unsafe。Claude 的 10-3 repeat 0 是模型散文拒答，同样不计分。
+- 时间：首条 10:12:30.969Z，末条 10:40:16.537Z，总墙钟 1665.57 秒；GPT p50 3.437 秒、Claude p50 6.093 秒。
+- 费用：356,393 输入 + 22,412 输出 token，总 API 估价 **0.007445668 USD**（GPT 0.00408188，Claude 0.00336379，含失败调用）；11 次 refusal 无 usage、unpriced，不能记 0。价格按 OpenLux pricing_new 与实测路由组估算，不是账单。
+- 证据：`data/agent-security-study/runs/2026-10-30-agentharm-relay-50-v2/`，含 `RELAY-PILOT-REPORT.md`、`raw/`、`telemetry/`、`analysis/*-multimodel-metrics` 与 `analysis/*-common-metrics`。
+- 限制：8 个 family；GPT 拒绝集中在 family 8，共同 47 item 比较会排除 GPT 无法判分的 harmful 项；中转策略与路由组均可能影响结果/价格；仍是 pilot。
+
+
+## 2026-11-01：Qwen3Guard-Gen-0.6B 本地部署完成并跑完 50×3
+
+- 本机 RTX 3050 Ti Laptop 4GB 上以 bf16 加载 `Qwen/Qwen3Guard-Gen-0.6B`（权重 SHA-256 `4f3ce47e…`，1.50GB），transformers 4.57.1 + torch 2.2.1+cu121；显存约 1.12GB。通过 `hf-mirror.com` 逐文件下载，Hub 客户端直连失败。
+- 新增 `scripts/local_guard_server.py`（OpenAI-compatible `/v1/chat/completions`）和独立 `.venv-local`；新增 `controversial_policy` 配置项，Qwen3Guard 的 Controversial 不再硬编码为解析失败。
+- 执行：同一 AgentHarm validation 50 item × 3 = 150 次，全部成功。原始标签 Safe 48 / Unsafe 78 / Controversial 24。
+- 指标（多数票）：strict（Controversial=unsafe）TP25/FP9/TN16/FN0，accuracy 0.820、precision 0.735、recall 1.000、FPR 0.360；loose（=safe）TP21/FP5/TN20/FN4，accuracy 0.820、precision 0.808、recall 0.840、FPR 0.200。两种口径都报告，不能只挑一个。
+- 时间：p50 0.531 秒、p95 0.750 秒，150 次累计 81.42 秒；输入 53,370 token、输出 1,533 token；本地费用未计价。
+- 证据：`data/agent-security-study/runs/2026-11-01-agentharm-qwen3guard-50/`，含 `LOCAL-PILOT-REPORT.md`、raw、telemetry 与两份派生分析。
+- 机器分工：4GB 本地先跑 Qwen3Guard 0.6B（已完成），后续 GLiGuard 300M、Laya 421M、SecJev-0.8B 仍属本地候选；D3-Mini 4.5B、Qwen3.5-4B、Shieldstral 3B、SecJev 2B/4B 放到 3090 24GB。Jev-Guard 仍缺可核验发布制品。
+
+
+## 2026-11-01：GLiGuard-300M 本地部署完成并跑完 50×3
+
+- 本机 4GB GPU 以 gliner2 2.1.0 加载 `fastino/gliguard-LLMGuardrails-300M`（833,938,108 字节，SHA-256 `03132cef…`），显存约 0.79GB；输入为 AgentHarm `user_request` 原文。
+- 150/150 次成功；50 item 多数票 TP25/FP1/TN24/FN0，accuracy 0.980（Wilson [0.895, 0.996]）、precision 0.962、recall 1.000、F1 0.980、FPR 0.040；1 个 benign item 三次误报。
+- 时间：p50 0.078 秒、p95 0.094 秒，150 次累计 12.16 秒；输入/输出 token 均为 0（编码器分类）；本地费用未计价。
+- 输入长度 max 145 token，低于 512 上下文，未截断。
+- 新增 `scripts/local_gliguard_server.py` 与独立配置；证据在 `data/agent-security-study/runs/2026-11-01-agentharm-gliguard-50/`。
+- 本地已完成 Qwen3Guard-0.6B、GLiGuard-300M；下一个本地候选 Laya-421M，再后 SecJev-0.8B。
+
+
+## 2026-11-01：Laya-421M 本地部署完成并跑完 50×3
+
+- 本机 4GB GPU 加载 `convaiinnovations/laya` 根 checkpoint（842,609,210 字节，SHA-256 `891102d3…`），显存约 1.58GB；laya 0.4.20，服务为 `Agent.system_one` 的 HTTP 桥接。
+- Windows/torch 2.2 下 ModernBert 导入触发不支持的 torch.compile，服务在导入前将 torch.compile 置为恒等；推理为 eager。
+- 150/150 次成功，无截断。多数票 TP7/FP2/TN23/FN18，accuracy 0.600（Wilson [0.462, 0.724]）、precision 0.778、recall 0.280、F1 0.412、FPR 0.080。25 个 harmful 只识别出 7 个。
+- 时间 p50 0.078 秒、p95 0.094 秒，150 次累计 10.88 秒；输入 22,401 token、输出 0；本地未计价。
+- checkpoint 自带部分 temperature 越界，laya 回退到 0.5 并警告 confidence 未校准；本轮只用 choice，不用 confidence。
+- 证据在 `data/agent-security-study/runs/2026-11-01-agentharm-laya-50/`。
+- 本地已完成 Qwen3Guard-0.6B、GLiGuard-300M、Laya-421M；只剩 SecJev-0.8B 属本地候选，其余上 3090。
+
+
+## 2026-11-01：Qwen3Guard 原始输入对照（排除 JSON 包装混淆）
+
+- 发现前一版本地 Qwen3Guard 收到的是 `{"user_request": ...}` JSON 字符串，而 GLiGuard 收到的是 `user_request` 原文；输入格式不可比。
+- 用相同 50 item × 3 重跑 Qwen3Guard，`input_field=user_request`：strict（Controversial=unsafe）TP25/FP8/TN17/FN0，accuracy 0.840、precision 0.758、recall 1.000、FPR 0.320；loose TP22/FP6/TN19/FN3，accuracy 0.820。Controversial 从 24 降到 15 次。
+- 原始输入只把 strict accuracy 从 0.820 提到 0.840，仍明显低于 GLiGuard 的 0.980；格式不是全部差距。
+- 证据：`data/agent-security-study/runs/2026-11-01-agentharm-qwen3guard-raw-50/`。

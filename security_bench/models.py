@@ -15,6 +15,15 @@ class StopRun(RuntimeError):
     pass
 
 
+class PolicyRefusal(RuntimeError):
+    """Provider-side content policy rejected the request before inference."""
+
+    def __init__(self, status, detail=''):
+        super().__init__('Provider policy refusal')
+        self.status = status
+        self.detail = detail
+
+
 class TransportError(RuntimeError):
     def __init__(self, status):
         super().__init__('Transport failed; see redacted raw response')
@@ -50,7 +59,8 @@ class Transport:
             raise StopRun('wall_time_budget')
         if self.call_count >= budget['max_calls']:
             raise StopRun('call_budget')
-        if any(e.get('provider') != 'local' and e.get('estimated_cost_usd') is None for e in self.monitor.events):
+        if any(e.get('provider') != 'local' and e.get('estimated_cost_usd') is None
+               and e.get('error_type') != 'PolicyRefusal' for e in self.monitor.events):
             raise StopRun('unknown_cost_stop')
         if self.monitor.totals['known_estimated_cost_usd'] + budget['reserve_usd_per_call'] > budget['max_api_usd']:
             raise StopRun('estimated_cost_budget')
@@ -97,6 +107,13 @@ class Transport:
             return parsed
         except urllib.error.HTTPError as exc:
             status, body = exc.code, exc.read()
+            text = body.decode('utf-8', 'replace')
+            if status in (400, 403) and any(marker in text for marker in
+                    ('cyber_policy', 'content was flagged', 'content_policy', 'safety_policy')):
+                # The provider rejected the input before inference. Keep it distinct from a
+                # transport failure so one policy refusal does not abort the whole schedule.
+                error = PolicyRefusal(status, text[:500])
+                raise error from None
             error = TransportError(status)
             raise error from None
         except Exception as exc:

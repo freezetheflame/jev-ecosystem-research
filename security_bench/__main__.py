@@ -12,6 +12,7 @@ def main():
     p.add_argument('--run-dir')
     p.add_argument('--out-dir', help='New directory for offline inspect-inputs artifacts')
     p.add_argument('--split', action='append', choices=['validation','test_public'], help='inspect-inputs only; explicit source split override')
+    p.add_argument('--dataset', help='inspect-inputs only; select one dataset from a multi-dataset config')
     p.add_argument('--resume', action='store_true')
     p.add_argument('--benchmark-version', help='Explicit AgentDojo version for offline check-environment only')
     p.add_argument('--skip-key-check', action='store_true', help='doctor only; never bypass live credential checks')
@@ -28,7 +29,7 @@ def main():
             if not args.out_dir:
                 p.error('--out-dir is required for inspect-inputs')
             from .agentharm import inspect_inputs
-            print(json.dumps(inspect_inputs(config, args.out_dir, args.split), ensure_ascii=False, indent=2))
+            print(json.dumps(inspect_inputs(config, args.out_dir, args.split, args.dataset), ensure_ascii=False, indent=2))
             return 0
         if args.command == 'doctor':
             result = inspect(config, check_keys=not args.skip_key_check)

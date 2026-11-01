@@ -105,7 +105,7 @@ python scripts/fetch_jevbench.py --version v1.4.2.1
 
 ## 跑测实践与框架代码（2026-10-27）
 
-当前研究范围见[第二版选型](docs/model-evaluation/2026-10-27-study-selection-v2.md)：11 项模型/方法与 AgentDojo、AgentHarm、MCPHunt、ATBench 四个数据集。新 Mode A1/A2/B/C 的含义尚未确定，具体运行配置未冻结。
+当前研究范围见[2026-10-30 A/A/B/D 选型](docs/model-evaluation/2026-10-30-aabd-adaptation.md)：11 项模型/方法与 AgentHarm（A1）、InjecAgent（A2）、TS-Bench（B）、ATBench（D）四个数据集。InjecAgent 与 TS-Bench 已完成离线加载和 Jev 请求样例，没有真实模型调用；运行配置未冻结。
 
 本地 Jev 安全工作区的已有实践现已整理入仓：
 

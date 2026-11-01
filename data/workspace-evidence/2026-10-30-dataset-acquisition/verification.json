@@ -1,0 +1,120 @@
+{
+  "record_kind": "dataset_acquisition_verification_not_experiment",
+  "created_at": "2026-10-30T05:30:43.814140+00:00",
+  "config": "D:\\projects\\jev_empirical\\jev-ecosystem-research\\configs\\security-bench-aabd.template.json",
+  "data_root": "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30",
+  "python": "3.11.1 (tags/v3.11.1:a7a450f, Dec  6 2022, 19:58:39) [MSC v.1934 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26300-SP0",
+  "model_calls": 0,
+  "network_model_requests": 0,
+  "datasets": {
+    "injecagent": {
+      "mode": "A2",
+      "contract": "input_inspection",
+      "items": 2108,
+      "families": 1054,
+      "gold_counts": {
+        "0": 1054,
+        "1": 1054
+      },
+      "gold_sources": {
+        "derived_paired_neutralization": 1054,
+        "native_InjecAgent_attack_case": 1054
+      },
+      "view_keys": [
+        "tool_response",
+        "user_request"
+      ],
+      "max_view_chars": 761,
+      "source_revision": "f19c9f2c79a41046eb13c03c51a24c567a8ffa07",
+      "manifest_file_count": 2,
+      "manifest_hashes_match": true
+    },
+    "tsbench": {
+      "mode": "B",
+      "contract": "pre_action_safety",
+      "items": 7182,
+      "families": 3376,
+      "gold_counts": {
+        "0": 3770,
+        "1": 1631,
+        "None": 1781
+      },
+      "gold_sources": {
+        "native_TSBench_step_score": 7182
+      },
+      "view_keys": [
+        "candidate_action",
+        "history",
+        "tools",
+        "user_request"
+      ],
+      "max_view_chars": 73262,
+      "source_revision": "46358fa424a927a895c6c8322f99032c4eb5155e",
+      "manifest_file_count": 9,
+      "manifest_hashes_match": true
+    },
+    "agentharm": {
+      "mode": "A1",
+      "contract": "request_risk_classification",
+      "items": 416,
+      "families": 52,
+      "gold_counts": {
+        "0": 208,
+        "1": 208
+      },
+      "gold_sources": {
+        "published_harmful_or_benign_partition": 416
+      },
+      "view_keys": [
+        "user_request"
+      ],
+      "max_view_chars": 733,
+      "source_revision": "e23b3fe60a0da9037314b88e5ee3a0c054970dad",
+      "manifest_file_count": 6,
+      "manifest_hashes_match": true
+    },
+    "atbench": {
+      "mode": "D",
+      "contract": "full_trace_risk_classification",
+      "items": 1000,
+      "families": 1000,
+      "gold_counts": {
+        "0": 503,
+        "1": 497
+      },
+      "gold_sources": {
+        "native_ATBench_label": 1000
+      },
+      "view_keys": [
+        "tools",
+        "trajectory"
+      ],
+      "max_view_chars": 365588,
+      "source_revision": "4476ef92ed8f85c8d58d8a5b9dfdf55aa7893138",
+      "manifest_file_count": 1,
+      "manifest_hashes_match": true,
+      "source_sha256": "80c534b5f3517c872b528a2e6b64e34495206968edd184f4aed563d39f0cca09"
+    }
+  },
+  "hashed_files": 16,
+  "hash_manifest": {
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\atbench\\ATBench.json": "80c534b5f3517c872b528a2e6b64e34495206968edd184f4aed563d39f0cca09",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\agentharm\\snapshot\\benchmark\\harmful_behaviors_validation.json": "40cd099915258b41142acfc88a9f2b4e15cd631c5490ad02a0dce0cf2b9c175e",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\agentharm\\snapshot\\benchmark\\benign_behaviors_validation.json": "b74ffb781ce54182775a8b2843ea341ab2fb4cfea5743bfa89a368e52a76c27a",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\agentharm\\snapshot\\benchmark\\harmful_behaviors_test_public.json": "fc3e4abbcd812022b85150b0e6f81c0bdbdfabb486e5b82ec46f1ba135f3ba08",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\agentharm\\snapshot\\benchmark\\benign_behaviors_test_public.json": "65b4ebd4d8d2e7c9a79db4e11bc642f1800e642be0626ba0a990c763a325957a",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\injecagent\\snapshot\\test_cases_dh_base.json": "0a8186468d21389af432e8c7b399ae42264d1b93a07b65c7a489468508604305",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\injecagent\\snapshot\\test_cases_ds_base.json": "4daab35c62a3845e8b9400f4dca58b9c9f37e57cd33b2337552557fbb26282e9",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\agentharm-traj\\benign_steps.json": "f44fce25b0ed795e3c11fadafb8d8c959d2ae4513e6e9f15e154fa4aba9bf020",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\agentharm-traj\\harmful_steps.json": "6046b4f4b2e5086c98780433bddf74be542eeec910e3260b4727bf22a9a3365b",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\agentdojo-traj\\banking.json": "eb4a314845c8236ba1bbcd9855973f59279a70368b6eb31d447a4cd243086029",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\agentdojo-traj\\slack.json": "08152de8cf9c39d01d58eb708f3a820a892f493841b975e09654ab904cf8a0d5",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\agentdojo-traj\\travel.json": "1935121585fb1a02662e8121fe80e78c6d89b77e0c6035ea2b75b593e3728a22",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\agentdojo-traj\\workspace.json": "74b20a4fcd7df1c3e39a231e64860aeac8cd57ce3531728b329080abbcc862d0",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\asb-traj\\DPI_attack_success.json": "a900a0775addf35588154d28438127f9c830a08845a105e084b319b1e984d4af",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\asb-traj\\OPI_attack_success.json": "e491c96e43c8352e65ca948a72cb3e6f366d60f14fd7d3d6e374865eb092ae47",
+    "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\datasets\\2026-10-30\\tsbench\\snapshot\\asb-traj\\attack_failure.json": "6cf422389a41416e05d236252ecba8757c1f7d7a978ae270e419ff846ae98f51"
+  },
+  "note": "Counts and hashes only. No model output, metric or fee is produced by this check."
+}

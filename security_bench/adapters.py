@@ -138,7 +138,12 @@ def parse_prediction(model, response):
         if len(labels) != 1:
             raise ValueError('Qwen3Guard requires one unambiguous Safety line')
         if labels[0] == 'Controversial':
-            raise ValueError('Qwen3Guard Controversial is unresolved, not a binary prediction')
+            policy = model.get('controversial_policy')
+            if policy == 'unsafe':
+                return 1
+            if policy == 'safe':
+                return 0
+            raise ValueError('Qwen3Guard Controversial requires an explicit controversial_policy')
         return int(labels[0] == 'Unsafe')
     if kind == 'json_risk':
         # Reject duplicate keys, even if the last one happens to parse as a bool.

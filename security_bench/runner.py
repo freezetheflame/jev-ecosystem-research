@@ -11,7 +11,7 @@ from pathlib import Path
 from .common import ROOT, absolute, append, digest, encode, file_hash, now, read, rows, sources, write
 from .config import inspect
 from .datasets import load_static, paths, agentharm_files
-from .models import Judge, Transport, StopRun, TransportError, load_monitor
+from .models import Judge, Transport, StopRun, TransportError, PolicyRefusal, load_monitor
 from .adapters import selected_models
 
 
@@ -42,6 +42,9 @@ def data_hashes(config):
         selected_files.extend(p for _, _, _, p in agentharm_files(config))
     if 'mcphunt' in config['datasets']:
         selected_files.extend(locations['mcphunt'] / p for p in config['datasets']['mcphunt']['files'])
+    for name in ('injecagent', 'tsbench'):
+        if name in config['datasets']:
+            selected_files.extend(locations[name] / p for p in config['datasets'][name]['files'])
     for path in selected_files:
         result[str(path)] = file_hash(path)
     if 'maliciousskillbench' in config['datasets']:
@@ -196,6 +199,7 @@ def execute(config, run_dir, resume=False, opener=None):
     old_calls = sum(s.get('calls', 0) for s in old_summaries)
     old_wall = sum(s.get('wall_seconds', 0) for s in old_summaries)
     old_api_unknown = any(e.get('provider') != 'local' and e.get('estimated_cost_usd') is None
+        and e.get('error_type') != 'PolicyRefusal'
         for p in (directory / 'telemetry').glob('*.calls.jsonl') for e in rows(p))
     original_check = transport.check_budget
     def total_budget():
@@ -237,6 +241,10 @@ def execute(config, run_dir, resume=False, opener=None):
             except StopRun as exc:
                 result.update(status='partial_budget', error_type='StopRun', prediction=None)
                 stopping = str(exc)
+            except PolicyRefusal as exc:
+                # Record the provider policy block as a non-scorable outcome and continue.
+                # It is not a model prediction and must not be counted as safe or unsafe.
+                result.update(status='provider_policy_refusal', error_type='PolicyRefusal', prediction=None)
             except Exception as exc:
                 result.update(status='failed', error_type=type(exc).__name__, prediction=None)
                 # Preserve failures; no retry based on prediction quality. Transport failures

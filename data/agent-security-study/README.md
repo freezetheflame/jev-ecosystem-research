@@ -8,7 +8,7 @@
 - [AgentHarm A1 独立适配器](../../docs/model-evaluation/2026-10-28-agentharm-a1-adapter.md)：原始请求输入检查，独立配置、离线请求预览、按 split 的分类/时间/费用报告；无主 Agent 依赖，不是官方 harm score。
 - [四基准统一入口](../../security_bench/README.md)、[运行配置模板](../../configs/security-bench.template.json)：当前为 AgentHarm/MSB 输入分类与 MCPHunt/ATBench 原始轨迹判断，复用原 monitor；AgentDojo 动态入口保留作历史配置。真实 pilot 和科学配置仍待确定。AgentHarm 官方有害任务执行评分尚未接入。
 - [当前四个基准的获取记录](../../docs/model-evaluation/2026-10-27-selected-dataset-acquisition.md)及 [机器可读索引](dataset-acquisition-2026-10-27.json)：原始快照、来源版本、文件哈希与实际条目数；AgentDojo 使用完整官方基准入口，不采用历史静态派生片段。
-- [当前选型（第三版）](../../docs/model-evaluation/2026-10-28-study-selection-v3.md)及 [JSON 清单](selection-2026-10-28-v3.json)：AgentHarm=A1、MaliciousSkillBench=A2、MCPHunt=B、ATBench=C；11 个模型/方法不变，A1/A2 同属输入检查，B/C 待确认。第二版及旧数据包保留为历史。
+- [当前选型（第四版，A/A/B/D）](../../docs/model-evaluation/2026-10-30-aabd-adaptation.md)及 [JSON 清单](selection-2026-10-30-v4.json)：AgentHarm=A1、InjecAgent=A2、TS-Bench=B、ATBench=D；11 个模型/方法不变，A1/A2 同属输入检查，B 为执行前动作安全，D 为完整轨迹审计，C 暂时空缺。第三版及旧数据包保留为历史。
 - [历史选型](../../docs/model-evaluation/2026-10-27-study-selection.md)及 [原 JSON](selection-2026-10-27.json)：保留此前 12 项模型/方法、6 个数据集和五类参数因素供溯源。
 - [历史 Mode A–D 定义](../../docs/model-evaluation/agent-security-evaluation-modes.md)：保留旧定义、用户论证原文和待核验引用；新代码不自动继承旧定义，现有报告工具仍按旧命名空间验证。
 - [report.template.md](report.template.md)：每次实验必须完成的报告；数据集与数量、时间/费用、基础计数、模型完整配置、prompt/请求和复现入口。

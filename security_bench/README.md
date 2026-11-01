@@ -17,7 +17,7 @@
 | MCPHunt | 原始 agent-visible messages 与用户任务；明确选择 native labeling 字段 | 完整轨迹风险分类；不将完整轨迹标签复制到动作/前缀，不包含检测器 canary 标志、outcome 或 usage |
 | ATBench | 原始 tools 与完整 structured contents，保留工具调用参数 | 原始轨迹风险分类，无自动截断、分块或重标注 |
 
-2026-10-28 当前选型为 AgentHarm=A1、MaliciousSkillBench=A2、MCPHunt=B、ATBench=C，见[第三版选型](../docs/model-evaluation/2026-10-28-study-selection-v3.md)。A1/A2 均继承原 Mode A 输入检查，1/2 仅为序号；B/C 仍未定。输入字段/标签合同、prompt 与运行参数尚未冻结。四基准分数分别报告，不合成为一项总体准确率。当前流程全部判断原始输入/已有轨迹，不需要 DeepSeek 主 Agent；其暂定选型保留供后续闭环研究。
+2026-10-30 当前选型为 AgentHarm=A1、InjecAgent=A2、TS-Bench=B、ATBench=D，见[第四版选型](../docs/model-evaluation/2026-10-30-aabd-adaptation.md)。A1/A2 均继承原 Mode A 输入检查，1/2 仅为序号；B 是执行前动作安全；D 是完整轨迹审计；C 暂时空缺。InjecAgent 与 TS-Bench 的离线加载和 Jev 请求样例已生成，没有真实调用。输入字段/标签合同、prompt 与运行参数尚未冻结。四基准分数分别报告，不合成为一项总体准确率。当前流程全部判断原始输入/已有轨迹，不需要 DeepSeek 主 Agent；其暂定选型保留供后续闭环研究。
 
 旧 AgentDojo 官方动态适配器仍保留，配置另存 `configs/security-bench-agentdojo.template.json`；其动作前 gate 不得标成 A2。这不意味着 AgentDojo 本身无法另行适配输入检查。
 

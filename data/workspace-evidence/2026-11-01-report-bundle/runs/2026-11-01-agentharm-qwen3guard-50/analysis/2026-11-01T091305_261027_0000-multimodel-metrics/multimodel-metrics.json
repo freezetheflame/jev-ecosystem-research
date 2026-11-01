@@ -1,0 +1,119 @@
+{
+  "record_kind": "derived_multimodel_pilot_metrics_not_confirmatory",
+  "created_at": "2026-11-01T09:13:05.261027+00:00",
+  "run_dir": "D:\\projects\\jev_empirical\\jev-ecosystem-research\\data\\agent-security-study\\runs\\2026-11-01-agentharm-qwen3guard-50",
+  "planned": 150,
+  "recorded": 150,
+  "valid": 150,
+  "failed_or_partial": 0,
+  "arms": {
+    "qwen3guard": {
+      "per_repeat": {
+        "0": {
+          "N": 50,
+          "TP": 25,
+          "FP": 9,
+          "TN": 16,
+          "FN": 0,
+          "accuracy": 0.82,
+          "accuracy_wilson95": [
+            0.6920394632569922,
+            0.9022980732976582
+          ],
+          "precision": 0.7352941176470589,
+          "recall": 1.0,
+          "f1": 0.847457627118644,
+          "fpr": 0.36,
+          "fnr": 0.0,
+          "specificity": 0.64,
+          "assigned": 50,
+          "valid": 50,
+          "seconds_sum": 27.299999999991996,
+          "seconds_p50": 0.5235000000011496
+        },
+        "1": {
+          "N": 50,
+          "TP": 25,
+          "FP": 9,
+          "TN": 16,
+          "FN": 0,
+          "accuracy": 0.82,
+          "accuracy_wilson95": [
+            0.6920394632569922,
+            0.9022980732976582
+          ],
+          "precision": 0.7352941176470589,
+          "recall": 1.0,
+          "f1": 0.847457627118644,
+          "fpr": 0.36,
+          "fnr": 0.0,
+          "specificity": 0.64,
+          "assigned": 50,
+          "valid": 50,
+          "seconds_sum": 27.484000000022206,
+          "seconds_p50": 0.5385000000005675
+        },
+        "2": {
+          "N": 50,
+          "TP": 25,
+          "FP": 9,
+          "TN": 16,
+          "FN": 0,
+          "accuracy": 0.82,
+          "accuracy_wilson95": [
+            0.6920394632569922,
+            0.9022980732976582
+          ],
+          "precision": 0.7352941176470589,
+          "recall": 1.0,
+          "f1": 0.847457627118644,
+          "fpr": 0.36,
+          "fnr": 0.0,
+          "specificity": 0.64,
+          "assigned": 50,
+          "valid": 50,
+          "seconds_sum": 26.639999999988504,
+          "seconds_p50": 0.5315000000027794
+        }
+      },
+      "majority": {
+        "N": 50,
+        "TP": 25,
+        "FP": 9,
+        "TN": 16,
+        "FN": 0,
+        "accuracy": 0.82,
+        "accuracy_wilson95": [
+          0.6920394632569922,
+          0.9022980732976582
+        ],
+        "precision": 0.7352941176470589,
+        "recall": 1.0,
+        "f1": 0.847457627118644,
+        "fpr": 0.36,
+        "fnr": 0.0,
+        "specificity": 0.64
+      },
+      "agreement": {
+        "0/3": 9,
+        "3/3": 41
+      },
+      "unanimous_rate": 1.0,
+      "seconds": {
+        "p50": 0.5310000000026776,
+        "p95": 0.75,
+        "sum": 81.4240000000027,
+        "n": 150
+      },
+      "resources": {
+        "calls": 150,
+        "input_tokens": 53370,
+        "output_tokens": 1533,
+        "api_fee_usd_price_estimated": 0,
+        "unpriced_calls": 150,
+        "local_compute": "unpriced"
+      }
+    }
+  },
+  "paired_comparison": null
+}

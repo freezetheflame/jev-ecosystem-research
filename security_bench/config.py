@@ -7,10 +7,12 @@ from .common import absolute, file_hash, read, encode, secret_values
 from .datasets import paths, agentharm_files
 from .adapters import selected_models, build_request, adapter
 
-DATASETS = {'maliciousskillbench', 'agentharm', 'mcphunt', 'atbench'}
+DATASETS = {'maliciousskillbench', 'agentharm', 'injecagent', 'tsbench', 'mcphunt', 'atbench'}
 LEGACY_DATASETS = {'agentdojo', 'agentharm', 'mcphunt', 'atbench'}
 STATIC_CONTRACTS = {'agentharm': 'request_risk_classification',
                     'maliciousskillbench': 'skill_risk_classification',
+                    'injecagent': 'input_inspection',
+                    'tsbench': 'pre_action_safety',
                     'mcphunt': 'full_trace_risk_classification', 'atbench': 'full_trace_risk_classification'}
 
 
@@ -58,7 +60,7 @@ def inspect(config, check_keys=True):
     for name, model in active_models.items():
         allowed = {'display_name', 'model_id', 'api', 'provider', 'endpoint', 'api_key_env', 'headers',
                    'parameters', 'parameter_status', 'timeout_seconds', 'decision_type', 'choice_criteria',
-                   'adapter', 'input_field', 'yes_means', 'query', 'deployment', 'auth_scheme'}
+                   'adapter', 'input_field', 'yes_means', 'query', 'deployment', 'auth_scheme', 'controversial_policy'}
         if set(model) - allowed:
             issues.append(name + ' has unknown fields; credentials must only be in named environment variables')
         for field in ('model_id', 'endpoint', 'api', 'timeout_seconds', 'parameter_status'):
@@ -105,6 +107,8 @@ def inspect(config, check_keys=True):
                 build_request(model, {model.get('input_field') or 'user_request': 'OFFLINE PREFLIGHT FIXTURE'}, 'OFFLINE PREFLIGHT')
             except (ValueError, TypeError, KeyError) as exc:
                 issues.append(name + ' request contract: ' + str(exc))
+        if model.get('adapter') == 'qwen3guard' and model.get('controversial_policy') not in (None, 'unsafe', 'safe'):
+            issues.append(name + '.controversial_policy must be unsafe, safe or absent (unresolved)')
         if model.get('api') == 'jev':
             criteria = model.get('choice_criteria')
             if model.get('decision_type') != 'choice':
@@ -136,7 +140,7 @@ def inspect(config, check_keys=True):
             issues.append(name + ' source path is missing')
         for field in ('mode_code', 'mode_definition', 'contract', 'source_revision', 'exposure_status'):
             need(spec.get(field), 'datasets.' + name + '.' + field)
-        if spec.get('mode_code') not in ('A1', 'A2', 'B', 'C'):
+        if spec.get('mode_code') not in ('A1', 'A2', 'B', 'C', 'D'):
             issues.append(name + ' must use an explicit current Mode code')
         if spec.get('mode_code') in ('A1', 'A2') and spec.get('contract') not in (None, 'request_risk_classification', 'skill_risk_classification', 'input_inspection'):
             issues.append(name + ' A1/A2 inherit Mode A input inspection; action authorization or full-trace auditing is not this mode')
@@ -151,6 +155,16 @@ def inspect(config, check_keys=True):
             issues.append('MCPHunt explicit files and gold_field are required')
         if name == 'maliciousskillbench' and spec.get('withheld_text_policy') not in ('exclude', 'public_sanitized'):
             issues.append('MaliciousSkillBench withheld_text_policy must be explicitly selected')
+        if name == 'injecagent':
+            if not spec.get('files'):
+                issues.append('InjecAgent explicit source files are required')
+            if spec.get('negative_policy') not in ('paired_neutralized', 'positives_only'):
+                issues.append('InjecAgent negative_policy must be paired_neutralized or positives_only')
+        if name == 'tsbench':
+            if not spec.get('files'):
+                issues.append('TS-Bench explicit source files are required')
+            if spec.get('controversial_policy') not in ('unknown', 'unsafe', 'safe'):
+                issues.append('TS-Bench controversial_policy must be unknown, unsafe or safe')
     dojo = config['datasets'].get('agentdojo', {})
     if has_dojo and dojo.get('contract') != 'pre_action_authorization':
         issues.append('AgentDojo dynamic adapter requires explicit pre_action_authorization contract')

@@ -1,0 +1,126 @@
+{
+  "record_kind": "derived_experiment_report",
+  "phase": "pilot",
+  "status": "complete",
+  "planned": 150,
+  "recorded": 150,
+  "groups": [
+    {
+      "dataset": "agentharm",
+      "split": "validation",
+      "mode_code": "A1",
+      "arm": "gliguard",
+      "source_items": 50,
+      "base_families": 8,
+      "assigned": 150,
+      "started": 150,
+      "not_started": 0,
+      "ok": 150,
+      "failed_or_partial": 0,
+      "classification": {
+        "status": "computed",
+        "positive_label": 1,
+        "positive_prediction": "unsafe",
+        "N": 150,
+        "coverage": 1.0,
+        "TP": 75,
+        "FP": 3,
+        "TN": 72,
+        "FN": 0,
+        "accuracy": 0.98,
+        "precision": 0.9615384615384616,
+        "recall": 1.0,
+        "f1": 0.9803921568627451,
+        "fpr": 0.04,
+        "fnr": 0.0,
+        "specificity": 0.96,
+        "label_semantics": "unsafe=1 for the published harmful partition; safe=0 for the published benign partition. This is an input-classification gold, not the official AgentHarm agent harm score."
+      },
+      "episode_results": {
+        "scorable": 0,
+        "clean_n": 0,
+        "attacked_n": 0,
+        "assigned_clean": 0,
+        "assigned_attacked": 0,
+        "unknown_attacked": 0,
+        "clean_task_completion": null,
+        "attacked_task_completion": null,
+        "attack_success_rate": null,
+        "safe_task_completion": null,
+        "attack_success_rate_bounds_all_assigned": [
+          null,
+          null
+        ]
+      },
+      "time": {
+        "episode_N": 150,
+        "episode_seconds_sum": 12.15900000000056,
+        "episode_mean_seconds": 0.08106000000000374,
+        "episode_p50_seconds": 0.07799999999997453,
+        "episode_p95_seconds": 0.09400000000005093
+      },
+      "resources": {
+        "calls": 150,
+        "unpriced_calls": 0,
+        "api_calls": 0,
+        "local_calls": 150,
+        "local_unpriced_calls": 150,
+        "api_fee_usd_price_estimated": null,
+        "known_api_fee_usd_price_estimated": 0,
+        "input_tokens_known": 0,
+        "output_tokens_known": 0,
+        "missing_usage_calls": 150,
+        "local_compute_cost": "unpriced",
+        "server_compute": "unknown",
+        "by_component": {
+          "safety_module": {
+            "calls": 150,
+            "known_fee_usd": 0,
+            "unpriced_calls": 150,
+            "call_seconds_sum": 10.169999999999618
+          }
+        },
+        "by_provider_model": [
+          {
+            "provider": "local",
+            "model": "gliguard-300m",
+            "calls": 150,
+            "known_fee_usd": 0,
+            "unpriced_calls": 150
+          }
+        ]
+      },
+      "contract": "request_risk_classification"
+    }
+  ],
+  "started_including_interrupted": 150,
+  "unfinished_started_episode_ids": [],
+  "all_api_calls_including_unassigned": 0,
+  "all_local_calls_including_unassigned": 150,
+  "unresolved_request_ids": [],
+  "unassigned_metered_calls": 0,
+  "api_fees_usd": {
+    "known_price_estimated": 0,
+    "total_price_estimated": null,
+    "unpriced_calls": 0,
+    "status": "no_api_calls",
+    "local_compute": "unpriced"
+  },
+  "invocation_wall_seconds": 13.095670700000028,
+  "monitor_run_ids": [
+    "0adcc34aae354a82af75b9404951ba45"
+  ],
+  "sources": {
+    "plan.jsonl": "373f8afdbc6b192852eedfaf53792c71e4d93d6bcec06c6c1fc6d60e53d0cdd5",
+    "cases.jsonl": "29ab2c664f59d6703fda4805de993956369a490de4ca939b0728f8b83f09337c",
+    "effective-config.json": "e5e69d200563998c73ff2e487ce6fbae10dd901ea7f475cbfeb7727d60d5544f",
+    "episodes.jsonl": "3d3ba7b529eb9335d33218b7249326af8b6a44bbecea6690dd558c84a1e8757f"
+  },
+  "limitations": [
+    "Per-dataset contracts have different target events; no pooled benchmark score.",
+    "API fees are provider-usage price estimates, not verified bills; local compute unpriced.",
+    "No calibration, confidence interval or replacement/noninferiority claim is produced.",
+    "AgentHarm request classification is not its official agent task-completion benchmark.",
+    "Full-trace gold is not action/prefix gold."
+  ]
+}
