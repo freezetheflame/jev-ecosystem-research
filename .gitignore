@@ -32,6 +32,8 @@ framework/telemetry/
 # Downloaded upstream benchmark snapshots; acquisition index is tracked separately.
 data/agent-security-study/datasets/
 artifacts/dataset-bundles/
+artifacts/experiment-reports/
+local-models/
 data/agent-security-study/runs/
 data/agent-security-study/preparations/
 data/workspace-evidence/**/predictions.jsonl

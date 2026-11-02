@@ -1,0 +1,369 @@
+{
+  "health": {
+    "status": "ok",
+    "model": "secjev08-local",
+    "context_limit": 8192,
+    "hardware": "NVIDIA GeForce RTX 4070 SUPER",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "dtype": "float32",
+    "merge": false,
+    "attention": "sdpa_math",
+    "tf32": false,
+    "temperature": 1.3525612043415394,
+    "load_seconds": 8.344019556000003,
+    "server_source_sha256": "1342c8899538954e8c670765b3f6e7da9a1c5d82f0ec679b61ca1f78268fd07b",
+    "warmup_inferences": 0
+  },
+  "checkpoint": {
+    "repo": "UESTC1010/SecJev-0.8B",
+    "revision": "v1.0.0",
+    "release_archive_sha256": "afb7e216edfbde4bfc19335312e4ae6577e98f29c915545ae2f7284e052e13dc",
+    "base": {
+      "repo": "Qwen/Qwen3.5-0.8B-Base",
+      "revision": "dc7cdfe2ee4154fa7e30f5b51ca41bfa40174e68",
+      "files": [
+        {
+          "path": "LICENSE",
+          "bytes": 11343,
+          "sha256": "50cbab8a892c5f2993b8c7351a99182507472def3b1374558308605d99b86b32",
+          "upstream_verified": true
+        },
+        {
+          "path": "README.md",
+          "bytes": 3727,
+          "sha256": "3cff39d2674e28b95e2df75cdb2d7a687ec391931065b05df83dbae12b447b11",
+          "upstream_verified": true
+        },
+        {
+          "path": "config.json",
+          "bytes": 2907,
+          "sha256": "b90b86f35c8e6925ef74ee04d0e758f0a845c83a42089ad82bbaa948de9b4204",
+          "upstream_verified": true
+        },
+        {
+          "path": "merges.txt",
+          "bytes": 3353259,
+          "sha256": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+          "upstream_verified": true
+        },
+        {
+          "path": "model.safetensors-00001-of-00001.safetensors",
+          "bytes": 1746942600,
+          "sha256": "c2b1e5a17d9c1e27685d92ed9b382911ebb99955ecd89052d1721241adfbab6c",
+          "upstream_verified": true
+        },
+        {
+          "path": "model.safetensors.index.json",
+          "bytes": 50900,
+          "sha256": "ce9a885efdf27d3664fdef5d512ad365216f1074051ef840c7cd8e5431495d0a",
+          "upstream_verified": true
+        },
+        {
+          "path": "preprocessor_config.json",
+          "bytes": 390,
+          "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+          "upstream_verified": true
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 12807196,
+          "sha256": "fe000e3ed39ed12b8d2481d527d44f93c65d37e87645d2dcc80d1bf9d50d2927",
+          "upstream_verified": true
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 16712,
+          "sha256": "e611fbccc7c29ef3b1cafb1cb7ea548d189968632901d678fd62be68c47885de",
+          "upstream_verified": true
+        },
+        {
+          "path": "video_preprocessor_config.json",
+          "bytes": 386,
+          "sha256": "d039cd7d88b3502a99edd455496b75b44ecf7dd3b3669748bafac37e6cecc085",
+          "upstream_verified": true
+        },
+        {
+          "path": "vocab.json",
+          "bytes": 6722759,
+          "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+          "upstream_verified": true
+        }
+      ],
+      "model_calls": 0,
+      "download_source": "HF resolve URL at fixed revision; mirror fallback uses identical revision"
+    },
+    "kev_revision": "90990a5fac2995b9faa3190f7d437e84f2067768",
+    "files": [
+      {
+        "path": "SecJev-0.8B/adapter_config.json",
+        "bytes": 1312,
+        "sha256": "650e4a4edc038d46bfdbfd77f3b9a29567713963f25538d72e377c0d12406332"
+      },
+      {
+        "path": "SecJev-0.8B/adapter_model.safetensors",
+        "bytes": 43338624,
+        "sha256": "365341166b0b38186dc6e336b0749c8ade15a67fc9262c6f9aeb1c6241adbef6"
+      },
+      {
+        "path": "SecJev-0.8B/chat_template.jinja",
+        "bytes": 7755,
+        "sha256": "273d8e0e683b885071fb17e08d71e5f2a5ddfb5309756181681de4f5a1822d80"
+      },
+      {
+        "path": "SecJev-0.8B/checkpoint-selection.json",
+        "bytes": 26368,
+        "sha256": "703d33a4653e727061ebf61fd76e00ba28d8da9204e64effde147922d934b8bb"
+      },
+      {
+        "path": "SecJev-0.8B/export-validation.json",
+        "bytes": 3776,
+        "sha256": "b66a8380468a6585c91ee998f456ef22c64fe66b4319c6b6e53dbd0fcc5978f3"
+      },
+      {
+        "path": "SecJev-0.8B/files.json",
+        "bytes": 2513,
+        "sha256": "ab253469cc1e56ab123486a79d3bdcd3c9ef4e0fad30f93eb5c10edf09b29a8d"
+      },
+      {
+        "path": "SecJev-0.8B/head.pt",
+        "bytes": 2101944,
+        "sha256": "0f1ee2a01eddf787fd37a97690cc2dd72e8760fea93921e5b5c5d9b9adb5349d"
+      },
+      {
+        "path": "SecJev-0.8B/infer.py",
+        "bytes": 2541,
+        "sha256": "26a5b8a0a159955c7dd311f6a9c12a131081913f1d7e387d33df9f8097cdd845"
+      },
+      {
+        "path": "SecJev-0.8B/LICENSE",
+        "bytes": 6259,
+        "sha256": "b6a588f3a9a4da1cab13af0aeda2e580865748bbb989bb58bebb1b89bc2834ba"
+      },
+      {
+        "path": "SecJev-0.8B/LICENSE.zh-CN.md",
+        "bytes": 5136,
+        "sha256": "a2641a076c901943d85960413e0efd03d62689a10568d5113655695a893c1989"
+      },
+      {
+        "path": "SecJev-0.8B/parent-test.json",
+        "bytes": 14701,
+        "sha256": "4b8c08bedd59e790baad32ab628df61f6591ec549154c7e2ca1a764a173e6325"
+      },
+      {
+        "path": "SecJev-0.8B/provenance.json",
+        "bytes": 455,
+        "sha256": "72717a4b5336121e70a069ab84ecd17d961e2b758895f1755b386bd0fd9f08fa"
+      },
+      {
+        "path": "SecJev-0.8B/README.md",
+        "bytes": 4393,
+        "sha256": "2c355922d953ad516dc635466c4ca0568c5716eac3789b9f39f3826f28b1fdd0"
+      },
+      {
+        "path": "SecJev-0.8B/SOURCES.md",
+        "bytes": 5648,
+        "sha256": "473a02f03ceb62439f178a07e7cf540bdc2f99e0161310cb47b2c4d9aef9243c"
+      },
+      {
+        "path": "SecJev-0.8B/THIRD_PARTY_NOTICES.md",
+        "bytes": 1723,
+        "sha256": "77158f2d3e6a908db922ef340cd35aa38a93e92fae48db1a2e4f26e2634d478b"
+      },
+      {
+        "path": "SecJev-0.8B/tokenizer.json",
+        "bytes": 19989326,
+        "sha256": "1d8325caa17dffabd587f6eb025a642786caa785658d0d8c07b879dd1ea13477"
+      },
+      {
+        "path": "SecJev-0.8B/tokenizer_config.json",
+        "bytes": 1126,
+        "sha256": "353c083805d863719e54973335a38e252a92e1ac64d32b83bb0b333cc1644ef2"
+      },
+      {
+        "path": "SecJev-0.8B/trained-test.json",
+        "bytes": 15334,
+        "sha256": "30252dc874a1ebd03a1a37f171f7ff566bff9d64cfc91482028607ceed9e8934"
+      },
+      {
+        "path": "SecJev-0.8B/training_config.json",
+        "bytes": 1319,
+        "sha256": "d79aad32ffc67dc31c8927a8710f1e6a149c97c4d930642b7103d83885f080cb"
+      },
+      {
+        "path": "SecJev-0.8B/UPSTREAM.md",
+        "bytes": 836,
+        "sha256": "4971aa27166b5f105f927f7d8e7b6e1e11f5d8239fad517a79781be03f563531"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/AgentDojo-LICENSE.txt",
+        "bytes": 1161,
+        "sha256": "4285a071f2d382338e52b4fb0a186d952984a34d43a33d8872e1a1d8cb43401e"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/Apache-2.0.txt",
+        "bytes": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/ByzFL-LICENSE.txt",
+        "bytes": 1060,
+        "sha256": "8ffdc64a5a72fd0702a82b2a40e217331e536eabfb6901f35feaf03f46f22ef1"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/FoolsGold-LICENSE.txt",
+        "bytes": 1070,
+        "sha256": "7045a6c845c53731a49b77082b921d10a8cfee05ea19b304e8560cec202d4194"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/InjecAgent-LICENSE.txt",
+        "bytes": 1066,
+        "sha256": "b48589499dbb84caa796b00b4ea652b0443e49660282c44d890fd473b8c0674e"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/LANL.md",
+        "bytes": 717,
+        "sha256": "bae0a707d73699b58d7480d0e8f340216eb95792b560610197a287560ce9dbb3"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/Twins-LICENSE.txt",
+        "bytes": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "path": "SecJev-0.8B/licenses/VeReMi-LICENSE.txt",
+        "bytes": 18657,
+        "sha256": "9ba9550ad48438d0836ddab3da480b3b69ffa0aac7b7878b5a0039e7ab429411"
+      },
+      {
+        "path": "source/kev/kev/anchors.py",
+        "bytes": 3930,
+        "sha256": "6963eafdb276db5a6c94d939eae675c761555553b8d0f963ffd803448beaabbb"
+      },
+      {
+        "path": "source/kev/kev/api.py",
+        "bytes": 6595,
+        "sha256": "620a7eaeb7379d157ecbca1c284d33d5a54a99958b97897b7f2f5d90164a4b6f"
+      },
+      {
+        "path": "source/kev/kev/autoresearch.py",
+        "bytes": 20892,
+        "sha256": "42c0dacc2a89a9aa585355d7a15b32df7564bbb22f7b6656c1ff2d770e860cbc"
+      },
+      {
+        "path": "source/kev/kev/benchmark.py",
+        "bytes": 11424,
+        "sha256": "341f2616be759f1a7764fead5de1b2875d139cf5bfce3f83cbd0d84a685470f1"
+      },
+      {
+        "path": "source/kev/kev/checkpoint.py",
+        "bytes": 9177,
+        "sha256": "9cd2ef04632ee84340c07cf95e8c80f999f153f4d896c46a4b74dbd1fb0cb193"
+      },
+      {
+        "path": "source/kev/kev/compare.py",
+        "bytes": 3198,
+        "sha256": "3606dbf98bb305d66420158498cb837304d2edb8dab01cdaf2ec42964bef3435"
+      },
+      {
+        "path": "source/kev/kev/composition.py",
+        "bytes": 15847,
+        "sha256": "f335ed17e18e0a544893db5e22b9a059e6ce1b2e14dbb863ac7d7bbf8f3e0536"
+      },
+      {
+        "path": "source/kev/kev/contrastive.py",
+        "bytes": 20624,
+        "sha256": "cbb979aa5d40265ad0e64695f94b281d91751fa405811ddfa8212fede111edcf"
+      },
+      {
+        "path": "source/kev/kev/data.py",
+        "bytes": 25662,
+        "sha256": "a5a5e200f56b60e4bf30a195a4cc87a74afddae15999ec48c7543a4f9b59f71c"
+      },
+      {
+        "path": "source/kev/kev/device.py",
+        "bytes": 836,
+        "sha256": "d1677fd98ec0979c7284546306e34e0d09298ca4042fc39eb2b32a74f4e975c4"
+      },
+      {
+        "path": "source/kev/kev/evaluate.py",
+        "bytes": 14195,
+        "sha256": "999264f2837dcfbf2ec93601aa4745e701698ab850a43ad89324672a6604965c"
+      },
+      {
+        "path": "source/kev/kev/experiment.py",
+        "bytes": 25328,
+        "sha256": "df0bfe771a09303b97008725778cceb28a2a2e9b62a7ea964653de49e28694c4"
+      },
+      {
+        "path": "source/kev/kev/jev.py",
+        "bytes": 2585,
+        "sha256": "acd4cc3f1844e438cc83a8d409c15ef78a5ef64d39ea10f583d75a6c7646b243"
+      },
+      {
+        "path": "source/kev/kev/metrics.py",
+        "bytes": 14978,
+        "sha256": "cbba1235d8abad018a02910a59f14c148c9e6ef48ff3d936ce9b4fdd4c399237"
+      },
+      {
+        "path": "source/kev/kev/model.py",
+        "bytes": 19947,
+        "sha256": "c743c26e20fe8550e28b0697cb123173ee24c83e1b387830bff9f0b178900d55"
+      },
+      {
+        "path": "source/kev/kev/plot.py",
+        "bytes": 3368,
+        "sha256": "0874bcff2885d8155a1cceade0de8a275a7163d3c3fd6aa0c294e8ccf5ff7e02"
+      },
+      {
+        "path": "source/kev/kev/predictors.py",
+        "bytes": 8107,
+        "sha256": "35456d2addcf01c34d0761ce189bfb8c75078b4dbb0dee5ecf21f367ccf9cc17"
+      },
+      {
+        "path": "source/kev/kev/publish.py",
+        "bytes": 4652,
+        "sha256": "8abc9bcf4a01365697b05cf3c5ad0013462bd92d005f5616954e40ab1100c7aa"
+      },
+      {
+        "path": "source/kev/kev/serve.py",
+        "bytes": 7785,
+        "sha256": "5cd188c6d92b37ed7a29c03042e10c815f7a021d30443b21cfe2493004058a9d"
+      },
+      {
+        "path": "source/kev/kev/study_v3.py",
+        "bytes": 14919,
+        "sha256": "7891150aa623e4479c7c789d4dc4662f186132b37b7bac1e1f072b9e08ee13e3"
+      },
+      {
+        "path": "source/kev/kev/suite.py",
+        "bytes": 18683,
+        "sha256": "eb94f2319c2c0599e02687a5354da4d549c8f612a7275976d585220d2b9271fa"
+      },
+      {
+        "path": "source/kev/kev/train.py",
+        "bytes": 24522,
+        "sha256": "a2d85632d73760fb3efe51627ff4fde6af3100ed1c34e75d290c1b00c9899aa9"
+      },
+      {
+        "path": "source/kev/kev/transfer_v9.py",
+        "bytes": 10969,
+        "sha256": "0902409742151250a28af1fd8f42258b70fcc161f3deed3ee35fe3f473f3c763"
+      },
+      {
+        "path": "source/kev/kev/__init__.py",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "model_calls": 0
+  },
+  "client_config_sha256": "452f359f68224a0217e9d29fb9514e82012cbbf771fd07c353bf0c79091ee880",
+  "reference_run": "2026-10-30-agentharm-pilot-50",
+  "item_count": 50,
+  "repeats": 3,
+  "model_calls_during_preparation": 0,
+  "time_scope": "Client HTTP episode; model load excluded; no automatic warmup; local compute unpriced",
+  "launch_command": "wsl -d Ubuntu -- /home/hectum/.cache/jev-research-env/bin/python /mnt/d/projects/jev_research/scripts/local_secjev_server.py --model-path /mnt/d/projects/jev_research/local-models/nov02/secjev/SecJev-0.8B --base-path /mnt/d/projects/jev_research/local-models/nov02/secjevbase --kev-source /mnt/d/projects/jev_research/local-models/nov02/secjev/source/kev --port 8026"
+}

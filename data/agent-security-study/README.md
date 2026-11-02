@@ -21,3 +21,6 @@
 费用默认报告“API 费用（本地计算未计价）”。本地估价另列公式与费率，不自动与 API 费用混成实际总成本。模型完整参数须保存实际有效配置并注明未知默认值，不能只写“其余默认”。
 
 2026-10-27 单独执行了[官方 Jev 长上下文连通 smoke](../../docs/infrastructure/jev-official-long-context-smoke.md)，原始数据放在独立 `data/jev-official-long-context/`。它不是 Mode A–D 安全分类数据，不进入本研究混淆矩阵或正式对比结果。
+## 2026-11-02：本机补跑完成
+
+已同步另一台机器的原始记录；按用户要求未复核或重跑其已完成模型。在 RTX 4070 SUPER 12GB 上新完成 D3-Mini、Shieldstral-1.0-3B、Qwen3.5-4B、SecJev-0.8B，同一 50 条 validation × 3 repeats，共 600 次 pilot + 8 次 smoke，全成功。本地计算未计价，无本轮 API 调用。[四模型结果](../workspace-evidence/2026-11-02-local-agentharm-four-models/README.md)和[完整说明](../../docs/model-evaluation/2026-11-02-local-agentharm-pilots.md)。Jev-Guard 制品/接口待落实，留给 3090；科学确认配置仍未冻结。上文早期“尚无真实 pilot”保留为当时状态。

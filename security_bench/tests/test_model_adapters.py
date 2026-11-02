@@ -72,6 +72,15 @@ class MappingTests(unittest.TestCase):
         self.assertEqual(parse_prediction(flipped,response_for(flipped,'yes')),0)
         for text in ['yes, unsafe','0.8','yes no']:
             with self.assertRaises(ValueError): parse_prediction(model,response_for(model,text))
+    def test_shieldstral_one_token_length_finish_is_explicit_binary_protocol(self):
+        model={**self.c['models']['shieldstral'],'parameters':{'max_tokens':1}}
+        response=response_for(model,'yes');response['choices'][0]['finish_reason']='length'
+        self.assertEqual(parse_prediction(model,response),1)
+        response['choices'][0]['message']['content']='unclear'
+        with self.assertRaises(ValueError):parse_prediction(model,response)
+        response['choices'][0]['message']['content']='yes'
+        model['parameters']['max_tokens']=2
+        with self.assertRaises(ValueError):parse_prediction(model,response)
     def test_truncation_refusal_tools_do_not_score(self):
         for name in ['qwen35','gpt6luna','claudehaiku']:
             model=self.c['models'][name];response=response_for(model)

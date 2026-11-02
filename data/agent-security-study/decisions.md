@@ -273,3 +273,13 @@
 - 用相同 50 item × 3 重跑 Qwen3Guard，`input_field=user_request`：strict（Controversial=unsafe）TP25/FP8/TN17/FN0，accuracy 0.840、precision 0.758、recall 1.000、FPR 0.320；loose TP22/FP6/TN19/FN3，accuracy 0.820。Controversial 从 24 降到 15 次。
 - 原始输入只把 strict accuracy 从 0.820 提到 0.840，仍明显低于 GLiGuard 的 0.980；格式不是全部差距。
 - 证据：`data/agent-security-study/runs/2026-11-01-agentharm-qwen3guard-raw-50/`。
+
+## 2026-11-02：按用户要求同步后补跑本机剩余模型
+
+- 已从 origin/main 同步 c4890e6；保留本机原有修改。导入用户 ZIP 的 runs/preparations 原字节，原件和导入 manifest 留在本地，不执行压缩包源码。用户随后明确不需要复核旧实验，因此不重算旧结果、不重跑已完成模型。
+- 新跑 D3-Mini、Shieldstral-1.0-3B、Qwen3.5-4B；又依据原日志明确列出的 SecJev-0.8B 候选补跑第四组。沿用既有 AgentHarm 50 条、25/25 标签、8 个 family、相同输入 hash、3 repeats、schedule_seed=20261030。每组另开两条 smoke，原始记录和报告均保留。
+- 四组各 150/150 调用成功，另 8/8 smoke 成功。多数票 accuracy：D3-Mini 0.98；Shieldstral 0.94；Qwen3.5-4B 0.88；SecJev-0.8B 0.86。均为本机真实 pilot，不是确认性或官方 agent harm score。
+- 原 monitor 实现和接口不变；本轮 608 次全为本地推理，API 调用 0，本地计算未计价。模型加载单独记录，pilot 之前有 smoke；不跨显卡直接归因耗时差。完整 TP/FP/TN/FN、时间、参数/精度、模型和软件 hash、raw/source/telemetry 及复现命令见新 run 与 data/workspace-evidence/2026-11-02-local-agentharm-four-models/。
+- Shieldstral 的一 token yes/no 协议允许显式 max_tokens=1 对应的 length 结束，文本仍须精确 yes/no；其他截断仍拒绝。52 项离线测试通过，新增真实推理链路均通过 smoke。
+- SecJev 使用官方 v1.0.0 adapter、固定 backbone 和 Kev 代码、原 head/校准、FP32 未合并 LoRA。运行时 PyTorch 2.11.0 与参考 requirements 2.6.0 的差异明确记录，不宣称数值复现官方指标。
+- Jev-Guard 尚缺核验后的制品/接口，保留给用户 3090。对应草案仅含该模型，不用同名 base 模型替代。

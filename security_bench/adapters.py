@@ -85,7 +85,7 @@ def build_request(model, state, instructions):
     raise ValueError('Unsupported API/adapter combination')
 
 
-def response_text(api, response):
+def response_text(api, response, *, single_token_label=False):
     if api == 'openai_responses':
         if response.get('status') not in (None, 'completed'):
             raise ValueError('Response is not completed')
@@ -96,7 +96,8 @@ def response_text(api, response):
         return ''.join(p['text'] for p in parts)
     if api == 'openai_chat':
         choices = response.get('choices', [])
-        if len(choices) != 1 or choices[0].get('finish_reason') != 'stop':
+        allowed = ('stop', 'length') if single_token_label else ('stop',)
+        if len(choices) != 1 or choices[0].get('finish_reason') not in allowed:
             raise ValueError('Chat output must have one completed choice')
         message = choices[0].get('message', {})
         if message.get('refusal') or message.get('tool_calls') or not isinstance(message.get('content'), str):
@@ -128,7 +129,10 @@ def parse_prediction(model, response):
         if label not in ('safe', 'unsafe'):
             raise ValueError('GLiGuard must return its native prompt_safety label')
         return int(label == 'unsafe')
-    text = response_text(model['api'], response).strip()
+    # Shieldstral's published binary protocol intentionally generates exactly one
+    # yes/no token. A length finish is expected here, but never for arbitrary text.
+    single_token_label = kind == 'shieldstral' and model.get('parameters', {}).get('max_tokens') == 1
+    text = response_text(model['api'], response, single_token_label=single_token_label).strip()
     if kind == 'shieldstral':
         if text.lower() not in ('yes', 'no') or model.get('yes_means') not in ('safe', 'unsafe'):
             raise ValueError('Shieldstral requires exactly yes/no and an explicit polarity')

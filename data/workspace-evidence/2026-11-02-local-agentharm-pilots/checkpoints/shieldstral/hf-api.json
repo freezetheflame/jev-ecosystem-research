@@ -1,0 +1,187 @@
+{
+  "_id": "6a58b14d3c82a8f1f153e340",
+  "id": "mistralai/Shieldstral-1.0-3B",
+  "private": false,
+  "library_name": "vllm",
+  "tags": [
+    "vllm",
+    "safetensors",
+    "mistral3",
+    "mistral-common",
+    "en",
+    "fr",
+    "es",
+    "de",
+    "it",
+    "pt",
+    "nl",
+    "zh",
+    "ja",
+    "ko",
+    "ar",
+    "ru",
+    "arxiv:2607.25857",
+    "base_model:mistralai/Ministral-3-3B-Base-2512",
+    "base_model:finetune:mistralai/Ministral-3-3B-Base-2512",
+    "license:apache-2.0",
+    "region:us"
+  ],
+  "downloads": 28967,
+  "likes": 314,
+  "modelId": "mistralai/Shieldstral-1.0-3B",
+  "author": "mistralai",
+  "sha": "003ec7e2b0bab5f0e6307edbaf186fa5822b76f5",
+  "lastModified": "2026-08-05T10:06:52.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": null,
+  "config": {
+    "architectures": [
+      "Mistral3ForConditionalGeneration"
+    ],
+    "model_type": "mistral3",
+    "tokenizer_config": {
+      "bos_token": "<s>",
+      "eos_token": "</s>",
+      "unk_token": "<unk>",
+      "pad_token": "<pad>"
+    },
+    "chat_template_jinja": "{#- Default system message if no system prompt is passed. #}\n{%- set default_system_message = '' %}\n\n{#- Begin of sequence token. #}\n{{- bos_token }}\n\n\n{#- Handle system prompt if it exists. #}\n{%- set loop_messages = messages %}\n{%- if messages[0]['role'] != 'system' and default_system_message != '' %}\n    {{- '[SYSTEM_PROMPT]' + default_system_message + '[/SYSTEM_PROMPT]' }}\n{%- endif %}\n\n\n{#- Macros #}\n{%- macro render_content(content, context_name, supported_types_desc, support_images) -%}\n    {%- if content is string -%}\n        {{- content -}}\n    {%- elif content -%}\n        {%- for block in content -%}\n            {%- if block['type'] == 'text' -%}\n                {{- block['text'] -}}\n            {%- elif support_images and block['type'] in ['image', 'image_url'] -%}\n                {{- '[IMG]' -}}\n            {%- else -%}\n                {{- raise_exception('Only ' + supported_types_desc + ' chunks are supported in ' + context_name + '.') -}}\n            {%- endif -%}\n        {%- endfor -%}\n    {%- else -%}\n        {{- raise_exception(context_name + ' must have non-empty content.') -}}\n    {%- endif -%}\n{%- endmacro -%}\n\n{#- Aggregate consecutive messages with the same role except system. #}\n{#- A sentinel message is appended so the last group gets flushed inside the loop. #}\n{%- set ns_agg = namespace(messages=[], current_group=[], current_role=none) %}\n{%- for message in loop_messages + [{'role': '__sentinel__'}] %}\n    {%- if message['role'] != ns_agg.current_role or message['role'] == 'system' %}\n        {%- if ns_agg.current_role is not none %}\n            {%- set ns_c = namespace(text_parts=[], chunks=[], has_non_text=false) %}\n            {%- for msg in ns_agg.current_group %}\n                {%- if msg['content'] is string %}\n                    {%- set ns_c.text_parts = ns_c.text_parts + [msg['content']] %}\n                {%- elif msg['content'] is not none %}\n                    {%- for block in msg['content'] %}\n                        {%- if block['type'] == 'text' %}\n                            {%- set ns_c.text_parts = ns_c.text_parts + [block['text']] %}\n                        {%- else %}\n                            {%- if ns_c.text_parts | length > 0 %}\n                                {%- set ns_c.chunks = ns_c.chunks + [{'type': 'text', 'text': ns_c.text_parts | join('\\n\\n')}] %}\n                                {%- set ns_c.text_parts = [] %}\n                            {%- endif %}\n                            {%- set ns_c.chunks = ns_c.chunks + [block] %}\n                            {%- set ns_c.has_non_text = true %}\n                        {%- endif %}\n                    {%- endfor %}\n                {%- endif %}\n            {%- endfor %}\n            {%- if ns_c.has_non_text %}\n                {%- if ns_c.text_parts | length > 0 %}\n                    {%- set ns_c.chunks = ns_c.chunks + [{'type': 'text', 'text': ns_c.text_parts | join('\\n\\n')}] %}\n                {%- endif %}\n                {%- set merged_content = ns_c.chunks %}\n            {%- else %}\n                {%- set merged_content = ns_c.text_parts | join('\\n\\n') %}\n            {%- endif %}\n            {%- set ns_agg.messages = ns_agg.messages + [{'role': ns_agg.current_role, 'content': merged_content}] %}\n        {%- endif %}\n        {%- if message['role'] != '__sentinel__' %}\n            {%- set ns_agg.current_group = [message] %}\n            {%- set ns_agg.current_role = message['role'] %}\n        {%- endif %}\n    {%- else %}\n        {%- set ns_agg.current_group = ns_agg.current_group + [message] %}\n    {%- endif %}\n{%- endfor %}\n{%- set loop_messages = ns_agg.messages %}\n\n{#- Validates message ordering. #}\n{%- if loop_messages | length > 0 and loop_messages[0]['role'] not in ['user', 'system'] %}\n    {{- raise_exception('Conversation must start with a user or system message, got ' + loop_messages[0]['role'] + '.') }}\n{%- endif %}\n{%- set ns_order = namespace(previous_role=none) %}\n{%- for message in loop_messages %}\n    {%- set current_role = message['role'] %}\n    {%- if ns_order.previous_role is not none %}\n        {%- if ns_order.previous_role == 'system' %}\n            {%- if current_role not in ['user', 'assistant', 'system'] %}\n                {{- raise_exception('Unexpected role \\'' + current_role + '\\' after role \\'' + ns_order.previous_role + '\\'') }}\n            {%- endif %}\n        {%- elif ns_order.previous_role == 'user' %}\n            {%- if current_role not in ['assistant', 'system', 'user'] %}\n                {{- raise_exception('Unexpected role \\'' + current_role + '\\' after role \\'' + ns_order.previous_role + '\\'') }}\n            {%- endif %}\n        {%- elif ns_order.previous_role == 'assistant' %}\n            {%- if current_role not in ['assistant', 'user'] %}\n                {{- raise_exception('Unexpected role \\'' + current_role + '\\' after role \\'' + ns_order.previous_role + '\\'') }}\n            {%- endif %}\n        {%- endif %}\n    {%- endif %}\n    {%- set ns_order.previous_role = current_role %}\n{%- endfor %}\n\n{#- Handle conversation messages. #}\n{%- for message in loop_messages %}\n    {#- User messages supports text, image and image_url content. #}\n    {%- if message['role'] == 'user' %}\n        {%- if message['content'] is not string and message['content'] %}\n            {#- When content has exactly one image and one text block, put image first. #}\n            {%- if message['content'] | length == 2 and message['content'][0]['type'] == 'text' and message['content'][1]['type'] in ['image', 'image_url'] %}\n                {%- set blocks = [message['content'][1], message['content'][0]] %}\n            {%- else %}\n                {%- set blocks = message['content'] %}\n            {%- endif %}\n            {%- set user_content = blocks %}\n        {%- else %}\n            {%- set user_content = message['content'] %}\n        {%- endif %}\n        {{- '[INST]' -}}\n        {{- render_content(content=user_content, context_name='user message content', supported_types_desc='text, image and image_url', support_images=true) -}}\n        {{- '[/INST]' }}\n\n    {#- Assistant messages supports text content. #}\n    {%- elif message['role'] == 'assistant' %}\n        {%- if message['content'] is none or message['content'] == '' or message['content']|length == 0 %}\n            {{- raise_exception('Assistant message must have a string or a list of chunks in content.') }}\n        {%- endif %}\n\n        {{- render_content(content=message['content'], context_name='assistant message contents', supported_types_desc='text', support_images=false) -}}\n\n        {{- eos_token }}\n\n    {#- System messages. #}\n    {%- elif message['role'] == 'system' %}\n        {{- '[SYSTEM_PROMPT]' -}}\n        {{- render_content(content=message['content'], context_name='system message contents', supported_types_desc='text', support_images=false) -}}\n        {{- '[/SYSTEM_PROMPT]' -}}\n\n    {#- Raise exception for unsupported roles. #}\n    {%- else %}\n        {{- raise_exception('Only user, assistant and system roles are supported, got ' + message['role'] + '.') }}\n    {%- endif %}\n{%- endfor %}"
+  },
+  "cardData": {
+    "library_name": "vllm",
+    "language": [
+      "en",
+      "fr",
+      "es",
+      "de",
+      "it",
+      "pt",
+      "nl",
+      "zh",
+      "ja",
+      "ko",
+      "ar",
+      "ru"
+    ],
+    "license": "apache-2.0",
+    "inference": false,
+    "base_model": [
+      "mistralai/Ministral-3-3B-Base-2512"
+    ],
+    "extra_gated_description": "If you want to learn more about how we process your personal data, please read our <a href=\"https://mistral.ai/terms/\">Privacy Policy</a>.",
+    "tags": [
+      "mistral-common"
+    ]
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "c684f12ce1b2a358bfc3e8539ba4ca0ef7b5c9cb",
+      "size": 1618
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "e7dc8f7bdef81f89aa5a267ef927f6a758ac7c67",
+      "size": 23152
+    },
+    {
+      "rfilename": "chat_template.jinja",
+      "blobId": "996c8d7aff415382473e4e501794a29a009ac908",
+      "size": 7095
+    },
+    {
+      "rfilename": "config.json",
+      "blobId": "87bb9aef7af4b65085c476c4575577023be5e8cd",
+      "size": 1654
+    },
+    {
+      "rfilename": "consolidated.safetensors",
+      "blobId": "ddbc79cd617f36b5614b38d5f27a06bd44321f77",
+      "size": 7698234952,
+      "lfs": {
+        "sha256": "25bcdaafaf81fe79982409ffaf9b3e269abe67d9064fed349b424944db92095e",
+        "size": 7698234952,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "generation_config.json",
+      "blobId": "ce01f715d02f6946500f5662bcb83f73af5cb742",
+      "size": 126
+    },
+    {
+      "rfilename": "model.safetensors",
+      "blobId": "cac6484daab4e87336694fa153bc0015fae87a8a",
+      "size": 7698241104,
+      "lfs": {
+        "sha256": "87753e30c8c321da478b83bbabebcd813cc9b3d0cee5c5b3d64349a8ee4172f7",
+        "size": 7698241104,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "params.json",
+      "blobId": "7ba58252fadf525dc0c35fb3efa24a7ca01b518d",
+      "size": 1208
+    },
+    {
+      "rfilename": "processor_config.json",
+      "blobId": "e5723f69baa5ea651867735b2317ab7775a6a175",
+      "size": 660
+    },
+    {
+      "rfilename": "tekken.json",
+      "blobId": "8ef43705ebf514ab2851af79f38ae1def021c5ad",
+      "size": 16275088,
+      "lfs": {
+        "sha256": "ceb11e85e44d7c91d051604d636d97b05aee59a907a0dc96a3c6e557d9634e18",
+        "size": 16275088,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "tokenizer.json",
+      "blobId": "acf7022e233d30b8f26ff3e97bd53a09d3b9d54a",
+      "size": 17077322,
+      "lfs": {
+        "sha256": "9172cf28b79a17502736f971b560faeced38ee527540cea6882a1f40cce320c0",
+        "size": 17077322,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "tokenizer_config.json",
+      "blobId": "02d0b0044f3ccdca5e634c0bc0d879562f6a02ea",
+      "size": 261
+    }
+  ],
+  "spaces": [
+    "r3gm/wan2-2-fp8da-aoti-preview2",
+    "roosttools/llm_moderation_testing",
+    "ashwinhegde19/ai-risk-evaluation-workbench",
+    "Limmmavinnny/wan2-2-fp8da-aoti-preview2",
+    "STCM/wan2-2-fp8da-aoti-preview2",
+    "sdans237/wan2-2-fp8da-aoti-preview2",
+    "lbmodels/wan2-2-fp8da-aoti-preview2",
+    "cmartinjr001/wan2-2-fp8da-aoti-preview2",
+    "cash234k/wan2-2-fp8da-aoti-preview2",
+    "abdulkadirayar/wan2-2-fp8da-aoti-preview2",
+    "Scorpio1111/wan2-2-fp8da-aoti-preview2",
+    "Vineethsain/defenseclaw-slm-toolcall",
+    "Sojib-kun/wan2-2-fp8da-aoti-preview2",
+    "meddlerprompttime/wan2",
+    "mrHashe/image2video2",
+    "Copper899/wan2-2-fp8da-aoti-preview2",
+    "adhamsabry1111/wan22-ours",
+    "GiovaFart/Big-Fish-Wan2-2-fp8da-aoti-preview2"
+  ],
+  "createdAt": "2026-07-16T10:24:13.000Z",
+  "safetensors": {
+    "parameters": {
+      "BF16": 3849090048
+    },
+    "total": 3849090048
+  },
+  "usedStorage": 15429828466
+}

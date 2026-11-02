@@ -19,3 +19,10 @@ scripts/verify_security_bench.py -text
 data/jev-official-long-context/** -text
 scripts/jev_long_context_smoke.py -text
 scripts/test_jev_long_context_smoke.py -text
+data/workspace-evidence/2026-11-02*/** -text
+scripts/import_experiment_reports.py -text
+scripts/fetch_remaining_local_models.py -text
+scripts/local_remaining_server.py -text
+scripts/prepare_remaining_agentharm.py -text
+scripts/package_remaining_agentharm_results.py -text
+scripts/local_secjev_server.py -text
