@@ -114,6 +114,30 @@ def response_text(api, response, *, single_token_label=False):
     raise ValueError('No text extractor for this API')
 
 
+def unwrap_json_fence(text):
+    """Return the body when the entire answer is one ``` or ```json fence.
+
+    Bare JSON is otherwise unchanged. A different language tag or prose outside
+    the fence is left in place. Extra objects, a second fence, or any body
+    other than one JSON value still fail json.loads or the {"risk": bool} check.
+    """
+    text = text.strip().replace('\r\n', '\n').replace('\r', '\n')
+    if len(text) < 6 or not text.startswith('```') or not text.endswith('```'):
+        return text
+    newline = text.find('\n')
+    if newline == -1:
+        inner = text[3:-3].strip()
+        if inner.lower().startswith('json') and (len(inner) == 4 or inner[4].isspace() or inner[4] == '{'):
+            return inner[4:].strip()
+        if inner[:1].isalpha():
+            return text
+        return inner
+    tag = text[:newline][3:].strip().lower()
+    if tag not in ('', 'json'):
+        return text
+    return text[newline + 1:-3].strip()
+
+
 def parse_prediction(model, response):
     usage = response.get('usage') or {}
     if usage.get('truncated') or usage.get('state_tokens_dropped', 0) or usage.get('truncated_questions'):
@@ -150,6 +174,9 @@ def parse_prediction(model, response):
             raise ValueError('Qwen3Guard Controversial requires an explicit controversial_policy')
         return int(labels[0] == 'Unsafe')
     if kind == 'json_risk':
+        # One surrounding fence is presentation. The body must still be exactly
+        # one {"risk": boolean}; prose and extra keys stay failures.
+        text = unwrap_json_fence(text)
         # Reject duplicate keys, even if the last one happens to parse as a bool.
         def unique(pairs):
             result = {}
