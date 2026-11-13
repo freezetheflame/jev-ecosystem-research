@@ -1,0 +1,58 @@
+% Dataset / benchmark citations for the five inspection positions.
+% Verified 2026-11-13 against arXiv metadata and official ACL Anthology entries.
+% Key mapping:
+%   AgentHarm  -> agentharm2025   (ICLR 2025; arXiv 2410.09024)
+%   InjecAgent -> injecagent2024  (Findings of ACL 2024; arXiv 2403.02691)
+%   TS-Bench   -> toolsafe2026    (ToolSafe, Findings of ACL 2026; arXiv 2601.10156)
+%   StepShield -> stepshield2026  (arXiv 2601.22136; repo describes NeurIPS 2026 benchmark)
+%   WildGuardTest -> wildguard2024 (NeurIPS 2024 Datasets & Benchmarks; arXiv 2406.18495)
+
+@inproceedings{agentharm2025,
+  title     = {{AgentHarm}: A Benchmark for Measuring Harmfulness of {LLM} Agents},
+  author    = {Andriushchenko, Maksym and Souly, Alexandra and Dziemian, Mateusz and Duenas, Derek and Lin, Maxwell and Wang, Justin and Hendrycks, Dan and Zou, Andy and Kolter, Zico and Fredrikson, Matt and Winsor, Eric and Wynne, Jerome and Gal, Yarin and Davies, Xander},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2025},
+  url       = {https://arxiv.org/abs/2410.09024},
+  note      = {arXiv:2410.09024; dataset: \url{https://huggingface.co/datasets/ai-safety-institute/AgentHarm}}
+}
+
+@inproceedings{injecagent2024,
+  title     = {{InjecAgent}: Benchmarking Indirect Prompt Injections in Tool-Integrated Large Language Model Agents},
+  author    = {Zhan, Qiusi and Liang, Zhixiang and Ying, Zifan and Kang, Daniel},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2024},
+  year      = {2024},
+  pages     = {10471--10506},
+  doi       = {10.18653/v1/2024.findings-acl.624},
+  url       = {https://aclanthology.org/2024.findings-acl.624/}
+}
+
+@inproceedings{toolsafe2026,
+  title     = {{ToolSafe}: Enhancing Tool Invocation Safety of {LLM}-based Agents via Proactive Step-level Guardrail and Feedback},
+  author    = {Mou, Yutao and Xue, Zhangchi and Li, Lijun and Liu, Peiyang and Zhang, Shikun and Ye, Wei and Shao, Jing},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2026},
+  year      = {2026},
+  pages     = {37125--37153},
+  doi       = {10.18653/v1/2026.findings-acl.1850},
+  url       = {https://aclanthology.org/2026.findings-acl.1850/},
+  note      = {Introduces the TS-Bench step-level tool-call safety benchmark}
+}
+
+@misc{stepshield2026,
+  title        = {{StepShield}: When, Not Whether to Intervene on Rogue Agents},
+  author       = {Felicia, Gloria and Sasindran, Zitha and He, Jinfeng and Eniolade, Michael and Kumar, Hemant and Angati, Milan Hussain},
+  year         = {2026},
+  eprint       = {2601.22136},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.AI},
+  url          = {https://arxiv.org/abs/2601.22136},
+  note         = {Preprint; the project repository describes it as a NeurIPS 2026 benchmark. Verify camera-ready venue before submission. Code/data: \url{https://github.com/glo26/stepshield}}
+}
+
+@inproceedings{wildguard2024,
+  title     = {{WildGuard}: Open One-Stop Moderation Tools for Safety Risks, Jailbreaks, and Refusals of {LLMs}},
+  author    = {Han, Seungju and Rao, Kavel and Ettinger, Allyson and Jiang, Liwei and Lin, Bill Yuchen and Lambert, Nathan and Choi, Yejin and Dziri, Nouha},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track},
+  year      = {2024},
+  url       = {https://arxiv.org/abs/2406.18495},
+  note      = {WildGuardTest is the released test split of WildGuardMix: \url{https://huggingface.co/datasets/allenai/wildguardmix}}
+}
