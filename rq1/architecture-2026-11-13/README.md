@@ -22,6 +22,9 @@ Jev 在轨迹级弱、在 input 级强；离线诊断显示"重新聚合现有 p
 | ARCHITECTURE.md | 诊断、三种候选架构、CCD 三层设计、实验计划、功效、假设与反驳、风险 |
 | **BASELINES.md** | 基线设计：StepShield 官方 4 detector、同模型/同分解/同聚合消融、杀灭条件、BaseDetector 实现映射 |
 | baseline-matrix.csv | 28 个基线（B1-B28）的层级、实现、split、指标、隔离对象、判据 |
+| **TS-BENCH-RESULT.md** | 负结果：单动作判断上原子探针分解无显著收益；真实杠杆是阈值校准与分来源 |
+| **MCC-TABLE.md** | 各 split 下 prefix / CG / CG+ / CCD / GPT / Claude 的 TP-FP-TN-FN 与 MCC（含不可定义说明） |
+| **BASELINE-CONSTRAINTGUARD.md** | 把官方 ConstraintGuard 当基线的实测：覆盖率、同 split 指标、覆盖子集头对头、CG+ 强规则版 |
 | **RESULTS-PILOT.md** | 第一轮真实 pilot：0 LLM 调用、互补性 census（补回 44/55）、组合曲线、成本/延迟 |
 | ccd/ | 可执行 CCD 包（含 run_pilot 与 mock 模式） |
 | runs/ | 4 个可复现 run（v1/v2 holdout、dev、prefix-miss census） |

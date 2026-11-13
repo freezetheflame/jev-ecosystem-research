@@ -2,6 +2,11 @@
 
 整理时间：2026-11-08 (Asia/Shanghai)。时间与 token 汇总补于 2026-11-11。服务器本地 StepShield 结果同步于 2026-11-11。统一汇总表重写于 2026-11-12 02:31 Asia/Shanghai，并于 2026-11-12 02:38 Asia/Shanghai 从正式汇总中删除 WildGuard prompt（Mode A1）。Packy Jev 的 StepShield 官方 analysis 于 2026-11-12 20:24 Asia/Shanghai 写入汇总来源说明。服务器本地 Mode E（`full-local-wildguard-response-v1`）于 2026-11-12 02:44:52 Asia/Shanghai 同步到 `wildguard/server-local/`（压缩包 `_ingest/rq1-wildguard-response-local-download.tar.gz`，29.7 MB，sha256 `a382288e5fccfb69a199a59a46ef794f0adf85f7e791a8d67fb3cca15fd835ca`，打包时排除 raw/），并写入正式汇总。MCC 主表重建于 2026-11-13 13:27:07 Asia/Shanghai：`summary/metrics.md` 现以 MCC 与 TPR/TNR 为跨位置主比较，准确率不再作为排名指标；指标含义见 `summary/README.md`。本目录存放数据副本/快照；原始 runs 仍在 `data/agent-security-study/runs`（未删除、未改动生成结果）。
 
+## 审阅包
+
+- `handoff-2026-11-13/` — RQ1/RQ2 审阅包（README + RQ1/RQ2 数据与结果 + 补充 insight + 关键表副本 + zip）。给外部审阅用；不替代正式汇总。
+- `summary/SUMMARY-2026-11-13.md` — 对外审阅版总结（正式汇总仍以 `summary/metrics_full.csv` 为准）。
+
 ## 目录结构
 
 - `tsbench/server-local/` — 服务器本地模型 TS-Bench（已跑完，从 172.17.210.135 下载）
@@ -28,6 +33,7 @@
 - `summary/metrics_full.md` / `.csv` — 全指标（准确率作为次要数字保留；含 FPR/FNR/TNR/MCC，以及 StepShield 的 EIR@3、干预差）。StepShield 可计算的 MCC 已补齐
 - `summary/time_tokens.md` / `.csv` — 时间与 token（成功样本墙钟、调用延迟、已知输入/输出 token；本次补写了 gpt6luna 的 WildGuard Mode E，其余已填行未改）
 - `summary/rebuild_mcc_summary.py` — 从已有混淆矩阵计数重建指标表，不读 `raw/`，不重跑
+- `summary/test_examples.md` — 五个正式数据集的测试设计说明与可追溯的典型例子（只讲如何测试，不含模型分数）
 
 2026-11-10 / 2026-11-11 的旧分表已移到 `summary/_archive/20261110-split-by-stepshield/`。根目录的 `rq1_non_stepshield_bundle_20261110.zip` 仍保留，但是过期快照，请以 `summary/` 新表为准。
 

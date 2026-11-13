@@ -67,3 +67,6 @@ related_papers/
 # Third-party literature/source snapshots (kept locally, re-fetchable)
 data/jev-robustness-literature/
 data/jevagentharness-reading/
+
+# Review handoff archives (regenerated, not tracked)
+rq1/handoff-*.zip

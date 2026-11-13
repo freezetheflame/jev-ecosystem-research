@@ -1,0 +1,10 @@
+file,role,unit,status
+data/metrics_ci.csv,RQ1 主表：TP/FP/TN/FN + TPR/TNR/MCC + 族聚类 CI,cell,derived; descriptive
+data/metrics_full.csv,正式汇总全指标（含 acc/F1/EIR/IG）,cell,official summary snapshot
+data/time_tokens.csv,RQ2 时间/token 汇总,cell,derived; local unpriced
+data/thresholds.csv,操作点分析（AUC/TPR@FPR/最优阈值）,cell,exploratory; post-hoc
+data/thresholds_stepshield.csv,Jev 逐前缀阈值扫描,cell,exploratory; post-hoc
+data/rank_top1.csv,各位置 top-1 概率,position,derived
+data/rank_by_metric.csv,MCC/BAcc/TPR 三种口径名次,position,derived
+data/shift.csv,按来源/split 的指标,split,derived
+data/cost.csv,每判定/episode 调用、时延、token,cell,derived; estimates flagged

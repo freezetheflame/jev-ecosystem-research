@@ -1,0 +1,3 @@
+model,dataset,n,pos,neg,natural_tpr,natural_tnr,mcc_opt_thr,mcc_opt,mcc_opt_tpr,mcc_opt_tnr,calls,steps_per_ep,auc,ap,tpr_at_fpr01,tpr_at_fpr05,tpr_at_fpr10,youden_thr,youden_tpr,youden_tnr,brier,ece10,argmax_agreement,n_events
+jev-packy-1.14.0,stepshield_test,7933,639,7294,0.9139280125195618,0.8652316972854401,0.77,0.7102888185925414,0.7198748043818466,0.9786125582670688,69289,8.734274549350813,,,,,,,,,,,,7933
+jev-packy-1.14.0,stepshield_test_holdout,216,108,108,0.9722222222222222,0.8703703703703703,0.63,0.879667339085829,0.9351851851851852,0.9444444444444444,2519,11.662037037037036,,,,,,,,,,,,216
