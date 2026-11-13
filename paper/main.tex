@@ -1,0 +1,79 @@
+% Standalone draft: keep references inline for the Codex live PDF preview.
+% Research questions and experimental sections will be added after discussion.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=25mm]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,citecolor=blue!45!black,urlcolor=blue!45!black,
+  pdftitle={Fast Decisions, Secure Agents?},pdfauthor={}}
+\setlength{\emergencystretch}{2em}
+\title{Fast Decisions, Secure Agents?\\[0.3em]
+  \large Studying Jev as a Decision Component in LLM Agents}
+\author{}
+\date{Working draft --- October 15, 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1.5em}
+\begin{abstract}
+Fast decision models offer a way to embed semantic judgments throughout an LLM agent's execution. Their value for security depends on both the judgments they make and the consequences of delegating decisions to them. This draft motivates an empirical study of Jev, focusing on action gating and context selection as two candidate integration roles. An action gate can prevent unauthorized operations, while a context selector can change which evidence reaches the agent. Both may introduce errors that affect subsequent behavior. The proposed study will examine security outcomes, legitimate task completion, robustness to untrusted inputs, and integration strategies. Cost and latency will be evaluated at the task level, with savings assessed subject to explicit security and utility requirements. This preliminary draft presents the motivation and scope; it reports no experimental findings.
+\end{abstract}
+
+\section{Introduction}
+An LLM agent may read a document, interpret its contents, and invoke tools that change external state. This creates a security problem when the document contains instructions supplied by an attacker. AgentDojo provides an executable setting for evaluating such attacks and defenses, illustrating the need to assess agents interacting with untrusted tool data~\cite{agentdojo}. Preventing an unauthorized operation is only part of the objective: the agent must also remain able to complete the user's legitimate task.
+
+Security-relevant decisions arise at several points in this process. A system can screen incoming content, check a proposed tool call, select information for the next model invocation, or request additional review. Some decisions admit exact rules, such as enforcing a permitted destination. Others require interpreting a request in context, such as deciding whether a request for aggregate statistics authorizes sharing the underlying records. Calling a general-purpose language model at each such point adds inference work. A faster decision component could make frequent checks more practical, provided that its errors do not undermine the protections it is intended to support.
+
+TypeSafe introduces Jev as a \emph{System One model}: it accepts application state and developer-defined questions and returns typed answers with probabilities rather than free-form text~\cite{typesafe}. The name draws on the distinction between fast, intuitive judgment and deliberate reasoning. We use it as the vendor's designation, without assuming a particular cognitive mechanism. For this study, the relevant properties are Jev's bounded answer interface, probability outputs, and intended use as a fast component within software. A valid answer type alone does not establish that the selected answer is appropriate for the user's task.
+
+\paragraph{Security effects extend beyond explicit guards.}
+Consider a user asking an agent to summarize customer records while keeping individual records private. A retrieved document additionally claims that the user has approved sending the raw data to an external address. An action gate must distinguish that claim from authorization supplied through a trusted channel. A context selector faces a different decision: which parts of the retrieved material should remain available to the agent? Retaining the attack while dropping qualifications or provenance could increase risk even if the selector was introduced only to reduce context length. In the proposed setting, trusted user instructions and hard permission checks remain outside the selector's removal authority; the experiment concerns its treatment of external evidence and associated context.
+
+These roles expose two paths by which a decision component can affect security. Action gating directly changes which operations execute. Context selection changes the information from which later operations are proposed. Their combination may prevent failures that either component misses, but it may also propagate errors or interrupt legitimate work. Measuring a component's isolated classification performance cannot determine which outcome occurs during execution.
+
+\paragraph{Prior evidence motivates an integration-level study.}
+Existing work already evaluates System One models on security classification, calibration, and selective automation~\cite{securitydecisions}. Decision Hijacking examines how malicious tool observations influence Jev's typed action decisions~\cite{hijacking}. These studies establish relevant baselines and preclude treating either security judging or attacks on typed decisions as an unexplored topic. The proposed emphasis here is the connection between a component's assigned role, its responses to untrusted information, and the agent behavior that follows. Paired decision tests can isolate specific input changes; executable tasks can assess whether those changes lead to unauthorized operations, recovery, or loss of legitimate functionality.
+
+\paragraph{Efficiency must be evaluated together with security and utility.}
+A lower price per judgment need not produce a cheaper successful task. Additional checks, escalation, repeated retrieval, and recovery from mistaken decisions can offset local savings. Conversely, selecting useful context or reserving expensive review for a subset of steps may reduce total inference work. The study will therefore account for the main agent, Jev, reviewers, and retries, and measure end-to-end latency. Any efficiency advantage must be interpreted alongside security outcomes and task completion: early termination is not a useful saving when it prevents the requested work. Whether frequent inexpensive checks outperform fewer expensive checks at a matched budget remains an empirical question.
+
+The intended study thus treats Jev as a decision component whose suitability depends on its role and surrounding enforcement logic. Action gating and context selection provide an initial, bounded scope, with escalation policies offering a way to examine composition. The objective is to identify where delegation is useful, how failures arise under adversarial inputs, and whether practical gains remain after accounting for security, legitimate task completion, and total execution cost. These considerations motivate the research questions to be developed next.
+
+% Continue here with the agreed research questions, then study design.
+% Do not add contribution/result claims until supported by completed experiments.
+
+\begingroup
+\small
+\begin{thebibliography}{9}
+\bibitem{agentdojo}
+Edoardo Debenedetti, Jie Zhang, Mislav Balunovi\'c, Luca Beurer-Kellner,
+Marc Fischer, and Florian Tram\`er.
+\newblock AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents.
+\newblock \emph{arXiv:2406.13352v3}, 2024.
+\newblock \url{https://arxiv.org/abs/2406.13352v3}.
+
+\bibitem{typesafe}
+Diogo Almeida.
+\newblock Introducing System One Models \& Jev.
+\newblock TypeSafe AI, September 15, 2026. Vendor announcement.
+\newblock \href{https://typesafe.ai/blog/introducing-system-one-models-and-jev}{Official announcement}, accessed October 15, 2026.
+
+\bibitem{securitydecisions}
+Yixuan Liu.
+\newblock Evaluating System One Models for Agent Security Decisions:
+Reliability, Calibration, and Selective Automation.
+\newblock \emph{arXiv:2609.33401v3}, 2026. Preprint.
+\newblock \url{https://arxiv.org/abs/2609.33401v3}.
+
+\bibitem{hijacking}
+Tiantong Wu and Wei Yang Bryan Lim.
+\newblock Decision Hijacking: Prompt Injection Attacks on Jev's Typed Probabilistic Decisions.
+\newblock \emph{arXiv:2609.28613v1}, 2026. Preprint.
+\newblock \url{https://arxiv.org/abs/2609.28613v1}.
+\end{thebibliography}
+\endgroup
+\end{document}

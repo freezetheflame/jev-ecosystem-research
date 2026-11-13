@@ -59,3 +59,11 @@ data/JevOut/
 data/JevOut-main.zip
 data/mu/
 data/decision-index-source/
+
+# Editor/backup copies and third-party PDFs
+*.bak-*
+related_papers/
+
+# Third-party literature/source snapshots (kept locally, re-fetchable)
+data/jev-robustness-literature/
+data/jevagentharness-reading/
