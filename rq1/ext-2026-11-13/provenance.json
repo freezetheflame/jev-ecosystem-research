@@ -1,0 +1,13 @@
+{
+ "generated_utc": "2026-11-12T17:19:26Z",
+ "script": "rq1/ext-2026-11-13/derive.py",
+ "script_sha256": "390166630c8846aa6275cde569f4fd1a56c91f3b59bca703515abd50912ef44a",
+ "seed": 20261113,
+ "reps": 1000,
+ "cells": 66,
+ "unmatched": [],
+ "inputs": {
+  "metrics_full_sha256": "0b7490e0d2eeeb824fe04070d3e546eee90987116c06b6c6107b9b772ffa7435",
+  "time_tokens_sha256": "29aa81ffbf0e83f11da245142ff554a1a71e721f55c247ae77c94b2df5923c0e"
+ }
+}

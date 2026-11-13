@@ -1,0 +1,16 @@
+{
+  "calls-all-runs.csv": "0578714c48b366134c8362745e1721c60ed377d7ff71e7adbfc7bc7657e4e079",
+  "comparison.csv": "f19042795f361cacf025588d13c8c876c52aa3da0032be1c8b99c00c0c231e6c",
+  "episodes-all-runs.csv": "2c2025e3b892ade053f018062ceab5a8de9690f0d3e0da48f62aa96237bc47e5",
+  "export-counts.json": "6ef2343e666950eef04240e8433f1b1451064e68cc4dbe16530a45680fd9263d",
+  "full-sample.csv": "011e2e3f83b5371edbc2efccb25ce7774f3b7009811b48eed4af272d87408520",
+  "item-predictions.csv": "99b0f1fb856e4aa3f07381646a1a61a12fd37d27762e597bcfb8a0491aee75eb",
+  "metrics.csv": "109d52b0d92091a9127837baa8964c85a73da8243ebfdb8b531f4cdf4d31322f",
+  "model-parameters.csv": "67c1859b8cb546de5688a8486de3dee22b968a6a769513bc049189ad6b43a541",
+  "model-sizes.csv": "f095d8693ad671e3f3d683b8d8ae85847f3ce45d7ec5ec80a3c4d84a42e9327d",
+  "README.md": "99991184cedcc57cfc9c716bfe20eea6f66bd72ec7737fad546e51a82974d3aa",
+  "results.json": "e88036330726a71495794d0fa62ac52e97e146be1bd1265b3ae1ffb7380829f2",
+  "run-inventory.csv": "333217367f054d6ffa6c7543885777fade4391bbad92dcb655447c45eb4321c0",
+  "run-inventory.json": "80d5e6a61f376210a836e2c721370f1aeaf6871a119974c7fa9a9bbd0daa6993",
+  "tokens.csv": "f7397aebcec5326901a4c21f22077ac640481db9cc26ab18c28c4db9766ba2a7"
+}

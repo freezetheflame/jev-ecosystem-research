@@ -184,3 +184,7 @@ SHA-256 能核对文件变化，不能单独证明调用真实；本地只追加
 `research-rigor` 已安装到本机，固定 commit 见[候选核查记录](../infrastructure/research-agent-skills-review.md)。采用其保留证据、冻结比较与结果溯源要求；不运行其整套项目初始化器覆盖本项目。
 
 同时参考已有 scientific-critical-thinking skill 的设计审核流程。其论文书目已在线核对：Kassis, T., Agarwal, V., He, Y., Patel, D., & Brueckner, A. M. (2026). *Scientific Agent Skills: A Library of Procedural Knowledge for Research Agents*. [arXiv / DOI](https://doi.org/10.48550/arXiv.2609.00065)。该程序知识库不是本实验有效性或代理不会造假的证明。
+# 当前执行范围补充（2026-11-04）
+
+下一轮范围由用户更新为 AgentHarm、InjecAgent、TS-Bench、StepShield、WildGuardTest 的全部公开评测条目；12 个模型含 Kev-4B。当前手册与命令见[五数据集全集操作](../infrastructure/full-benchmark-operations.md)，选型和标签决策见 study decision log。下文旧四基准选型保留为历史。新全集是描述性安全模块评测，不能自动视为盲测确认或真实 Agent 闭环；未完成授权/集成测试不冒称可全部有效判分。
+

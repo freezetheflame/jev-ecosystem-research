@@ -283,3 +283,83 @@
 - Shieldstral 的一 token yes/no 协议允许显式 max_tokens=1 对应的 length 结束，文本仍须精确 yes/no；其他截断仍拒绝。52 项离线测试通过，新增真实推理链路均通过 smoke。
 - SecJev 使用官方 v1.0.0 adapter、固定 backbone 和 Kev 代码、原 head/校准、FP32 未合并 LoRA。运行时 PyTorch 2.11.0 与参考 requirements 2.6.0 的差异明确记录，不宣称数值复现官方指标。
 - Jev-Guard 尚缺核验后的制品/接口，保留给用户 3090。对应草案仅含该模型，不用同名 base 模型替代。
+
+## 2026-11-03：补充找到 Jev-Guard 原生安全头发布
+
+- 用户要求在本机补跑 2B 并整理所有模型数据。公开发布 hubin/jev-guard-v3.2-2b 的固定 revision、LoRA/heads/原生代码已核验；此前缺制品的记录不覆盖本次新发现。
+- AgentHarm 使用 native safety-only，不使用类别输出或完整策略树成绩。原发布未固定基座 commit，本轮固定 Qwen/Qwen3.5-2B 15852e8c16360a2fea060d615a32b45270f8a8fc，并记录共享运行时与官方 requirements 的差异。
+- 当前为准备状态，尚无本轮推理结果。按用户要求改用 Hugging Face 官方 HTTP 下载，经 127.0.0.1:7890 代理；保留此前下载缓存。
+
+## 2026-11-03：Jev 经 OpenLux 中转重测
+
+用户授权使用 GPT 原中转站重测延迟。模型列表核验为 jev-1.14.0（用户写 0.14.0），原生 /v1/systemone。同旧 Jev 的 50 条输入/hash、策略、choice、3 repeats、seed、串行和预算；仅改变 provider/endpoint/凭证来源及相应价格快照。2 条 smoke 单独保存。异时异机比较仅作探索性延迟观察，不作网络路径因果归因。保留旧 run，不替换主结果。
+
+- 执行结果：150/150 pilot + 2/2 smoke 成功，返回 model 全为 jev-1.14.0。150 次请求 payload hash 多重集合与旧官方 run 完全一致。多数票 TP22/FP0/TN25/FN3，accuracy .94；p50 1.766s、p95 2.485s，累计279.955s；pilot API 价格估算0.001083096 USD。独立对照见 data/workspace-evidence/2026-11-03-jev-relay-comparison/，旧主比较不覆盖。
+
+## 2026-11-03：主汇总切换 Jev 中转重测
+
+用户确认以 OpenLux 重测替换汇总表 Jev 主行。分析脚本 PRIMARY 改为 2026-11-03-agentharm-jev-relay-50，重新生成 experiment-summary-v2，旧官方 run 与旧汇总保留。其他九模型数据核对未变；qwen35 确认 Qwen/Qwen3.5-4B、本地 BF16。
+
+## 2026-11-03：汇总补充 token 口径
+
+按用户要求生成 experiment-summary-v4，在 comparison.csv、tokens.csv 和文档中加入输入/输出/总 token、usage 覆盖与原因。取原 monitor/usage，不复算分词，不重跑。GLiGuard 无 usage 保持未知，GPT 11 次拒绝缺失 usage 仅报139次小计；非生成式输出0保留。原分数、时间、费用、参数量未变。
+
+## 2026-11-03：统一50项主分母（探索性分析版本变更）
+
+用户要求 GPT 也显示50项计算。生成 summary-v5，所有模型主指标统一为全50正确完成率，未决记未成功完成，不伪造safe/unsafe。GPT正确45、错误2、未决3，45/50=.90；已有预测条件准确率45/47=.9574、覆盖47/50=.94单列，TP/FP/TN/FN和F1不强行插补。旧预测、调用、token、费用和历史分析不变；此为事后描述口径变更，不是新确认性预注册，无新API调用。
+
+## 2026-11-03：恢复 Jev-Guard 下载并完成校验
+
+按用户要求短时试下、慢则停止。7890 经标准 aria2 断点续传速度可接受（整段平均7.2MiB/s），下载完成。Qwen3.5-2B 基座4548221488字节，官方固定revision的SHA256 aa33250c4fc64891ddfaba3a314fd9542ea371843c387178b425fbcc5ed680b1 校验一致；发布包逐文件hash也一致。下载清单在 local-models/nov02/jevguardbase/download-manifest.json。本次只有下载/文件校验，无新增模型推理和实验成绩。
+
+## 2026-11-03：Jev-Guard 本机pilot完成
+
+用户授权启动；官方 safety-only 适配下两条smoke+150次pilot均成功，50项多数票TP25/FP5/TN20/FN0、accuracy .90、F1 .9091。p50 .078秒/p95 .125秒，pilot累计13.591秒；输入17976、生成输出0，150/150 usage。本地未计价，模型加载/首smoke初始化单列；参考卷积回退和共享依赖差异见专门文档。11模型汇总在 experiment-summary-v6-final，保留统一50项正确完成率；原十模型字段核对未变。原monitor校验不变，6项针对性离线测试通过。
+
+## 2026-11-04：整理已使用prompt
+
+从28个实际run的events/raw提取2001条请求，验证每条request SHA256，按case.view只替换输入占位符并逐条验证无损还原，归纳16个实际模板。当前主比较11模型共1650条；其他包含历史、smoke、失败/部分实验和其他三基准smoke。模板目录data/workspace-evidence/2026-11-04-experiment-prompts-final，逐条展开原文仅在本地artifacts整理包，不更改旧raw。附本地可取得的4份原生chat template；服务端/未取得内部模板明确未知。无新模型调用。
+
+## 2026-11-04：新增 Kev-4B pilot
+
+用户授权加入4B并试测。固定 jaredpalmer/kev-4b 6cfce5c2fa4b4bd64026336ab649c5ca78857d52、原生代码2074cc44256200bb37540103fa4572901faa10f3、Qwen3.5-4B-Base 1001bb4d826a52d1f399e183466143f4da7b741b。沿用原AgentHarm50×3与2条smoke；明确BF16未合并、原temperature、无跨请求缓存/额外预处理，原monitor不变，运行时差异见新文档。目前基座下载中，未发起推理；已有12项适配离线检查通过，无付费调用。
+
+- Kev执行完成：2条smoke+150次pilot全部成功，150次均正确且50项三次完全一致；TP25/FP0/TN25/FN0，accuracy/F1=1.0；p50 .157秒、p95 .328秒、累计27.615秒，输入21261、输出0。body除model外与原Jev150次完全一致，未改参数/温度，原11模型字段保持不变。使用参考卷积回退，本地未计价，不是官方参考路径或确认性结论。12模型汇总为2026-11-04-experiment-summary-v7。
+
+## 2026-11-04：建立汇总专用目录
+
+按用户要求建立data/agent-security-study/summary/，AgentHarm当前12模型结果置于summary/agentharm/。从已核验v7分析逐字节复制并核对hash，来源另记source.json；旧版本与raw路径保留。无新实验或分数计算。
+
+## 2026-11-04：本机模型恢复与使用手册
+
+用户要求盘点、补齐不能运行的本地选型，并固定Jev中转。恢复GLiGuard/Laya/Qwen3Guard原权重，固定HF revision并验证原SHA256；安装gliner2=2.1.0/laya=0.4.20且未改其他依赖，各2条本机smoke共6调用成功，原主12模型表不替换。另6模型重新加载/健康检查成功；原monitor不变。新增model_services和machine_benchmark统一入口，当前Jev模板及入口使用OpenLux。58项离线测试与12模型离线请求预览通过；共享WSL pip check存在其他工具既有冲突，原日志保留，不宣称全环境依赖一致。唯一使用手册为docs/infrastructure/local-model-operations.md；清单/证据在data/workspace-evidence/2026-11-04-local-model-operations/。服务已停止释放显存，无付费API调用。
+## 2026-11-04：五数据集全集准备与操作规范
+
+用户指定当前范围为 AgentHarm、InjecAgent、TS-Bench、StepShield、WildGuardTest；旧四集范围不再作为下一轮默认。12 个实验模型保留，试用模型不纳入，Jev 使用 OpenLux 中转站。
+
+用户已明确接受全部公开评测条目、按原始 split 分报、历史暴露保留；InjecAgent 只用原生攻击条目，不构造负例；TS-Bench 0.5 保留 unknown。用户选择 WildGuard 作者原库，稍后配置访问授权，不替换镜像。
+
+新增版本化部署配置、`scripts/fetch_full_suite.py`、`scripts/full_benchmark.py` 与[全集手册](../../docs/infrastructure/full-benchmark-operations.md)。全集默认一次重复、串行、单组合 24 小时是显式工程默认，可在首次运行前改变并记录；API 总预算没有用户定值，运行时必须显式传入，手册示例不是批准预算。描述性全集沿用内部 phase=pilot，并以 record_kind 区分；没有声称完成 confirmatory 统计协议。
+
+正式原始记录位置：`runs/<campaign>/<model>/<dataset>/`；准备冻结与部署 health：`preparations/<campaign>/`；跨机汇总预留 `summary/<campaign>/`。旧 50 条 pilot 和旧汇总不覆盖。当前工作是数据获取/离线实现，没有本轮新模型调用。
+
+# 2026-11-05：补齐 WildGuardTest 作者原始数据
+
+用户授权从仓库 `.env.local` 中读取 HF_TOKEN 获取缺失数据。已通过 7890 代理下载 `allenai/wildguardmix` 固定 revision `d29c47f41c8b51348b5c8e8c81c039b3132b66d1` 的 README 与原始 `test/wildguard_test.parquet`，不使用镜像。凭证未写入产物。
+
+原始 test 文件 2,258,878 字节，SHA-256 `6ccc2909c1ae6d41424fac69f1fc32535b1de39cb8f80407d81e8bc64a0bebca`，与作者库 API 的 LFS oid 一致。实际 1,725 条：prompt harmful 754、unharmful 945、null 26；未定标签保留，不补造 gold。
+
+获取 manifest：`datasets/full-suite-v1/wildguardtest/manifest.json`；最新离线核验：`data/workspace-evidence/2026-11-05-full-suite-readiness/`（仓库根目录相对路径）。此次仅下载及离线预检，0 次模型推理，没有新 benchmark 分数或推理 API 费用。
+
+## 2026-11-05：修复 API 分类输出与显式重试（探索性协议变更）
+
+用户要求核对 AgentHarm 全集数量并修复 JSONDecodeError，允许网络、decode、格式和拒绝重试。固定原始数据核对：validation 64（32 harmful/32 benign）、test_public 352（176/176），共416个变体条目、52个基础任务族；chat和私有集不属于当前 behavior 输入分类合同。
+
+原 `full-api-agentharm-v2` 审计：GPT 378有效、37 provider policy refusal、1 RemoteDisconnected；Claude 117有效、295 JSONDecodeError、3 URLError、1 TimeoutError。295个Claude失败均是合法HTTP响应包内的非JSON答案，而非外层JSON损坏；抽查有散文拒答，不能把295条都命名为已人工确认的拒绝。审计代码与输入hash见 `runs/2026-11-05-api-retry-diagnostic-v2/old-run-audit.json` 及同目录脚本。旧raw/results不修改。
+
+新API配置使用明确分类材料边界与最多5次请求；2秒指数退避、最多60秒并参考数字Retry-After；网络、指定临时HTTP错误、解码、格式和拒绝可重试，第一次有效预测即结束。每次HTTP请求独立写raw、开始/结束事件及原monitor；删除原来未逐次计量的隐藏429重试。次数/墙钟/估价预算每次检查；未知费用保留null，按预留占用继续调度（原调用前PolicyRefusal豁免保留），不是实际费用或账单硬上限。401/永久配置错误停止；临时错误耗尽按失败保留并继续下一条。历史无重试配置保留原行为。
+
+验证：68项离线工程测试通过；两模型416条离线预检通过。真实诊断仅每模型4条：按原记录顺序选前3条失败及前1条成功，不按正确性选样；显式总估价上限0.50 USD。GPT 4/4有效、6次请求（2次拒绝重试），25.743秒；Claude4/4有效、4次请求、19.059秒，未出现JSONDecodeError。GPT TP3/FP1/TN0/FN0，Claude TP4/FP0/TN0/FN0；这不是总体准确率估计。已知API价格估算小计0.000108654264 USD，GPT两次无usage拒绝费用unknown，费用合计unknown，本地计算未计价。原monitor SHA256仍为f1f3d220f87681e79d65d9baf91e7b1e30733f80312c60b4129a42be8fc00c67。
+
+完整诊断记录、精确ID、有效配置、prompt、raw、monitor、环境和复现命令在 `runs/2026-11-05-api-retry-diagnostic-v2/<model>/agentharm/report.md` 及其链接产物。v1是凭证变量缺失的准备失败，0次模型调用，保留记录。没有启动新416条全集，没有追加Jev，没有合并旧成功和新失败补测；重跑须使用新campaign。公开且已暴露样本仅作开发诊断，不能称确认性证据。
+

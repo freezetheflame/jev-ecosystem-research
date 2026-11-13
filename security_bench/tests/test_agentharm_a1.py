@@ -94,7 +94,7 @@ class AgentHarmA1Tests(unittest.TestCase):
                     result.update(status='completed',output=[{'type':'message','content':[{'type':'output_text','text':'{"risk":true}'}]}])
                 return FakeResponse(result)
         opener=Opener()
-        with patch.dict(os.environ,{'TYPESAFE_API_KEY':'fixture-only','OPENAI_API_KEY':'fixture-only'}):
+        with patch.dict(os.environ,{m['api_key_env']:'fixture-only' for m in self.c['models'].values() if m.get('api_key_env')}):
             run=self.root/'run'
             prepared=plan(self.c,run)
             self.assertEqual(prepared['episodes'],8)

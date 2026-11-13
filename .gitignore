@@ -38,3 +38,16 @@ data/agent-security-study/runs/
 data/agent-security-study/preparations/
 data/workspace-evidence/**/predictions.jsonl
 data/workspace-evidence/**/repairs.jsonl
+
+# Local credentials and scratch probes (never commit)
+.pi/
+_tmp_*
+
+# RQ1 raw run snapshots are large; summaries and analyses are tracked
+rq1/agentharm/
+rq1/injecagent/
+rq1/stepshield/
+rq1/tsbench/
+rq1/wildguard/
+rq1/_ingest/
+rq1/*.zip

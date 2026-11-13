@@ -1,0 +1,7 @@
+{
+  "openlux:jev-1.14.0": {
+    "input_usd_per_million": 0.016800000000000002,
+    "output_usd_per_million": 0,
+    "basis": "OpenLux public pricing_new snapshot 2026-11-03: model_ratio=.021, completion_ratio=0, sole enabled group jev-1 ratio=0.4; 2*model_ratio*group_ratio USD/M input. List-price estimate, not invoice; server actual routing unverified."
+  }
+}

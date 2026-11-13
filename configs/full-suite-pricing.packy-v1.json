@@ -1,0 +1,9 @@
+{
+  "record_kind": "campaign_local_pricing_overlay_not_shared_default",
+  "campaign": "full-api-jev-packy-v1",
+  "packy:jev-1.14.0": {
+    "input_usd_per_million": 0.042,
+    "output_usd_per_million": 0,
+    "basis": "PackyAPI list-price estimate for jev-1.14.0 on the typesafe-officially group, recorded 2026-11-11: about USD 0.042 per million input tokens and USD 0 output (third-party listings; Packy announced a JEV-group 7x billing multiplier on 2026-11-06). This is a budget-stop estimate, not an invoice or a guarantee of the live group rate."
+  }
+}

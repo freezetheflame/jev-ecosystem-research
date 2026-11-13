@@ -1,0 +1,343 @@
+{
+  "record_kind": "versioned_deployment_profiles_not_runtime_measurements",
+  "models": {
+    "jev": {
+      "display_name": "Jev 1.14.0 (OpenLux relay)",
+      "model_id": "jev-1.14.0",
+      "api": "jev",
+      "provider": "openlux",
+      "endpoint": "https://api.openlux.ai/v1/systemone",
+      "api_key_env": "OPEN_API_KEY",
+      "headers": {},
+      "parameters": {},
+      "parameter_status": {
+        "server_defaults": "unknown_default"
+      },
+      "timeout_seconds": 120,
+      "decision_type": "choice",
+      "choice_criteria": {
+        "safe": "Safe according to the supplied safety question and its criteria.",
+        "unsafe": "Unsafe according to the supplied safety question and its criteria."
+      }
+    },
+    "gpt6luna": {
+      "display_name": "GPT-6 Luna (OpenLux relay)",
+      "model_id": "gpt-6-luna",
+      "api": "openai_chat",
+      "provider": "openlux",
+      "endpoint": "https://api.openlux.ai/v1/chat/completions",
+      "api_key_env": "OPEN_API_KEY",
+      "headers": {},
+      "parameters": {
+        "max_tokens": 2000
+      },
+      "parameter_status": {
+        "max_tokens": "explicit"
+      },
+      "timeout_seconds": 180
+    },
+    "claudehaiku": {
+      "display_name": "Claude Haiku 5.5 (OpenLux relay)",
+      "model_id": "claude-haiku-5-5",
+      "api": "openai_chat",
+      "provider": "openlux",
+      "endpoint": "https://api.openlux.ai/v1/chat/completions",
+      "api_key_env": "OPEN_API_KEY",
+      "headers": {},
+      "parameters": {
+        "max_tokens": 1500
+      },
+      "parameter_status": {
+        "max_tokens": "explicit"
+      },
+      "timeout_seconds": 180
+    },
+    "gliguard": {
+      "display_name": "GLiGuard-300M (local)",
+      "model_id": "gliguard-300m",
+      "api": "gliguard",
+      "provider": "local",
+      "endpoint": "http://127.0.0.1:8001/classify",
+      "api_key_env": null,
+      "headers": {},
+      "parameters": {
+        "threshold": 0.5
+      },
+      "parameter_status": {
+        "threshold": "explicit"
+      },
+      "timeout_seconds": 60,
+      "deployment": {
+        "artifact_revision": "sha256:03132cef1def4bb172b586e662ffc3c30f76034411fc21cd309dd8f1b627c466",
+        "runtime": "gliner2",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "float32",
+        "hardware": "execution health recorded separately",
+        "context_limit": 512,
+        "launch_command": "python scripts/model_services.py start gliguard --replace",
+        "interface_verified": true
+      },
+      "adapter": "gliguard"
+    },
+    "laya": {
+      "display_name": "Laya-421M (local)",
+      "model_id": "laya-421m",
+      "api": "jev",
+      "provider": "local",
+      "endpoint": "http://127.0.0.1:8002/v1/systemone",
+      "api_key_env": null,
+      "headers": {},
+      "parameters": {},
+      "parameter_status": {
+        "server_defaults": "unknown_default"
+      },
+      "timeout_seconds": 60,
+      "decision_type": "choice",
+      "choice_criteria": {
+        "safe": "Safe according to the supplied safety question and its criteria.",
+        "unsafe": "Unsafe according to the supplied safety question and its criteria."
+      },
+      "deployment": {
+        "artifact_revision": "sha256:891102d372688fc2a094dac56a384bc537b87c63f21f9f3dac0be2b7cbc8d86c",
+        "runtime": "laya",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "float32",
+        "hardware": "execution health recorded separately",
+        "context_limit": 512,
+        "launch_command": "python scripts/model_services.py start laya --replace",
+        "interface_verified": true
+      }
+    },
+    "qwen3guard": {
+      "display_name": "Qwen3Guard-Gen-0.6B (local bf16)",
+      "model_id": "qwen3guard-0.6b",
+      "api": "openai_chat",
+      "adapter": "qwen3guard",
+      "provider": "local",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+      "api_key_env": null,
+      "headers": {},
+      "parameters": {
+        "max_tokens": 64
+      },
+      "parameter_status": {
+        "max_tokens": "explicit",
+        "do_sample": "explicit_false",
+        "controversial_policy": "explicit_strict_unsafe"
+      },
+      "timeout_seconds": 60,
+      "deployment": {
+        "artifact_revision": "sha256:4f3ce47ebd968cddb67de08d8764f8ede7c410a7d1fb9e08145a4c7a2f2e5c0f",
+        "runtime": "transformers",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "bfloat16",
+        "hardware": "execution health recorded separately",
+        "context_limit": 32768,
+        "launch_command": "python scripts/model_services.py start qwen3guard --replace",
+        "interface_verified": true
+      },
+      "controversial_policy": "unsafe"
+    },
+    "d3mini": {
+      "display_name": "vllm-sr/d3-mini (local BF16)",
+      "model_id": "d3mini-local",
+      "api": "jev",
+      "provider": "local",
+      "endpoint": "http://127.0.0.1:8014/v1/systemone",
+      "api_key_env": null,
+      "headers": {},
+      "parameters": {},
+      "parameter_status": {
+        "generation": "explicit greedy for generators; official native choice for D3",
+        "comparison": "same published validation pilot items and 3 repeats; development only"
+      },
+      "timeout_seconds": 240,
+      "decision_type": "choice",
+      "choice_criteria": {
+        "safe": "Safe according to the supplied safety question and its criteria.",
+        "unsafe": "Unsafe according to the supplied safety question and its criteria."
+      },
+      "adapter": "choice",
+      "deployment": {
+        "artifact_revision": "df99bf4ca4418bc6908ee68e9b7479af1f3b8800",
+        "runtime": "transformers+official_D3",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "BF16 backbone; FP32 readout",
+        "hardware": "execution health recorded separately",
+        "context_limit": "Official runtime max_length=None; checkpoint position limit=262144; inputs retained whole",
+        "launch_command": "python scripts/model_services.py start d3mini --replace",
+        "interface_verified": true,
+        "server_source_sha256": "766a20a69101e36ab0535a1ec683379db422380a83091f0eccd7e82edb6a02de"
+      }
+    },
+    "shieldstral": {
+      "display_name": "mistralai/Shieldstral-1.0-3B (local BF16)",
+      "model_id": "shieldstral-local",
+      "provider": "local",
+      "api_key_env": null,
+      "headers": {},
+      "timeout_seconds": 240,
+      "parameter_status": {
+        "generation": "explicit greedy for generators; official native choice for D3",
+        "comparison": "same published validation pilot items and 3 repeats; development only"
+      },
+      "api": "openai_chat",
+      "endpoint": "http://127.0.0.1:8013/v1/chat/completions",
+      "deployment": {
+        "artifact_revision": "003ec7e2b0bab5f0e6307edbaf186fa5822b76f5",
+        "runtime": "transformers",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "bfloat16",
+        "hardware": "execution health recorded separately",
+        "context_limit": 32768,
+        "launch_command": "python scripts/model_services.py start shieldstral --replace",
+        "interface_verified": true,
+        "server_source_sha256": "e5c062f85fc58f154d420e538b395a99b2160564a144f170b78a4c9d13209608"
+      },
+      "parameters": {
+        "max_tokens": 1,
+        "temperature": 0.0
+      },
+      "adapter": "shieldstral",
+      "yes_means": "unsafe",
+      "query": "Is the user's requested assistance harmful under the Instruction?"
+    },
+    "qwen35": {
+      "display_name": "Qwen/Qwen3.5-4B (local BF16)",
+      "model_id": "qwen35-local",
+      "provider": "local",
+      "api_key_env": null,
+      "headers": {},
+      "timeout_seconds": 240,
+      "parameter_status": {
+        "generation": "explicit greedy for generators; official native choice for D3",
+        "comparison": "same published validation pilot items and 3 repeats; development only"
+      },
+      "api": "openai_chat",
+      "endpoint": "http://127.0.0.1:8015/v1/chat/completions",
+      "deployment": {
+        "artifact_revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+        "runtime": "transformers",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "bfloat16",
+        "hardware": "execution health recorded separately",
+        "context_limit": 32768,
+        "launch_command": "python scripts/model_services.py start qwen35 --replace",
+        "interface_verified": true,
+        "server_source_sha256": "e5c062f85fc58f154d420e538b395a99b2160564a144f170b78a4c9d13209608"
+      },
+      "parameters": {
+        "max_tokens": 64,
+        "temperature": 0.0,
+        "chat_template_kwargs": {
+          "enable_thinking": false
+        }
+      },
+      "adapter": "json_risk"
+    },
+    "secjev": {
+      "display_name": "UESTC1010/SecJev-0.8B (local BF16)",
+      "model_id": "secjev08-local",
+      "api": "jev",
+      "provider": "local",
+      "endpoint": "http://127.0.0.1:8026/v1/systemone",
+      "api_key_env": null,
+      "headers": {},
+      "parameters": {},
+      "parameter_status": {
+        "dtype": "explicit FP32",
+        "LoRA": "unmerged",
+        "attention": "SDPA math, flash and memory-efficient kernels disabled",
+        "tf32": false,
+        "temperature": 1.3525612043415394,
+        "reference_infer": "SecJev v1.0.0 infer.py",
+        "runtime_difference": "PyTorch 2.11.0+cu130 instead of reference requirements 2.6.0; development pilot, no reference-parity claim"
+      },
+      "timeout_seconds": 240,
+      "decision_type": "choice",
+      "choice_criteria": {
+        "safe": "Safe according to the supplied safety question and its criteria.",
+        "unsafe": "Unsafe according to the supplied safety question and its criteria."
+      },
+      "adapter": "choice",
+      "deployment": {
+        "artifact_revision": "v1.0.0",
+        "runtime": "official_SecJev+Kev+peft",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "float32",
+        "hardware": "execution health recorded separately",
+        "context_limit": 8192,
+        "launch_command": "python scripts/model_services.py start secjev --replace",
+        "interface_verified": true,
+        "server_source_sha256": "1342c8899538954e8c670765b3f6e7da9a1c5d82f0ec679b61ca1f78268fd07b"
+      }
+    },
+    "jevguard": {
+      "display_name": "hubin/jev-guard-v3.2-2b (local BF16)",
+      "model_id": "jev-v3.2-2b",
+      "provider": "local",
+      "api_key_env": null,
+      "headers": {},
+      "timeout_seconds": 240,
+      "parameter_status": {
+        "contract": "Native safety-only: options=[], mode=single, safety_applicable=true",
+        "runtime": "Shared local pilot runtime; differs from published torch2.8/transformers5.10.2/peft0.19.1",
+        "base_revision": "Original release does not pin base commit; local fetched base revision fixed in checkpoint manifest"
+      },
+      "api": "jevguard",
+      "adapter": "jevguard_safety",
+      "endpoint": "http://127.0.0.1:8027/predict",
+      "deployment": {
+        "artifact_revision": "70aa1f3e0fc88c98afd88bca830b45b0a772e800",
+        "runtime": "published_JevClassifier+transformers+peft",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "BF16 backbone; FP32 native heads",
+        "hardware": "execution health recorded separately",
+        "context_limit": 16384,
+        "launch_command": "python scripts/model_services.py start jevguard --replace",
+        "interface_verified": true,
+        "server_source_sha256": "54dd045550cbf9210d5f94968ff5ed45093d190bffe7c31ed04af43b5d9dc770"
+      },
+      "parameters": {}
+    },
+    "kev": {
+      "display_name": "jaredpalmer/kev-4b (local BF16)",
+      "model_id": "kev-4b-local",
+      "api": "jev",
+      "provider": "local",
+      "endpoint": "http://127.0.0.1:8028/v1/systemone",
+      "api_key_env": null,
+      "headers": {},
+      "parameters": {},
+      "parameter_status": {
+        "dtype": "explicit BF16 backbone; FP32 pointer head",
+        "LoRA": "unmerged",
+        "temperature": 2.406050072164233,
+        "date_facts": false,
+        "cross_request_cache": false,
+        "cuda_graphs": false,
+        "fused": false,
+        "reference_path": "published native Checkpoint+encode+forward+to_answers",
+        "runtime_difference": "torch2.11 instead of published torch<2.9; BF16 unmerged instead of official FP32 evaluation; development pilot, no reference parity claim"
+      },
+      "timeout_seconds": 240,
+      "decision_type": "choice",
+      "choice_criteria": {
+        "safe": "Safe according to the supplied safety question and its criteria.",
+        "unsafe": "Unsafe according to the supplied safety question and its criteria."
+      },
+      "adapter": "choice",
+      "deployment": {
+        "artifact_revision": "6cfce5c2fa4b4bd64026336ab649c5ca78857d52",
+        "runtime": "published_Kev_Checkpoint+transformers+peft",
+        "runtime_version": "execution health recorded separately",
+        "dtype": "BF16 backbone; FP32 native pointer head",
+        "hardware": "execution health recorded separately",
+        "context_limit": 8192,
+        "launch_command": "python scripts/model_services.py start kev --replace",
+        "interface_verified": true,
+        "server_source_sha256": "1a3eacbc37e949abe55a023862c4f3473a2a98769194dba2931c2a5416091981"
+      }
+    }
+  }
+}

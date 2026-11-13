@@ -58,3 +58,17 @@ Mode 与比较组是不同字段：`evaluation_mode` 取 A/B/C/D；`arm` 仍表�
 > 为实现上述场景的互补覆盖，同时控制实验规模，我们选取六个具有不同安全机制和标注特征的公开基准。具体而言，InjecAgent 用于输入注入检测，AgentDojo 用于连接输入风险、工具执行前防护与实际攻击结果；R-Judge 提供多类别 Agent 行为安全审计样本，ATBench 则补充长轨迹和延迟触发风险；MCPHunt 用于评估跨 MCP 服务器的信息流安全 [8]，SCR-Bench 用于评估由能力传递、信任转移和授权混淆引起的 Skill 组合风险 [9]。我们根据各基准的原生数据结构，将其适配到对应评测场景，而不要求每个基准覆盖全部四种场景。对于原始基准未直接提供的执行前动作标签或轨迹前缀标签，将另行构造并验证相应的标注。通过这种基于安全机制与观测条件的基准选择策略，本研究旨在系统性地评估 Jev 从局部输入判断到多步骤行为安全分析的能力边界，并进一步区分离线风险识别与实际运行时防护效果。
 
 局部引用对应：1 ASB；2 InjecAgent；3 AgentDojo；4 CaMeL；5 Runtime Verification；6 R-Judge；7 ATBench；8 MCPHunt；9 SCR-Bench。六个数据集的来源链接见[选型清单](2026-10-27-study-selection.md)。[5] 尚未提供具体作者、题名、年份或来源；本轮不猜测是哪篇运行时验证文献。[1]/[4] 正式条目及所有引用与论述的对应支持程度，也留待书目核验。
+
+## 2026-11-10 增补：当前五集的检查位置与 Mode E
+
+用户确认的当前测试仓库对应为：
+
+- User Request Inspection — AgentHarm（既有 Mode A1，`request_risk_classification`）
+- External Content Inspection — InjecAgent（既有 Mode A2，`input_inspection`）
+- Tool Call Inspection — TS-Bench（既有 Mode B，`pre_action_safety`）
+- Action Inspection — StepShield（既有 Mode C，`prefix_monitoring`；用户稿中的 stepsheild 为笔误）
+- Response Inspection — WildGuardTest（新增 Mode E，`response_risk_classification`，数据集键 `wildguardtest-response`）
+
+这与上文 2026-10-30 的 A1/A2/B/D（当时 C 空缺、ATBench 为 D、WildGuard 尚未纳入）并不互相覆盖：ATBench 仍是历史 Mode D 完整轨迹审计，不在本轮五集之内。既有 `wildguardtest` 单元格保持 Mode A1 prompt-harm，不得改写其冻结合同，也不得把旧结果称为 Mode E。
+
+Mode E 的模型输入是官方 WildGuardTest 的 prompt 与 assistant response；gold 是原生 `response_harm_label`（本机官方 test 文件：harmful=284、unharmful=1,425、unknown/null=16）。16 条未知仍计划调用，但不进入二分类混淆矩阵。prompt_harm 与 refusal 不是本任务 gold，也不进入模型视图。详细操作说明、用户稿 LaTeX 表和书目 TODO 见 [full-benchmark-operations.md](../infrastructure/full-benchmark-operations.md) 中「五类检查位置与基准对应（2026-11-10）」。

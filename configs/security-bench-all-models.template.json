@@ -1,5 +1,5 @@
 {
-  "record_kind": "all_11_models_draft_deployment_config_not_frozen",
+  "record_kind": "all_12_models_draft_deployment_config_not_frozen",
   "phase": null,
   "data_root": "data/agent-security-study/datasets/2026-10-27",
   "atbench_path": "../jev/data/atbench-test.json",
@@ -28,9 +28,9 @@
       "display_name": "Jev 1.14.0",
       "model_id": "jev-1.14.0",
       "api": "jev",
-      "provider": "typesafe",
-      "endpoint": "https://api.typesafe.ai/v1/systemone",
-      "api_key_env": "TYPESAFE_API_KEY",
+      "provider": "openlux",
+      "endpoint": "https://api.openlux.ai/v1/systemone",
+      "api_key_env": "OPEN_API_KEY",
       "headers": {},
       "parameters": {},
       "parameter_status": null,
@@ -127,10 +127,10 @@
       }
     },
     "jevguard": {
-      "display_name": "Jev-Guard",
-      "model_id": null,
-      "adapter": "choice",
-      "api": "jev",
+      "display_name": "Jev-Guard v3.2 2B",
+      "model_id": "jev-v3.2-2b",
+      "adapter": "jevguard_safety",
+      "api": "jevguard",
       "provider": "local",
       "endpoint": null,
       "api_key_env": null,
@@ -138,11 +138,6 @@
       "parameters": {},
       "parameter_status": null,
       "timeout_seconds": null,
-      "decision_type": "choice",
-      "choice_criteria": {
-        "safe": "Safe according to the supplied safety question and its criteria.",
-        "unsafe": "Unsafe according to the supplied safety question and its criteria."
-      },
       "deployment": {
         "artifact_revision": null,
         "runtime": null,
@@ -278,6 +273,38 @@
       "parameter_status": null,
       "timeout_seconds": null,
       "auth_scheme": "bearer"
+    },
+    "kev": {
+      "display_name": "Kev-4B",
+      "model_id": "kev-4b-local",
+      "adapter": "choice",
+      "api": "jev",
+      "provider": "local",
+      "endpoint": null,
+      "api_key_env": null,
+      "headers": {},
+      "parameters": {},
+      "parameter_status": {
+        "precision": "BF16 unmerged pilot; official FP32 evaluation parity unverified",
+        "temperature": "native checkpoint calibration; no override",
+        "inference": "no cross-request cache or automatic warmup"
+      },
+      "timeout_seconds": null,
+      "decision_type": "choice",
+      "choice_criteria": {
+        "safe": "Safe according to the supplied safety question and its criteria.",
+        "unsafe": "Unsafe according to the supplied safety question and its criteria."
+      },
+      "deployment": {
+        "artifact_revision": "6cfce5c2fa4b4bd64026336ab649c5ca78857d52",
+        "runtime": "published Kev + transformers + peft",
+        "runtime_version": "5.17.0",
+        "dtype": "BF16 backbone; FP32 pointer head",
+        "hardware": null,
+        "context_limit": 8192,
+        "launch_command": "scripts/local_kev_server.py --help",
+        "interface_verified": true
+      }
     }
   },
   "main_agent_system_prompt": null,
@@ -367,6 +394,7 @@
     "qwen3guard",
     "qwen35",
     "gpt6luna",
-    "claudehaiku"
+    "claudehaiku",
+    "kev"
   ]
 }

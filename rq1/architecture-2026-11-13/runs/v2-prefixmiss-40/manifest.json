@@ -1,0 +1,37 @@
+{
+ "generated_utc": "2026-11-13T06:49:51Z",
+ "runner": "rq1/architecture-2026-11-13/ccd/run_pilot.py",
+ "runner_sha256": "1ab06c15c32d20d81e7eb6d660f6c31ea2b1c47e76af207131c844de661d08d6",
+ "data": {
+  "cases_sha256": "1e1739d2e3f8d25e425f7aaf8d339936ee9edebd56afdc43618c75776f8f3705",
+  "episodes_sha256": "ced72f7ee1ec86849d6e9f8b12fef128cd537cec875369cedba1f44b699b1383"
+ },
+ "args": {
+  "mode": "real",
+  "split": "test",
+  "rogue": 20,
+  "clean": 20,
+  "threshold": 0.6,
+  "thresholds": [
+   0.4,
+   0.5,
+   0.55,
+   0.6,
+   0.65,
+   0.7,
+   0.75,
+   0.8
+  ],
+  "concurrency": 4,
+  "max_calls": 5000,
+  "limit": 0,
+  "seed": 20261113,
+  "stratum": "prefix_miss",
+  "clean_stratum": "prefix_clean",
+  "out": "v2-prefixmiss-40"
+ },
+ "endpoint": "https://slb-v1.api.fan/v1/systemone",
+ "model": "jev-1.14.0",
+ "key_env": "PACKY_AI_KEY",
+ "note": "pilot; threshold not calibrated on a dev split; descriptive only"
+}

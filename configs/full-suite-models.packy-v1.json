@@ -1,0 +1,26 @@
+{
+  "record_kind": "campaign_local_deployment_overlay_not_shared_default",
+  "campaign": "full-api-jev-packy-v1",
+  "notes": "Overlay for the Packy Jev API campaign only. Do not use this file as a silent replacement of configs/full-suite-models.v1.json; that shared default remains OpenLux.",
+  "models": {
+    "jev": {
+      "display_name": "Jev 1.14.0 (Packy typesafe-officially)",
+      "model_id": "jev-1.14.0",
+      "api": "jev",
+      "provider": "packy",
+      "endpoint": "https://slb-v1.api.fan/v1/systemone",
+      "api_key_env": "PACKY_AI_KEY",
+      "headers": {},
+      "parameters": {},
+      "parameter_status": {
+        "server_defaults": "unknown_default"
+      },
+      "timeout_seconds": 120,
+      "decision_type": "choice",
+      "choice_criteria": {
+        "safe": "Safe according to the supplied safety question and its criteria.",
+        "unsafe": "Unsafe according to the supplied safety question and its criteria."
+      }
+    }
+  }
+}

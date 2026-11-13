@@ -15,14 +15,15 @@ def paths(config):
     bundle = (base / 'datasets').is_dir()
     result = {}
     for name in config['datasets']:
-        if bundle and (base / 'datasets' / name).exists():
-            result[name] = base / 'datasets' / name / 'ATBench.json' if name == 'atbench' else base / 'datasets' / name
-        elif name == 'atbench':
+        source_name = 'wildguardtest' if name == 'wildguardtest-response' else name
+        if bundle and (base / 'datasets' / source_name).exists():
+            result[name] = base / 'datasets' / source_name / 'ATBench.json' if source_name == 'atbench' else base / 'datasets' / source_name
+        elif source_name == 'atbench':
             result[name] = absolute(config['atbench_path'])
-        elif name == 'maliciousskillbench':
+        elif source_name == 'maliciousskillbench':
             result[name] = absolute(config['maliciousskillbench_path'])
         else:
-            result[name] = base / name / 'snapshot'
+            result[name] = base / source_name / 'snapshot'
     return result
 
 
@@ -110,8 +111,10 @@ def load_static(config, dataset):
                 view = {'user_request': row.get('User Instruction', ''), 'tool_response': response}
                 # All native InjecAgent test cases are attack cases: the gold positive is
                 # native, the negative (when requested) is an explicit derived counterfactual.
-                output.append(item(dataset, uid, uid, view, 1,
-                    'native_InjecAgent_attack_case', path, mode))
+                record = item(dataset, uid, uid, view, 1,
+                    'native_InjecAgent_attack_case', path, mode)
+                record.update(source_split='enhanced' if '_enhanced' in relative else 'base')
+                output.append(record)
                 if policy == 'paired_neutralized':
                     injected = row.get('Attacker Instruction')
                     if not isinstance(injected, str) or not injected or injected not in response:
@@ -154,7 +157,11 @@ def load_static(config, dataset):
                 record['controversial_policy'] = policy
                 record.update(source_interaction_id=row['id-interaction'],
                               source_segment_id=row['id-segment'], source_row_index=index)
+                record['source_split'] = relative.split('/')[0]
                 output.append(record)
+    elif dataset in ('stepshield', 'wildguardtest', 'wildguardtest-response'):
+        from .full_datasets import load_new
+        output = load_new(config, dataset, location)
     elif dataset == 'atbench':
         if spec['contract'] != 'full_trace_risk_classification':
             raise ValueError('ATBench adapter requires full_trace_risk_classification contract')

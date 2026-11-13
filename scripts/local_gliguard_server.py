@@ -11,6 +11,9 @@ import torch
 from fastapi import FastAPI, Body
 from gliner2 import GLiNER2
 import uvicorn
+import hashlib
+from pathlib import Path
+from importlib.metadata import version
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model-path', default='D:/models/gliguard-300m')
@@ -27,7 +30,11 @@ app = FastAPI()
 @app.get('/health')
 def health():
     return {'status': 'ok', 'cuda': torch.cuda.is_available(),
-            'device': torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'cpu'}
+            'device': torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'cpu',
+            'model': args.served_name, 'context_limit': 512, 'torch': torch.__version__,
+            'transformers': version('transformers'), 'gliner2': version('gliner2'),
+            'dtype': str(next(model.parameters()).dtype), 'warmup_inferences': 0,
+            'server_source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
 
 
 @app.post('/classify')

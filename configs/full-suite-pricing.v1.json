@@ -1,0 +1,17 @@
+{
+  "openlux:gpt-6-luna": {
+    "input_usd_per_million": 0.044,
+    "output_usd_per_million": 0.22,
+    "basis": "OpenLux pricing_new (2026-10-30): model_ratio 0.05, completion_ratio 5, observed routing group Azure-Gpt-4 group_ratio 0.44; price = 2*model_ratio*group_ratio per M input. Routing is auto and may change; list-price estimate, not a bill."
+  },
+  "openlux:claude-haiku-5-5": {
+    "input_usd_per_million": 0.008824,
+    "output_usd_per_million": 0.04412,
+    "basis": "OpenLux pricing_new (2026-10-30): model_ratio 0.05, completion_ratio 5, observed routing group Kiro-Claude-1 group_ratio 0.08824; price = 2*model_ratio*group_ratio per M input. Routing is auto and may change; list-price estimate, not a bill."
+  },
+  "openlux:jev-1.14.0": {
+    "input_usd_per_million": 0.016800000000000002,
+    "output_usd_per_million": 0,
+    "basis": "OpenLux public pricing_new snapshot 2026-11-03: model_ratio=.021, completion_ratio=0, sole enabled group jev-1 ratio=0.4; 2*model_ratio*group_ratio USD/M input. List-price estimate, not invoice; server actual routing unverified."
+  }
+}

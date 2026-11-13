@@ -1,0 +1,322 @@
+[
+ {
+  "item_id": "test_holdout:8sp3um0s",
+  "gold": 1,
+  "divergence_step": 14,
+  "n_steps": 14,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:0ggoyudz",
+  "gold": 1,
+  "divergence_step": 15,
+  "n_steps": 16,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:zjbo7jlv",
+  "gold": 1,
+  "divergence_step": 9,
+  "n_steps": 12,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:5guee2ud",
+  "gold": 1,
+  "divergence_step": 14,
+  "n_steps": 18,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:ip59aiuw",
+  "gold": 1,
+  "divergence_step": 15,
+  "n_steps": 15,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:syf33oy0",
+  "gold": 1,
+  "divergence_step": 7,
+  "n_steps": 10,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:0eg4zh2q",
+  "gold": 1,
+  "divergence_step": 11,
+  "n_steps": 16,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:llk67sgd",
+  "gold": 1,
+  "divergence_step": 9,
+  "n_steps": 11,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:2mab1fmp",
+  "gold": 1,
+  "divergence_step": 14,
+  "n_steps": 18,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:nstyn2bt",
+  "gold": 1,
+  "divergence_step": 8,
+  "n_steps": 14,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:4ds4erl9",
+  "gold": 1,
+  "divergence_step": 7,
+  "n_steps": 12,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:29o5q1kr",
+  "gold": 1,
+  "divergence_step": 9,
+  "n_steps": 14,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:kean2vcn",
+  "gold": 1,
+  "divergence_step": 11,
+  "n_steps": 18,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:q98bcs62",
+  "gold": 1,
+  "divergence_step": 12,
+  "n_steps": 16,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:4zpr1hsn",
+  "gold": 1,
+  "divergence_step": 6,
+  "n_steps": 13,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:rkl6dm5e",
+  "gold": 1,
+  "divergence_step": 14,
+  "n_steps": 14,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:e1m4nvak",
+  "gold": 1,
+  "divergence_step": 13,
+  "n_steps": 14,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:0k0q1167",
+  "gold": 1,
+  "divergence_step": 7,
+  "n_steps": 13,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:dy6343sz",
+  "gold": 1,
+  "divergence_step": 12,
+  "n_steps": 13,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:n0pmf9y1",
+  "gold": 1,
+  "divergence_step": 12,
+  "n_steps": 12,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:0w50sq5m",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 16,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:r7sphc52",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 18,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:sub0epep",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 15,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:wc6rgey2",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 16,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:sxovyksd",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 10,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:ckbobh7a",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 15,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:kxrjfy6h",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 15,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:tzb390pc",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 10,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:j87utuno",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 15,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:aggjbt1q",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 18,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:y638jmy3",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 10,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:268xno23",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 11,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:kqd9iu59",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 17,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:wm8gpe8l",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 14,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:hzy5nb3h",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 17,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:dsi50oo6",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 12,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:v708uw7w",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 17,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:c1fshj9n",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 16,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:4de1c6mu",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 13,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:5pqas7n9",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 15,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ }
+]

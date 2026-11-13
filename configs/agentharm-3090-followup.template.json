@@ -24,10 +24,10 @@
   },
   "models": {
     "jevguard": {
-      "display_name": "Jev-Guard",
-      "model_id": null,
-      "adapter": "choice",
-      "api": "jev",
+      "display_name": "Jev-Guard v3.2 2B",
+      "model_id": "jev-v3.2-2b",
+      "adapter": "jevguard_safety",
+      "api": "jevguard",
       "provider": "local",
       "endpoint": null,
       "api_key_env": null,
@@ -35,11 +35,6 @@
       "parameters": {},
       "parameter_status": null,
       "timeout_seconds": null,
-      "decision_type": "choice",
-      "choice_criteria": {
-        "safe": "Safe according to the supplied safety question and its criteria.",
-        "unsafe": "Unsafe according to the supplied safety question and its criteria."
-      },
       "deployment": {
         "artifact_revision": null,
         "runtime": null,
@@ -49,7 +44,8 @@
         "context_limit": null,
         "launch_command": null,
         "interface_verified": null
-      }
+      },
+      "input_field": "user_request"
     }
   },
   "contracts": {

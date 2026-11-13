@@ -1,0 +1,39 @@
+# RQ1 整理汇总说明（发给协作方的数据说明）
+
+生成时间（Asia/Shanghai，UTC+8）：
+- 指标表 `metrics.md` / `metrics.csv` / `metrics_full.md` / `metrics_full.csv` / `README.md`：2026-11-13 14:45:35 Asia/Shanghai
+- 时间与 token 表 `time_tokens.md` / `time_tokens.csv`：2026-11-13 14:46:29 Asia/Shanghai
+
+本目录是整理后的正式汇总表，不是原始跑测目录。不含 `raw/`、不含 telemetry 明细、不含中间脚本。指标定义见 `README.md`。完整数值与来源字段见各 `.csv`。
+
+## 计分与时间 / token 口径
+
+- 主比较指标是 MCC，并同时报告 TPR / TNR。准确率与 F1 留在 `metrics_full` 作为次要数字。
+- 百分比一位小数，MCC 三位小数。MCC 分母任一因子为 0 时记为 —，不能写成 0。
+- 意外失败不计入 acc / F1 / MCC 的可判分母，也不计入时间与 token 分母。
+- 时间取成功 episode 的 `wall_seconds`。token 为已知 usage；未上报则写「未上报」，不编造。本地算力未计价。
+
+## 本包写入的最后一格：gpt6luna × WildGuard response（Mode E）
+
+- 战役：`full-api-wildguard-response-v1`
+- 官方 analysis：`data/agent-security-study/runs/full-api-wildguard-response-v1/gpt6luna/wildguardtest-response/analysis/2026-11-13T061430.606753_0000-9d3a76/`
+- 完成时间：2026-11-13 14:14:30 Asia/Shanghai（目录时间戳 UTC 06:14:30）
+- status=`complete_with_failures`，planned=recorded=1725，ok=1724，fail=1（provider_policy_refusal / PolicyRefusal，`test:228`，gold=0）
+- 可判分 1708（另排除 16 条成功但 gold=None 的样本），该行 P/N=284/1424
+- 混淆矩阵：TP/FP/TN/FN=216/62/1362/68
+- 显示：MCC 0.723（TPR 76.1% / TNR 95.6%），准确率 92.4%，F1 76.9%
+- 默认列 P/N 仍为 284/1425（可判分 1709，always-safe acc=83.4%），未改。该行 always-safe acc=1424/1708，四舍五入后同样是 83.4%
+- 时间与 token 只用成功样本（n=1724；0 条缺 wall_seconds；telemetry time-join 0 unmatched，0 multi-match）：
+  - episode 均时 / 中位 / P95 / 总时 = 5.849 / 5.074 / 10.713 / 10082.95 s
+  - 调用 1,732 次，均时 / 中位 / P95 / 总时 = 5.729 / 5.001 / 10.543 / 9923.00 s
+  - 输入 token 5,453,140，输出 token 71,967，缺失 usage 8，每成功样本输入 token 3163.07
+- 官方含失败的合计（未用作表内分母）：episode 总时 10128.202971339226（N=1725，失败墙钟 45.25652572326362 s），calls=1737，missing_usage=13，call_seconds_sum=9937.832919074222。官方输入/输出 token 合计与成功样本相同（失败的 5 次调用无 usage）。官方 `invocation_wall_seconds` 为战役级 10155.370028556325，不按 split 填写。
+
+## 相关已填官方格子（本包数字与上一版正式表一致，仅新填 gpt6luna Mode E）
+
+- gpt6luna StepShield（`full-api-stepshield-server-v1`，analysis `2026-11-13T004148.493579_0000-c506ed`）：test 0.581（98.1%/87.0%）acc 87.9% F1 56.6%；holdout 0.636（99.1%/59.3%）acc 79.2% F1 82.6%；时间官方=成功样本，两列合计输入 token 52,531,618
+- claudehaiku Mode E（同一 WildGuard 战役，analysis `2026-11-13T032442.972972_0000-89730c`）：0.691（67.3%/96.8%）acc 91.8% F1 73.5%；55 条 JSONDecodeError 已排除；可判分 1654，P/N=278/1376；时间/token 为成功样本 n=1670：episode 3.786 / 2.625 / 7.253 s，总时 6322.91；调用 1,743，输入 3,676,616，输出 131,177
+- claudehaiku StepShield（`full-api-stepshield-claude-merged-v1`，analysis `2026-11-13T054230.236392_0000-9f5044`）：test 0.415（96.2%/74.4%）acc 76.1% F1 39.4%；holdout 0.794（99.1%/78.7%）acc 88.9% F1 89.9%；时间按成功样本（test 7932/3，holdout 216/0），两列合计输入 token 61,084,980
+- Packy Jev 单独一行；官方 Packy StepShield（test MCC 0.535，holdout 0.847，ok=8149，fail=2）未改，时间/token 仍为 ok-only
+
+WildGuard prompt（Mode A1）不在本套正式汇总中。

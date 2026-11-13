@@ -24,3 +24,15 @@
 ## 2026-11-02：本机补跑完成
 
 已同步另一台机器的原始记录；按用户要求未复核或重跑其已完成模型。在 RTX 4070 SUPER 12GB 上新完成 D3-Mini、Shieldstral-1.0-3B、Qwen3.5-4B、SecJev-0.8B，同一 50 条 validation × 3 repeats，共 600 次 pilot + 8 次 smoke，全成功。本地计算未计价，无本轮 API 调用。[四模型结果](../workspace-evidence/2026-11-02-local-agentharm-four-models/README.md)和[完整说明](../../docs/model-evaluation/2026-11-02-local-agentharm-pilots.md)。Jev-Guard 制品/接口待落实，留给 3090；科学确认配置仍未冻结。上文早期“尚无真实 pilot”保留为当时状态。
+
+## 2026-11-03：11模型AgentHarm pilot已齐
+
+Jev-Guard原生安全头补跑完成，150+2次本地推理成功。最新[11模型汇总](../workspace-evidence/2026-11-03-experiment-summary-v6-final/README.md)包括参数量、全50项正确完成率、条件准确率、token覆盖和耗时/费用。[Jev-Guard执行说明](../../docs/model-evaluation/2026-11-03-jevguard-agentharm.md)记录接口与运行时限制。仅指当前AgentHarm 50×3开发pilot，不代表其他基准或确认性矩阵已完成。
+
+## 2026-11-04：Kev-4B补充pilot完成
+
+[Kev执行说明](../../docs/model-evaluation/2026-11-04-kev-agentharm.md)；同一AgentHarm50×3全部正确，另2条smoke成功，均为本地BF16未合并的探索性测试。最新[12模型汇总](../workspace-evidence/2026-11-04-experiment-summary-v7/README.md)包括参数量、统一50项主指标、token、耗时与费用，原11模型记录保留。
+
+## 汇总结果固定入口
+
+日常查阅统一进入[summary/](summary/README.md)。当前[AgentHarm 12模型汇总](summary/agentharm/README.md)包含Kev-4B；来源版本和hash在同目录source.json及SHA256SUMS.json。

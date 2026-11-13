@@ -19,10 +19,11 @@ def hashes(path):
     return digest.hexdigest(), blob.hexdigest()
 
 
-def fetch_ranges(key, repo, revision, item, destination):
+def fetch_ranges(key, repo, revision, item, destination, block_size=32 * 1024 * 1024, workers=8):
     size, name = item['size'], item['rfilename']
-    block_size = 32 * 1024 * 1024
     parts = destination.parent / 'range-parts' / name
+    if block_size != 32 * 1024 * 1024:
+        parts = parts / ('chunks_' + str(block_size))
     parts.mkdir(parents=True, exist_ok=True)
     count = (size + block_size - 1) // block_size
     def part(index):
@@ -46,13 +47,13 @@ def fetch_ranges(key, repo, revision, item, destination):
                 except Exception:
                     time.sleep(1)
         raise RuntimeError('Failed checkpoint range: ' + key + '/' + name + '/' + str(index))
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    with ThreadPoolExecutor(max_workers=workers) as pool:
         futures = [pool.submit(part, i) for i in range(count)]
         for completed, future in enumerate(as_completed(futures), 1):
             future.result()
             if completed % 10 == 0 or completed == count:
                 print(json.dumps({'model': key, 'file': name, 'ranges_done': completed, 'ranges_total': count}), flush=True)
-    partial = destination.with_name(name + '.partial')
+    partial = destination.with_name(destination.name + '.partial')
     with partial.open('wb') as stream:
         for index in range(count):
             with (parts / str(index)).open('rb') as source:

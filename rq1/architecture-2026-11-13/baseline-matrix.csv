@@ -1,0 +1,29 @@
+id,tier,baseline,implementation,split,primary_metrics,isolates,supports_or_refutes
+B1,T1-official,Random,StepShield harness (trivial),test_holdout;test,Recall/FPR/EIR@3/IG,task floor,floor
+B2,T1-official,StaticGuard (847 regex rules),shipped detector; run locally,test_holdout;test,Recall/FPR/EIR@3/IG,rule-based monitor,if CCD <= StaticGuard at matched FPR -> no value
+B3,T1-official,ConstraintGuard (23 behavioral categories),shipped detector; run locally,test_holdout;test,Recall/FPR/EIR@3/IG,deterministic constraint monitor,if CCD <= ConstraintGuard -> rules suffice (closest analogue)
+B4,T1-official,LLMJudge (GPT-4.1-mini 5-step window),published numbers; optional re-run,test_holdout,Recall/FPR/EIR@3/IG/tokens,strong semantic monitor,if CCD << LLMJudge -> architecture insufficient
+B5,T1-official,HybridGuard (static -> LLM cascade),shipped detector; run locally,test_holdout;test,Recall/FPR/EIR@3/IG,cascade design,compare with CCD+cascade
+B6,T2-same-model,Jev prefix-level (Mode C),rq1/summary + rq1/ext,test_holdout;test,Recall/FPR/EIR@3/IG,current incumbent,if CCD <= B6 -> decomposition fails
+B7,T2-same-model,Jev sliding window (last k steps),new detector; reuse harness,test_holdout;test,same,context length vs decomposition,if B7 == CCD -> context length explains gain
+B8,T2-same-model,Jev multi-question prefix,new detector,test_holdout,same,question decomposition without step decomposition,if B8 == CCD -> no need for per-step
+B9,T2-same-model,Jev full-trace single call,new detector,test_holdout,same,long-context single-call judge (2609.34862 style),if B9 == CCD -> decomposition unnecessary
+B10,T2-same-model,Call-matched prefix queries,new detector (same #calls as CCD),test_holdout,same,compute vs decomposition,if B10 == CCD -> H3 refuted
+B11,T3-decomposition,Generic per-step probe (is this step unsafe?)+aggregator,new detector,test_holdout,same,checklist value,if B11 == CCD -> checklist unnecessary
+B12,T3-decomposition,q_inj only (InjecAgent-style)+aggregator,new detector,test_holdout,same,injection channel,if B12 == CCD -> gain is just injection detection
+B13,T3-decomposition,q_scope only+aggregator,new detector,test_holdout,same,scope channel,if B13 == CCD -> gain is just scope
+B14,T3-decomposition,Open-ended requirement-violation probe (no checklist)+aggregator,new detector,test_holdout,same,structured vs open-ended probing,if B14 == CCD -> structure unnecessary
+B15,T3-ours,CCD full,new detector,test_holdout;test,all,ours,-
+B16,T4-aggregation,max over probes,analysis,test_holdout,same,aggregator,-
+B17,T4-aggregation,any-threshold,analysis,test_holdout,same,aggregator,-
+B18,T4-aggregation,CUSUM,analysis,test_holdout,same,aggregator,-
+B19,T4-aggregation,L2 logistic on features,analysis,test_holdout,same,learned aggregator,-
+B20,T4-aggregation,last-step only,analysis,test_holdout,same,recency,-
+B21,T4-aggregation,oracle over thresholds,analysis,test_holdout,same,ceiling,-
+B22,T5-architecture,CCD + evidence-card LLM second opinion,new detector,test_holdout,Recall/FPR/EIR@3/IG/cost,second opinion,if B22 >> CCD -> aggregation insufficient
+B23,T5-architecture,Cascade (CCD filter -> LLM),new detector,test_holdout,Recall/FPR/EIR@3/IG/cost,cost design,compare cost frontier
+B24,T5-architecture,Fine-tuned small classifier on step text,new baseline (dev-trained),test_holdout,same,supervised alternative,if B24 == CCD -> Jev not needed
+B25,T5-reference,Human/oracle upper bound (100 trajectories),manual audit,test_holdout,same,ceiling,-
+B26,T5-citation,2609.34862 Jev trace judge (F1 77.8 vs 74.1),citation only,external,same,ceiling reference,-
+B27,T5-citation,ObligationBench 2610.11773 best recall 48.97% exact 10%,citation only,external,same,ceiling reference,-
+B28,T5-citation,2611.11571 deterministic monitor 0.0% ASR,citation only,external,same,deterministic reference,-

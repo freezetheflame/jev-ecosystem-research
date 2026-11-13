@@ -1,0 +1,25 @@
+{
+  "purpose": "Current consolidated AgentHarm results; byte-exact copy of versioned analysis",
+  "source_directory": "data/workspace-evidence/2026-11-04-experiment-summary-v7",
+  "source_hash_manifest_sha256": "9d9b72eb5ea512a12002c9d9515717a03917145755cd5aa7dc032cc9b48a31d2",
+  "models": 12,
+  "copied_files": [
+    "README.md",
+    "SHA256SUMS.json",
+    "calls-all-runs.csv",
+    "comparison.csv",
+    "episodes-all-runs.csv",
+    "export-counts.json",
+    "full-sample.csv",
+    "item-predictions.csv",
+    "metrics.csv",
+    "model-parameters.csv",
+    "model-sizes.csv",
+    "results.json",
+    "run-inventory.csv",
+    "run-inventory.json",
+    "tokens.csv"
+  ],
+  "model_calls": 0,
+  "historical_analyses": "Retained at original workspace-evidence paths"
+}

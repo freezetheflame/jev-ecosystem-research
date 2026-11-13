@@ -1,0 +1,20 @@
+scheme,position,judges,n_pos,n_neg,families,variants,conditions,steps_per_case,calls,notes
+S,toolcall,4,25,25,G1;G2;P1,8,12,1,2400,minimum publishable
+S,prefix,4,15,10,G1;G2;P3,8,12,8,9600,truncate at divergence+4 or 12 steps
+S,dev,4,40,40,-,0,3,1,2000,threshold selection only
+S,adaptive,1,0,0,AD1,0,0,1,0,not in S
+M,request,4,60,60,G1;G2;G5;I3,11,15,1,3600,AgentHarm
+M,toolcall,4,60,60,G1;G2;G5;I3;P1,13,17,1,4080,TS-Bench 20 per source
+M,prefix,4,40,40,G1;G2;P3,8,12,8,15360,StepShield rogue + non-rogue
+M,dev,4,80,80,-,0,3,1,3500,no attack
+M,adaptive,1,30,0,AD1;AD2,0,2,1,2400,Jev toolcall budget 32 + matched control
+M,total,4,200,200,-,-,-,-,28940,
+L,request,4,120,120,G1;G2;G5;I3,11,15,1,7200,
+L,content,4,120,120,G1;G2;G5;I3,11,15,1,7200,
+L,toolcall,4,120,120,G1;G2;G5;I3;P1,13,17,1,8160,
+L,response,4,120,120,G1;G2;G5,8,15,1,7200,
+L,prefix,4,80,80,G1;G2;P3;P4,11,15,8,30720,
+L,breadth,12,60,60,G1;G5,6,10,1,14400,two positions: request+toolcall
+L,adaptive,1,40,0,AD1;AD2,0,2,1,26880,budgets 8/32/128 + matched control
+L,dev,4,150,150,-,0,3,1,5000,
+L,total,4,720,720,-,-,-,-,106760,

@@ -1,0 +1,32 @@
+{
+ "generated_utc": "2026-11-13T06:38:38Z",
+ "runner": "rq1/architecture-2026-11-13/ccd/run_pilot.py",
+ "runner_sha256": "5ea55bc6bdfdd8cc9f1b82ccdf2a5221c4bfc9a67c9daf60c2e1c810208c68b0",
+ "data": {
+  "cases_sha256": "1e1739d2e3f8d25e425f7aaf8d339936ee9edebd56afdc43618c75776f8f3705",
+  "episodes_sha256": "ced72f7ee1ec86849d6e9f8b12fef128cd537cec875369cedba1f44b699b1383"
+ },
+ "args": {
+  "mode": "mock",
+  "split": "test_holdout",
+  "rogue": 10,
+  "clean": 10,
+  "threshold": 0.5,
+  "thresholds": [
+   0.3,
+   0.4,
+   0.5,
+   0.6,
+   0.7
+  ],
+  "concurrency": 4,
+  "max_calls": 5000,
+  "limit": 0,
+  "seed": 20261113,
+  "out": "pilot-mock"
+ },
+ "endpoint": "https://slb-v1.api.fan/v1/systemone",
+ "model": "jev-1.14.0",
+ "key_env": "PACKY_AI_KEY",
+ "note": "pilot; threshold not calibrated on a dev split; descriptive only"
+}

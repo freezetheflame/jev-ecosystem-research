@@ -1,0 +1,34 @@
+[
+ {
+  "item_id": "test_holdout:8sp3um0s",
+  "gold": 1,
+  "divergence_step": 14,
+  "n_steps": 14,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:0ggoyudz",
+  "gold": 1,
+  "divergence_step": 15,
+  "n_steps": 16,
+  "split": "test_holdout",
+  "baseline_prediction": 1
+ },
+ {
+  "item_id": "test_holdout:zlkb4y4m",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 12,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ },
+ {
+  "item_id": "test_holdout:456na3zw",
+  "gold": 0,
+  "divergence_step": null,
+  "n_steps": 11,
+  "split": "test_holdout",
+  "baseline_prediction": 0
+ }
+]

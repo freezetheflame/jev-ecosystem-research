@@ -6,10 +6,14 @@ from urllib.parse import urlsplit
 from .common import absolute, file_hash, read, encode, secret_values
 from .datasets import paths, agentharm_files
 from .adapters import selected_models, build_request, adapter
+from .retries import validate
 
-DATASETS = {'maliciousskillbench', 'agentharm', 'injecagent', 'tsbench', 'mcphunt', 'atbench'}
+DATASETS = {'maliciousskillbench', 'agentharm', 'injecagent', 'tsbench', 'mcphunt', 'atbench', 'stepshield', 'wildguardtest', 'wildguardtest-response'}
 LEGACY_DATASETS = {'agentdojo', 'agentharm', 'mcphunt', 'atbench'}
 STATIC_CONTRACTS = {'agentharm': 'request_risk_classification',
+                    'wildguardtest': 'request_risk_classification',
+                    'wildguardtest-response': 'response_risk_classification',
+                    'stepshield': 'prefix_monitoring',
                     'maliciousskillbench': 'skill_risk_classification',
                     'injecagent': 'input_inspection',
                     'tsbench': 'pre_action_safety',
@@ -38,10 +42,15 @@ def inspect(config, check_keys=True):
         issues.append('phase must be explicitly pilot or confirmatory')
     if config.get('concurrency') != 1:
         issues.append('Only serial concurrency=1 is implemented for unambiguous call accounting')
-    if config.get('execution_policy') != {'retry': 'none', 'overflow': 'provider_error_no_truncation',
+    expected_policy = {'retry': 'none', 'overflow': 'provider_error_no_truncation',
             'client_cache': 'disabled', 'unknown_cost': 'stop_before_next_request',
-            'context': 'full_native_input_no_automatic_chunking'}:
-        issues.append('execution_policy must match implemented no-retry/no-truncation policy')
+            'context': 'full_native_input_no_automatic_chunking'}
+    if 'retry_policy' in config:
+        expected_policy.update(retry='bounded_first_valid_v1', unknown_cost='reserve_per_unknown_attempt')
+        if not validate(config['retry_policy']):
+            issues.append('retry_policy is invalid')
+    if config.get('execution_policy') != expected_policy:
+        issues.append('execution_policy must match implemented retry/no-truncation policy')
     if type(config.get('repeats')) is not int or config['repeats'] < 1:
         issues.append('repeats must be an explicit positive integer')
     if type(config.get('schedule_seed')) is not int:
@@ -60,7 +69,8 @@ def inspect(config, check_keys=True):
     for name, model in active_models.items():
         allowed = {'display_name', 'model_id', 'api', 'provider', 'endpoint', 'api_key_env', 'headers',
                    'parameters', 'parameter_status', 'timeout_seconds', 'decision_type', 'choice_criteria',
-                   'adapter', 'input_field', 'yes_means', 'query', 'deployment', 'auth_scheme', 'controversial_policy'}
+                   'adapter', 'input_field', 'yes_means', 'query', 'deployment', 'auth_scheme', 'controversial_policy',
+                   'classification_input_as_data'}
         if set(model) - allowed:
             issues.append(name + ' has unknown fields; credentials must only be in named environment variables')
         for field in ('model_id', 'endpoint', 'api', 'timeout_seconds', 'parameter_status'):
@@ -72,13 +82,14 @@ def inspect(config, check_keys=True):
                           and url.hostname in ('localhost', '127.0.0.1', '::1'))
             if (url.scheme != 'https' and not local_http) or url.username or url.password or url.query or url.fragment:
                 issues.append(name + ' endpoint must be HTTPS (or local-provider loopback HTTP), without credentials/query/fragment')
-        if model.get('api') not in ('jev', 'openai_responses', 'openai_chat', 'anthropic_messages', 'gliguard'):
+        if model.get('api') not in ('jev', 'openai_responses', 'openai_chat', 'anthropic_messages', 'gliguard', 'jevguard'):
             issues.append(name + ' has no supported API selected')
         if type(model.get('parameters')) is not dict:
             issues.append(name + ' parameters must be explicit object, not an unspecified default')
         else:
             forbidden = {'model', 'messages', 'input', 'instructions', 'state', 'questions', 'tools',
-                         'api_key', 'authorization', 'stream', 'previous_response_id', 'system', 'text', 'schema'}
+                         'api_key', 'authorization', 'stream', 'previous_response_id', 'system', 'text', 'schema',
+                         'options', 'mode', 'safety_applicable'}
             if forbidden.intersection(model['parameters']):
                 issues.append(name + ' parameters override controlled fields')
         if type(model.get('timeout_seconds')) not in (int, float) or model['timeout_seconds'] <= 0:
@@ -140,8 +151,10 @@ def inspect(config, check_keys=True):
             issues.append(name + ' source path is missing')
         for field in ('mode_code', 'mode_definition', 'contract', 'source_revision', 'exposure_status'):
             need(spec.get(field), 'datasets.' + name + '.' + field)
-        if spec.get('mode_code') not in ('A1', 'A2', 'B', 'C', 'D'):
+        if spec.get('mode_code') not in ('A1', 'A2', 'B', 'C', 'D', 'E'):
             issues.append(name + ' must use an explicit current Mode code')
+        if spec.get('mode_code') == 'E' and spec.get('contract') not in (None, 'response_risk_classification'):
+            issues.append(name + ' Mode E is Response Inspection; prompt-harm or action contracts are not this mode')
         if spec.get('mode_code') in ('A1', 'A2') and spec.get('contract') not in (None, 'request_risk_classification', 'skill_risk_classification', 'input_inspection'):
             issues.append(name + ' A1/A2 inherit Mode A input inspection; action authorization or full-trace auditing is not this mode')
         if name in STATIC_CONTRACTS and spec.get('contract') != STATIC_CONTRACTS[name]:

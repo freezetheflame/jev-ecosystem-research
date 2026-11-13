@@ -13,6 +13,7 @@ from .config import inspect
 from .datasets import load_static, paths, agentharm_files
 from .models import Judge, Transport, StopRun, TransportError, PolicyRefusal, load_monitor
 from .adapters import selected_models
+from .retries import reservation
 
 
 def environment():
@@ -42,7 +43,7 @@ def data_hashes(config):
         selected_files.extend(p for _, _, _, p in agentharm_files(config))
     if 'mcphunt' in config['datasets']:
         selected_files.extend(locations['mcphunt'] / p for p in config['datasets']['mcphunt']['files'])
-    for name in ('injecagent', 'tsbench'):
+    for name in ('injecagent', 'tsbench', 'wildguardtest', 'stepshield'):
         if name in config['datasets']:
             selected_files.extend(locations[name] / p for p in config['datasets'][name]['files'])
     for path in selected_files:
@@ -202,11 +203,15 @@ def execute(config, run_dir, resume=False, opener=None):
         and e.get('error_type') != 'PolicyRefusal'
         for p in (directory / 'telemetry').glob('*.calls.jsonl') for e in rows(p))
     original_check = transport.check_budget
+    reserve_unknown = config['execution_policy']['unknown_cost'] == 'reserve_per_unknown_attempt'
+    old_events = [e for p in (directory / 'telemetry').glob('*.calls.jsonl') for e in rows(p)]
+    old_allowance = reservation(config, old_events) if reserve_unknown else 0
     def total_budget():
-        if old_api_unknown:
+        if old_api_unknown and not reserve_unknown:
             raise StopRun('prior_unknown_cost')
         b = config['budget']
-        if old_cost + monitor.totals['known_estimated_cost_usd'] + b['reserve_usd_per_call'] > b['max_api_usd']:
+        allowance = reservation(config, monitor.events) if reserve_unknown else 0
+        if old_cost + old_allowance + monitor.totals['known_estimated_cost_usd'] + allowance + b['reserve_usd_per_call'] > b['max_api_usd']:
             raise StopRun('cumulative_estimated_cost_budget')
         if old_calls + transport.call_count >= b['max_calls']:
             raise StopRun('cumulative_call_budget')
@@ -235,6 +240,9 @@ def execute(config, run_dir, resume=False, opener=None):
                 if case['dataset_id'] == 'agentdojo':
                     from .dojo import run_episode
                     result.update(run_episode(config, case, judge, transport, entry['episode_id'], directory))
+                elif case['dataset_id'] == 'stepshield':
+                    from .full_datasets import run_prefix
+                    result.update(run_prefix(case, judge, entry['episode_id']))
                 else:
                     prediction = judge.judge(case['view'], config['datasets'][case['dataset_id']]['contract'], entry['episode_id'])
                     result.update(status='ok', prediction=prediction)
@@ -249,7 +257,8 @@ def execute(config, run_dir, resume=False, opener=None):
                 result.update(status='failed', error_type=type(exc).__name__, prediction=None)
                 # Preserve failures; no retry based on prediction quality. Transport failures
                 # stop scheduling, including usage-unknown network/auth errors.
-                if isinstance(exc, (TransportError, OSError)):
+                if isinstance(exc, (TransportError, OSError)) and not (reserve_unknown and
+                        (isinstance(exc, OSError) or exc.status in config['retry_policy']['http_statuses'])):
                     stopping = 'transport_failure'
             result.update(finished_at=now(), wall_seconds=time.monotonic() - start,
                           monitor_run_id=monitor.run_id, monitor_event_start=call_start,

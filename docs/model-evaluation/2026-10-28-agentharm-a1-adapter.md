@@ -24,13 +24,13 @@ python -m security_bench inspect-inputs --config configs/agentharm-a1.template.j
 
 不需要 API key，也不发送网络请求。输出：
 
-| 文件 | 内容 |
-|---|---|
-| `inputs.jsonl` | ID、split、纯输入 view 与 hash；实际发送的 state 只使用 view |
-| `gold.jsonl` | 独立标签、来源分区、原始 ID 和基础行为 ID |
-| `jev-request-example.json` | 第一条输入展开后的完整 Jev 请求；type=choice、safe/unsafe，无 Authorization |
-| `effective-input-config.json` | 本次输入准备配置，包括显式覆盖的 split |
-| `manifest.json` | 全部确切 ID、数量、来源/产物 hash、draft 状态与零模型调用记录 |
+| 文件                            | 内容                                                         |
+| ----------------------------- | ---------------------------------------------------------- |
+| `inputs.jsonl`                | ID、split、纯输入 view 与 hash；实际发送的 state 只使用 view              |
+| `gold.jsonl`                  | 独立标签、来源分区、原始 ID 和基础行为 ID                                   |
+| `jev-request-example.json`    | 第一条输入展开后的完整 Jev 请求；type=choice、safe/unsafe，无 Authorization |
+| `effective-input-config.json` | 本次输入准备配置，包括显式覆盖的 split                                     |
+| `manifest.json`               | 全部确切 ID、数量、来源/产物 hash、draft 状态与零模型调用记录                     |
 
 实际已在 `data/agent-security-study/preparations/2026-10-28-agentharm-a1-validation/` 完成 validation 准备：64 条请求，harmful/benign 各 32 条，原始文件 hash 与获取快照一致。这个数量是准备的数据，不是已判分样本；没有模型输出、准确率或调用费用。该目录包含第三方原文，作为本地准备材料排除于 Git。
 

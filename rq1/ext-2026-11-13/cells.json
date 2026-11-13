@@ -1,0 +1,1328 @@
+[
+ {
+  "model": "claudehaiku",
+  "dataset": "tsbench",
+  "how": "single:full-api-tsbench-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-tsbench-v1\\claudehaiku\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 1477,
+   "fp": 830,
+   "tn": 2912,
+   "fn": 152,
+   "P": 1629,
+   "N": 3742,
+   "ok": 7149,
+   "fail": 33,
+   "scorable": 5371
+  }
+ },
+ {
+  "model": "claudehaiku",
+  "dataset": "agentharm",
+  "how": "single:full-api-agentharm-claude-v5",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-agentharm-claude-v5\\claudehaiku\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 190,
+   "fp": 52,
+   "tn": 156,
+   "fn": 18,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "claudehaiku",
+  "dataset": "injecagent",
+  "how": "single:full-api-wg-injec-tsbench-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-wg-injec-tsbench-v1\\claudehaiku\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 2015,
+   "fp": 0,
+   "tn": 0,
+   "fn": 93,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "d3mini",
+  "dataset": "tsbench",
+  "how": "single:full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\d3mini\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 640,
+   "fp": 130,
+   "tn": 3640,
+   "fn": 991,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "d3mini",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\d3mini\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 206,
+   "fp": 52,
+   "tn": 156,
+   "fn": 2,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "d3mini",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\d3mini\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1984,
+   "fp": 0,
+   "tn": 0,
+   "fn": 124,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "d3mini",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\d3mini\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 201,
+   "fp": 39,
+   "tn": 1386,
+   "fn": 83,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "d3mini",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\d3mini\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 513,
+   "fp": 267,
+   "tn": 7029,
+   "fn": 126,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "d3mini",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\d3mini\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 99,
+   "fp": 8,
+   "tn": 100,
+   "fn": 9,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "gliguard",
+  "dataset": "tsbench",
+  "how": "merged:full-local-tsbench-repair-v1,full-local-tsbench-server-v1,full-local-wildguard-tsbench-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-repair-v1\\gliguard\\tsbench\\episodes.jsonl",
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\gliguard\\tsbench\\episodes.jsonl",
+   "data\\agent-security-study\\runs\\full-local-wildguard-tsbench-v1\\gliguard\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 836,
+   "fp": 1027,
+   "tn": 2743,
+   "fn": 795,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "gliguard",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\gliguard\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 195,
+   "fp": 79,
+   "tn": 129,
+   "fn": 13,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "gliguard",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\gliguard\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1591,
+   "fp": 0,
+   "tn": 0,
+   "fn": 517,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "gliguard",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\gliguard\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 269,
+   "fp": 605,
+   "tn": 820,
+   "fn": 15,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "gliguard",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\gliguard\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 200,
+   "fp": 1083,
+   "tn": 6213,
+   "fn": 439,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "gliguard",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\gliguard\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 88,
+   "fp": 34,
+   "tn": 74,
+   "fn": 20,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "gpt6luna",
+  "dataset": "tsbench",
+  "how": "single:full-api-tsbench-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-tsbench-v1\\gpt6luna\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 1423,
+   "fp": 532,
+   "tn": 3238,
+   "fn": 208,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "gpt6luna",
+  "dataset": "agentharm",
+  "how": "single:full-api-agentharm-gpt-v5",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-agentharm-gpt-v5\\gpt6luna\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 182,
+   "fp": 40,
+   "tn": 168,
+   "fn": 26,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "gpt6luna",
+  "dataset": "injecagent",
+  "how": "single:full-api-wg-injec-tsbench-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-wg-injec-tsbench-v1\\gpt6luna\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 2100,
+   "fp": 0,
+   "tn": 0,
+   "fn": 8,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "jev-packy-1.14.0",
+  "dataset": "tsbench",
+  "how": "single:full-api-jev-packy-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-jev-packy-v1\\jev\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 742,
+   "fp": 63,
+   "tn": 3707,
+   "fn": 889,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "jev-packy-1.14.0",
+  "dataset": "agentharm",
+  "how": "single:full-api-jev-packy-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-jev-packy-v1\\jev\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 186,
+   "fp": 26,
+   "tn": 182,
+   "fn": 22,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "jev-packy-1.14.0",
+  "dataset": "injecagent",
+  "how": "single:full-api-jev-packy-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-jev-packy-v1\\jev\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 2012,
+   "fp": 0,
+   "tn": 0,
+   "fn": 96,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "jev-packy-1.14.0",
+  "dataset": "wildguard_response",
+  "how": "single:full-api-jev-packy-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-jev-packy-v1\\jev\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 215,
+   "fp": 48,
+   "tn": 1377,
+   "fn": 69,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "jev-packy-1.14.0",
+  "dataset": "stepshield_test",
+  "how": "single:full-api-jev-packy-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-jev-packy-v1\\jev\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 583,
+   "fp": 966,
+   "tn": 6328,
+   "fn": 56,
+   "P": 639,
+   "N": 7294,
+   "ok": 7933,
+   "fail": 2,
+   "scorable": 7933
+  }
+ },
+ {
+  "model": "jev-packy-1.14.0",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-api-jev-packy-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-api-jev-packy-v1\\jev\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 105,
+   "fp": 14,
+   "tn": 94,
+   "fn": 3,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "jevguard",
+  "dataset": "tsbench",
+  "how": "merged:full-local-tsbench-repair-v1,full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-repair-v1\\jevguard\\tsbench\\episodes.jsonl",
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\jevguard\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 1067,
+   "fp": 1434,
+   "tn": 2336,
+   "fn": 564,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "jevguard",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\jevguard\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 203,
+   "fp": 94,
+   "tn": 114,
+   "fn": 5,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "jevguard",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\jevguard\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1569,
+   "fp": 0,
+   "tn": 0,
+   "fn": 539,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "jevguard",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\jevguard\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 255,
+   "fp": 614,
+   "tn": 811,
+   "fn": 29,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "jevguard",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\jevguard\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 549,
+   "fp": 4035,
+   "tn": 3261,
+   "fn": 90,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "jevguard",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\jevguard\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 105,
+   "fp": 45,
+   "tn": 63,
+   "fn": 3,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "kev",
+  "dataset": "tsbench",
+  "how": "merged:full-local-tsbench-repair-v1,full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-repair-v1\\kev\\tsbench\\episodes.jsonl",
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\kev\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 395,
+   "fp": 140,
+   "tn": 3630,
+   "fn": 1236,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "kev",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\kev\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 188,
+   "fp": 46,
+   "tn": 162,
+   "fn": 20,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "kev",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\kev\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1925,
+   "fp": 0,
+   "tn": 0,
+   "fn": 183,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "kev",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\kev\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 230,
+   "fp": 217,
+   "tn": 1208,
+   "fn": 54,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "kev",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\kev\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 371,
+   "fp": 203,
+   "tn": 7093,
+   "fn": 268,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "kev",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\kev\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 81,
+   "fp": 9,
+   "tn": 99,
+   "fn": 27,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "laya",
+  "dataset": "tsbench",
+  "how": "merged:full-local-tsbench-repair-v1,full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-repair-v1\\laya\\tsbench\\episodes.jsonl",
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\laya\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 24,
+   "fp": 18,
+   "tn": 3752,
+   "fn": 1607,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "laya",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\laya\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 132,
+   "fp": 40,
+   "tn": 168,
+   "fn": 76,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "laya",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\laya\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 431,
+   "fp": 0,
+   "tn": 0,
+   "fn": 1677,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "laya",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\laya\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 31,
+   "fp": 89,
+   "tn": 1336,
+   "fn": 253,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "laya",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\laya\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 67,
+   "fp": 774,
+   "tn": 6522,
+   "fn": 572,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "laya",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\laya\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 2,
+   "fp": 2,
+   "tn": 106,
+   "fn": 106,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "qwen35",
+  "dataset": "tsbench",
+  "how": "single:full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\qwen35\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 803,
+   "fp": 424,
+   "tn": 3346,
+   "fn": 828,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "qwen35",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\qwen35\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 176,
+   "fp": 48,
+   "tn": 160,
+   "fn": 32,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "qwen35",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\qwen35\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1857,
+   "fp": 0,
+   "tn": 0,
+   "fn": 251,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "qwen35",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\qwen35\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 193,
+   "fp": 96,
+   "tn": 1329,
+   "fn": 91,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "qwen35",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\qwen35\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 296,
+   "fp": 66,
+   "tn": 7230,
+   "fn": 343,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "qwen35",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\qwen35\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 90,
+   "fp": 6,
+   "tn": 102,
+   "fn": 18,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "qwen3guard",
+  "dataset": "tsbench",
+  "how": "merged:full-local-tsbench-repair-v1,full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-repair-v1\\qwen3guard\\tsbench\\episodes.jsonl",
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\qwen3guard\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 708,
+   "fp": 424,
+   "tn": 3346,
+   "fn": 923,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "qwen3guard",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\qwen3guard\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 204,
+   "fp": 136,
+   "tn": 72,
+   "fn": 4,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "qwen3guard",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\qwen3guard\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1214,
+   "fp": 0,
+   "tn": 0,
+   "fn": 894,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "qwen3guard",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\qwen3guard\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 255,
+   "fp": 456,
+   "tn": 969,
+   "fn": 29,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "qwen3guard",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\qwen3guard\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 48,
+   "fp": 22,
+   "tn": 7274,
+   "fn": 591,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "qwen3guard",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\qwen3guard\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 50,
+   "fp": 3,
+   "tn": 105,
+   "fn": 58,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "secjev",
+  "dataset": "tsbench",
+  "how": "single:full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\secjev\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 265,
+   "fp": 309,
+   "tn": 3409,
+   "fn": 1294,
+   "P": 1559,
+   "N": 3718,
+   "ok": 7058,
+   "fail": 124,
+   "scorable": 5277
+  }
+ },
+ {
+  "model": "secjev",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\secjev\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 150,
+   "fp": 16,
+   "tn": 192,
+   "fn": 58,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "secjev",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\secjev\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1508,
+   "fp": 0,
+   "tn": 0,
+   "fn": 600,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "secjev",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\secjev\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 155,
+   "fp": 517,
+   "tn": 908,
+   "fn": 129,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "secjev",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\secjev\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 203,
+   "fp": 398,
+   "tn": 6898,
+   "fn": 436,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "secjev",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\secjev\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 34,
+   "fp": 19,
+   "tn": 89,
+   "fn": 74,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ },
+ {
+  "model": "shieldstral",
+  "dataset": "tsbench",
+  "how": "single:full-local-tsbench-server-v1",
+  "files": [
+   "rq1\\tsbench\\server-local\\full-local-tsbench-server-v1\\shieldstral\\tsbench\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7182,
+   "tp": 377,
+   "fp": 133,
+   "tn": 3637,
+   "fn": 1254,
+   "P": 1631,
+   "N": 3770,
+   "ok": 7182,
+   "fail": 0,
+   "scorable": 5401
+  }
+ },
+ {
+  "model": "shieldstral",
+  "dataset": "agentharm",
+  "how": "single:full-local-agentharm-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-agentharm-v1\\shieldstral\\agentharm\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 416,
+   "tp": 189,
+   "fp": 43,
+   "tn": 165,
+   "fn": 19,
+   "P": 208,
+   "N": 208,
+   "ok": 416,
+   "fail": 0,
+   "scorable": 416
+  }
+ },
+ {
+  "model": "shieldstral",
+  "dataset": "injecagent",
+  "how": "single:full-local-injecagent-v1",
+  "files": [
+   "data\\agent-security-study\\runs\\full-local-injecagent-v1\\shieldstral\\injecagent\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 2108,
+   "tp": 1019,
+   "fp": 0,
+   "tn": 0,
+   "fn": 1089,
+   "P": 2108,
+   "N": 0,
+   "ok": 2108,
+   "fail": 0,
+   "scorable": 2108
+  }
+ },
+ {
+  "model": "shieldstral",
+  "dataset": "wildguard_response",
+  "how": "single:full-local-wildguard-response-v1",
+  "files": [
+   "rq1\\wildguard\\server-local\\full-local-wildguard-response-v1\\shieldstral\\wildguardtest-response\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 1725,
+   "tp": 241,
+   "fp": 291,
+   "tn": 1134,
+   "fn": 43,
+   "P": 284,
+   "N": 1425,
+   "ok": 1725,
+   "fail": 0,
+   "scorable": 1709
+  }
+ },
+ {
+  "model": "shieldstral",
+  "dataset": "stepshield_test",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\shieldstral\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 7935,
+   "tp": 0,
+   "fp": 0,
+   "tn": 7296,
+   "fn": 639,
+   "P": 639,
+   "N": 7296,
+   "ok": 7935,
+   "fail": 0,
+   "scorable": 7935
+  }
+ },
+ {
+  "model": "shieldstral",
+  "dataset": "stepshield_test_holdout",
+  "how": "single:full-local-stepshield-server-v1",
+  "files": [
+   "rq1\\stepshield\\server-local\\full-local-stepshield-server-v1\\shieldstral\\stepshield\\episodes.jsonl"
+  ],
+  "counts": {
+   "n": 216,
+   "tp": 32,
+   "fp": 0,
+   "tn": 108,
+   "fn": 76,
+   "P": 108,
+   "N": 108,
+   "ok": 216,
+   "fail": 0,
+   "scorable": 216
+  }
+ }
+]

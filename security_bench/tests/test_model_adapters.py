@@ -18,7 +18,9 @@ from security_bench.tests import test_agentharm_a1 as fixtures
 
 def response_for(model, text=None):
     kind = model['adapter']
-    if kind == 'choice':
+    if kind == 'jevguard_safety':
+        response = {'safety': 'unsafe', 'safety_probs': {'unsafe': .8, 'safe': .2}, 'truncated': False}
+    elif kind == 'choice':
         response = {'answers': {'risk': {'type': 'choice', 'choice': 'unsafe'}}}
     elif kind == 'gliguard':
         response = {'prompt_safety': 'unsafe'}
@@ -36,8 +38,8 @@ def response_for(model, text=None):
 class MappingTests(unittest.TestCase):
     def setUp(self):
         self.c = read(ROOT/'configs/agentharm-all-models.template.json')
-    def test_all_11_requests_and_native_outputs(self):
-        self.assertEqual(len(selected_models(self.c)), 11)
+    def test_all_model_requests_and_native_outputs(self):
+        self.assertEqual(len(selected_models(self.c)), len(PROFILES))
         self.assertEqual(set(PROFILES), set(self.c['models']))
         for name, model in self.c['models'].items():
             with self.subTest(model=name):
@@ -149,9 +151,9 @@ class MappingTests(unittest.TestCase):
     def test_offline_previews_need_no_keys_or_weights(self):
         with tempfile.TemporaryDirectory() as tmp:
             result=preview(self.c,Path(tmp)/'preview')
-            self.assertEqual(result['model_count'],11)
+            self.assertEqual(result['model_count'],len(PROFILES))
             self.assertEqual(result['model_calls'],0)
-            self.assertEqual(len(list((Path(tmp)/'preview').glob('*.json'))),12)
+            self.assertEqual(len(list((Path(tmp)/'preview').glob('*.json'))),len(PROFILES)+1)
 
 
 class TransportAdapterTests(unittest.TestCase):
@@ -189,7 +191,7 @@ class TransportAdapterTests(unittest.TestCase):
 class AllModelWorkflowTests(unittest.TestCase):
     def setUp(self):fixtures.AgentHarmA1Tests.setUp(self)
     def tearDown(self):fixtures.AgentHarmA1Tests.tearDown(self)
-    def test_full_11_model_schedule_report_and_resume(self):
+    def test_full_model_schedule_report_and_resume(self):
         fixtures.AgentHarmA1Tests.operational_fixture(self)
         template=read(ROOT/'configs/agentharm-all-models.template.json')
         self.c['models']=copy.deepcopy(template['models'])
@@ -211,19 +213,20 @@ class AllModelWorkflowTests(unittest.TestCase):
             calls=0
             def open(self,req,timeout):
                 self.calls+=1
-                name=json.loads(req.data)['model'].removeprefix('test-')
+                payload=json.loads(req.data)
+                name=payload['model'].removeprefix('test-') if 'model' in payload else 'jevguard'
                 return FakeResponse(response_for(models[name]))
         opener=Opener();run=self.root/'all-run'
-        with patch.dict(os.environ,{k:'fixture-only' for k in ['TYPESAFE_API_KEY','OPENAI_API_KEY','ANTHROPIC_API_KEY']}):
-            self.assertEqual(plan(self.c,run)['episodes'],44)
+        with patch.dict(os.environ,{m['api_key_env']:'fixture-only' for m in models.values() if m.get('api_key_env')}):
+            self.assertEqual(plan(self.c,run)['episodes'],4*len(PROFILES))
             execute(self.c,run,opener=opener)
             execute(self.c,run,resume=True,opener=opener)
-        self.assertEqual(opener.calls,44)
+        self.assertEqual(opener.calls,4*len(PROFILES))
         self.assertEqual({r['arm'] for r in rows(run/'plan.jsonl')},set(PROFILES))
         report=read(sorted((run/'analysis').iterdir())[-1]/'summary.json')
         self.assertEqual(report['status'],'complete')
         self.assertEqual(report['all_api_calls_including_unassigned'],12)
-        self.assertEqual(report['all_local_calls_including_unassigned'],32)
+        self.assertEqual(report['all_local_calls_including_unassigned'],4*(len(PROFILES)-3))
         self.assertEqual(report['api_fees_usd']['unpriced_calls'],0)
         self.assertAlmostEqual(report['api_fees_usd']['total_price_estimated'],12*11/1e6)
         for group in report['groups']:

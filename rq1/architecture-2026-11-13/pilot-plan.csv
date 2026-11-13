@@ -1,0 +1,10 @@
+phase,model,trajectories,steps_avg,probes,calls,cash_note,notes
+P1,jev-packy-1.14.0,200,8.7,6,10440,~$0.44,$0.042/M input;300-500 tokens per probe
+P1,d3mini,200,8.7,6,10440,unpriced,local GPU
+P1,kev,200,8.7,6,10440,unpriced,local GPU
+P1,checklist_llm,200,0,1,200,price snapshot needed,one extraction per trajectory
+P2,jev-packy-1.14.0,100,8.7,5,4350,~$0.18,ablation subset
+P2,call_matched_control,100,8.7,5,4350,~$0.18,prompt-level prefix questions instead of probes
+P3,jev-packy-1.14.0,100,8.7,0,100,~$0.01,evidence cards only (probes reused from P1)
+P4,jev-packy-1.14.0,60,8.7,6,3132,~$0.13,warm-up and gradual-drift on CCD
+P4,d3mini,60,8.7,6,3132,unpriced,

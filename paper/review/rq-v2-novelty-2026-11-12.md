@@ -1,0 +1,107 @@
+# RQ v2 novelty delta: 2026-10-17 → 2026-11-12
+
+Date: 2026-11-12 · novelty-updater (task-4). Scope: arXiv window 2026-10-17..2026-11-12, plus repo docs changed since 2026-10-17. No model calls; no existing files modified.
+RQ definitions (as supplied): **RQ1** effectiveness of System One/decision models as security judges for LLM agents; **RQ2** runtime efficiency and cost; **RQ3** robustness of security judgments under attack; **RQ4** effect of different configurations.
+Evidence rule: every row was verified by opening its arXiv abs page (or Zenodo record) on 2026-11-12; numbers are as reported there, not reproduced. "Preprint" unless stated. Baseline = paper/review/related-work-overlap-2026-10-17.md (20 must-cites).
+
+## 0. Bottom line
+
+- **RQ1 is occupied at every granularity separately** (input, pre-action, trajectory) by new work; no first-claim survives.
+- **RQ2 is occupied end-to-end.** The October statement "no end-to-end cost/latency ledger exists" is now false (2610.24649, 2610.21412, 2610.28826).
+- **RQ3 is occupied and crowded** at the decision level: 7–12 model attack studies, universal suffixes, held-out attack families, confidence-monitor failures.
+- **RQ4 is partially occupied**: configuration sensitivity is measured, but not as a factorial design on one zoo with executed security outcomes.
+- Net: the only unclaimed axis is **granularity × configuration × model-family inside one protocol with executed outcomes and a cost frontier**. Every ingredient is separately published — this is a high-bar, narrow delta.
+
+## 1. Search executed (and failures)
+
+- arXiv API sweeps: `all:"Jev"` (in-window split in two halves; total 86 hits, 79 titles retrieved), `all:"typed decision"` (91 total, 40 shown), `all:"decision model" AND all:agent` (125 total), `all:"System One" AND all:security` (79 total), `all:"guard model"` (94 total), `all:"prompt injection" AND all:detector`, `all:"LLM judge" AND all:security`, `all:"guardrail" AND all:agent`; each filtered to the window locally.
+- Listing page checked: https://arxiv.org/list/cs.CR/recent (11 Nov 2026, 31 entries) — nothing in scope for these RQs.
+- Two web_search batches covering the mandated topics; they surfaced no additional in-window arXiv work beyond the API sweep except 2611.09803 (verified) and two 2026-09-22 Zenodo preprints (outside window, §3).
+- Failure: first `all:"Jev"` + submittedDate query timed out once (retried successfully). Export API returned max 40 items per response, so the 86 in-window "Jev" hits were split across two date ranges: 7 titles were not retrieved; an unseen Jev paper older than the cut cannot be excluded.
+
+## 2. Verified in-window works (v1 2026-10-17..2026-11-12)
+
+| arXiv id | v1 date | What it establishes (numbers as reported) | RQ |
+|---|---|---|---|
+| 2610.24649 | 10-17 | Jev 1.13 controller, fixed Claude Sonnet 5.5 loop, Terminal-Bench 2.1, 21 held-out tasks/315 trials: cost/attempt **+19%** (geomean 1.19, 95% CI 1.02–1.36) at identical pass rate 73.0% vs 73.0%; 0.81× a small-LLM controller but 22% more than a placebo; offline AUROC 0.78 vs 0.62 rules/0.60 small LLM; mean completion prob 0.50 when 87% of runs passed. | RQ2,RQ1 |
+| 2610.37688 | 10-17 | 3 vendor typed-decision interfaces, 1,000 MASSIVE items × 51 languages, threshold 0.9: English clears the threshold **8.6–11.7pp** more often even when both are correct; coverage lower in every other language; per-language thresholds at 5% error keep English ahead. | RQ4,RQ3 |
+| 2610.24929 | 10-18 | Jev limits: correct to 20k tokens/64 options, falls to **53–80%** at 16 state updates; 97.5% of items solvable in one LLM pass vs 74% of others; confidence flags its own errors but **not** errors inherited from stale input; neither explicit nor trained hand-off catches them. | RQ1,RQ3 |
+| 2610.25947 | 10-19 | Claim laundering, **12 configs of 4 decision models × 3 domains**: logged records outweigh observations; after claimed-but-failed steps models still stop/advance/purchase in **53–100%**; EVIGATE adds 0.04–2.0% serving latency, +18.7/+5.0/+5.1 pts task success (live ALFWorld/WebShop/phone). | RQ1,RQ3 |
+| 2610.26325 | 10-19 | 3 TDMs + bases + 2 classifiers, 5 datasets, 35 pre-fixed paired tests: Nimble-9B is **12.0 Macro-F1 worse** than its backbone on financial sentiment; Jev ECE/threshold risk grow **1.7/2.5pp** only there under shift; EM prior correction cuts ECE 2.7/1.8pp. | RQ3,RQ4 |
+| 2610.27620 | 10-20 | Per-action authorization does not compose (**peer-reviewed, IEEE TPS 2026**): relational violations are 2-safety; **9 LLM judges** approve a synthesized witness per-action at near benign-control rate yet flag it when shown both executions; 6/6 surveyed guardrails lack cross-execution monitoring. | RQ1,RQ3 |
+| 2610.33775 | 10-24 | Practitioner guide: 5-family taxonomy of System-1 models, 18 domains, 70+ reproductions, 190 refs, calibration/IIA/ordinal-bias and fast/slow cascades; survey, no new experiments. | RQ1,RQ4 |
+| 2610.34329 | 10-25 | SHIFT-Jev, 10 shifted environments: KL-anchored fine-tuning cuts calibration error **0.289→0.087**; at 10% target risk a certified learned-uncertainty threshold exceeds target in **3–5/27** env-seed tests vs **5–15** max-probability and **9–14** conformal; chi-square detects **95–99%** of prior shifts. | RQ3,RQ4 |
+| 2610.34875 | 10-26 | RubriX non-autoregressive rubric judge: **75.4%** exact vs Jev **57.1%**, Qwen3-8B **49.8%**; flat ~28 ms/judgment vs Jev 44→211 ms and Qwen 32→516 ms as levels grow 10→3,000 tokens; **7.7×/18.8×** faster at 3k. | RQ1,RQ2 |
+| 2610.36311 | 10-26 | Reference audit, Laya ×5 checkpoints + Jev 1.13: point-estimate threshold breaks its promise in **147/190** evaluations, Learn-then-Test **0/190**; Jev keeps a 95% promise in **8/51 locales**; confidence separates right/wrong at AUROC **0.80–0.96**. | RQ3,RQ4 |
+| 2610.38620 | 10-28 | JevAct: deterministic tool-state checks + prefill-only decision model intercepting agent actions; **11 LLM agents** on τ²-bench Airline/Telecom and BFCL; gains consistent on Telecom/BFCL, mixed on Airline. | RQ1,RQ2 |
+| 2610.38895 | 10-28 | FlipJev, 12 datasets: no prompt-injection strategy flips a correct answer in **10,240 paired tests**, but black-box suffixes flip **43%** of unseen documents and one task's suffix flips **90–100%** in other tasks. | RQ3 |
+| 2610.40588 | 10-29 | Overseer probes: activation probe catches **82%** of leaking calls at 5% benign flag vs **26%** for a zero-shot decision-model monitor; gpt-oss-20b probe AUROC 0.91; bag-of-words close, so gain is labels not activations. | RQ1,RQ3 |
+| 2611.00505 | 10-31 | **14 System-1 decision models vs 4 generative judges on 11 judge benchmarks**: 5 statistically indistinguishable from GPT-5.6-no-reasoning; 11 reach 90.3–93.4% on JudgeBench; reference-guided parity with GPT-5.6-reasoning at **~1/16 cost**; appended-note injection reverses 0–5% of correct verdicts for 5 models vs **17–49%** for 9; leaderboards predict accuracy r=0.95–0.96. | RQ1,RQ2,RQ3,RQ4 |
+| 2611.01370 | 11-01 | XDecideBench, 9 suites/122 languages: best 12-language model is best on only **2** other suites; English-fitted 5%-error threshold exceeds target on XNLI even in German/French; Decision-1 best in English, far behind Jev in Burmese. | RQ4 |
+| 2611.02155 | 11-01 | **22 hosted decision models + 2 prompted LLMs**, 2,643 tool calls, 28 rules, sealed holdout: explicit boundaries raise recall **5.5–26.1pp on all 23 available models**, lower FP on 21; Jev 1.14 recall **89.3→98.2%**, interruptions **30.6→4.8%** of 252 clean actions; **120 ms, $0.46/1k requests**; 16 post-hoc scenarios replicate on 22/23. | RQ1,RQ2,RQ4 |
+| 2611.02522 | 11-02 | Confidence monitor, 5 systems: low confidence ranks hijacks above clean (AUROC **0.86–0.90** on 4/5) but at ≤5% clean-alarm gate it misses **51–70%** of plain-note hijacks and **99–100%** when the note claims certainty (AUROC still 0.70–0.79). | RQ3 |
+| 2611.02815 | 11-02 | Predictive guardrails, 7 policy models × 2 environments: stronger prediction involvement is non-monotonic in safety, can lower task completion and substantially raise inference cost; prediction reliability degrades over horizon; corrupted predictions can still show safety gains. | RQ2,RQ3 |
+| 2611.03759 | 11-02 | JevBreak: **7 decision models**, 16 tasks/7 domains, 240 examples (990 targets/model); Slot Attack **32–99%** success on initially correct decisions at **17–72 queries**; near-equal-accuracy models differ ~**20pp** ASR; all wrong options forced for ~**20%** (Jev), 77% gpt-6-luna, 98% GLiNER2.5; confidence threshold does not reliably screen. | RQ3 |
+| 2611.06384 | 11-04 | Presentation sensitivity, Jev/Clef Flash/Perplexity Decider, 6 datasets/9,000 items/**702,000 judgments**: Jev second-position advantage **6.11pp**; endorsement reversal flips 40.40% of pairs; rejection framing costs Clef **23.36pt** human agreement; rating formats shift score levels. | RQ4,RQ3 |
+| 2611.08229 | 11-05 | Two-tier triage, 7 held-out attack families: ModernBERT gives p<0.05 benign to **37–60%** of held-out traversal, escalating only 50–81% at a 5% benign budget; Jev/Clef escalate **≥97.6%** of every family, but probability-guided search gets **43%** of held-out attacks past Jev in 300 queries and re-asking escalates **60%**; Jev escalates 37% of benign twins. | RQ3,RQ1 |
+| 2611.08845 | 11-06 | Jev input filter + tiered review on a Qwen2.5-1.5B pipeline, 970 prompts: harmful answered **73.2%→2.4%**; XSTest-safe refusals **1.2%→10.8%**; tiered gives 5.6% harmful answers, 4.0% benign refusals, **8.1%** output review; macro-F1 **0.9351→0.9512**; matched-budget gains over a retuned single gate not consistent on held-out split. | RQ1,RQ2,RQ3,RQ4 |
+| 2611.09264 | 11-06 | Digital nudges, 3 decision models (Jev, Decision-1, d1), 600 runs each: preselected default chosen **97.5–99.9%**; social-influence choice **75–96%** vs 47–49% control; automatic nudge effect stronger than reflective, opposite of reasoning-capable LLM agents. | RQ3,RQ4 |
+| 2611.09803 | 11-06 | Maya a1 (Laya re-engineered, 421M): every cyclic option rotation changes **25.8%** [22.9–28.7] of answers (19.7% English); gold-first vs gold-last accuracy differs **10.1pts**; flips concentrate at low confidence (54% vs 8%); shuffle fine-tune cuts flips to **7.2%** vs 11.4%; order vote 69.7% vs 69.1% at 4.1× compute. | RQ4,RQ3 |
+| 2611.11571 | 11-08 | Deterministic monitors vs guardrails, executable 13-task/12-tool env, 156 attack episodes/defence/model: models proposed attacker call in **64%/84%** behind the task-bound monitor which admitted only **1.3%/7.7%**; under an assumed erosion law every guardrail stack reaches **100.0%** ASR while the deterministic monitor holds severe actions at **0.0%**; taint-triggered review cuts residual harm 62%. | RQ1,RQ3,RQ4 |
+| 2611.12521 | 11-09 | 5 open-weight System-1 models 0.8–27B + S2 baselines: confidence is a closed-form dispersion transform, not empirical accuracy; bundling questions causes **11.7–22.4%** flips (Tev1-0.8B) vs 0.1–0.2% (Tev1-4B); prompt-injection defense N=250, ≥4B models **0.988–0.998 AUROC**, 95.2% recall, 0.0% false alarms at 48–60 ms. | RQ1,RQ3,RQ4 |
+| 2611.14309 | 11-10 | MMDM: 5,448 questions, 16 categories, **28 decision models**, options 2–1,024, inputs to 64,817 tokens; Decider-V1.2 78.75% world-knowledge single-select vs 53.95% option logic, 47.95% constraint planning. | RQ1,RQ4 |
+| 2610.28826 | 10-20 | Clinical judge comparison: Jev Gwet AC2 **0.50** matches/exceeds **7/12** LLM judges incl Opus 5.5 (0.49)/GPT-6 (0.38); HealthBench Professional matches reference GPT-5.4 on 91% of criteria; frontier judges cost **73–294×** more and take **7–57×** longer. | RQ1,RQ2 |
+| 2610.25768 | 10-19 | Jev as reader of truncated reasoning, 7 reasoners × 5 MC benchmarks (35 pairs): at 1,500-token budget **+4.1pp** overall, +8.6pp on truncated items; replay at **34.5%** of full cost for −1.13pp; held-out policy saves **71.3%** cost for −0.58pp. | RQ2,RQ1 |
+
+## 3. October-gap works verified here (v1 before window; absent from the October list)
+
+| id | v1 date | What it establishes | RQ |
+|---|---|---|---|
+| 2610.21412 | 10-15 | JevAgentHarness/AgentDecisionBench: decision models tested "from isolated questions up to control of a running agent"; most accurate isolated-question model solved only **69.5%** of agent tasks; no fitted threshold lowered success **19.0pts**; AgentDecision-4B **91.5%** vs Jev 82.0% on unlike tasks; **81.1–89.0% cheaper**, up to **2.5× faster** (non-loss clause truncated at read). Closest existing granularity span. | RQ1,RQ2,RQ4 |
+| 2610.18612 | 10-13 | JevProbe: **228 real Jev applications, 2,273 test cases** — 81.5% show decision flips, **98.6%** of those with potential downstream security impact; macro Decision Flip Rate **+50.4pp** over strongest adapted baseline; existing defenses limited. Closes the "execution consequence" gap partially. | RQ3,RQ1 |
+| 2610.14404 | 10-09 | DICE interface attacks: three adapter outputs (state extraction, question generation, output interpretation) each can change the final decision while Jev/API stay outside attacker control; binding checks stop tested interventions but reject some valid clean decisions; pilot, no prevalence. | RQ4,RQ3 |
+| 2610.03073 | 10-02 | SecJev: security-specialized Jev-style models **0.8B–9B**, 14 tasks/8 sources; SecJev-0.8B beats general Kev-9B by **20.51pp** task-macro; 0.8B/4B near answer-only generative fine-tuning with lower peak GPU memory. | RQ1,RQ4 |
+| 2610.11773 | 10-08 | ObligationBench: 240 expert-validated trajectories; **56.92%** of GLM-5.3 trajectories contain unfulfilled obligations vs 30.00% forbidden actions; **14 models** evaluated, best recall **48.97%**, exact-match **10.00%**. Trajectory-granularity guard evaluation. | RQ1,RQ3 |
+| Zenodo 22885291 | 2026-09-22 | Non-generative calibrated decision model vs LLM judges on moderation/hallucination/NLI/prompt-injection: never significantly worse than a cheap-tier judge under paired bootstrap, at **3–63× lower cost** and **3.7–8.6× lower latency**. Unreviewed preprint. | RQ1,RQ2 |
+
+## 4. Per-RQ verdict after merging October + new works
+
+| RQ | Verdict | Basis | Residual gap (if any) |
+|---|---|---|---|
+| RQ1 effectiveness | **Occupied** | October: 4 Jev studies. New: input (2611.08845), pre-action (2611.02155, 2610.38620), trajectory (2610.11773, 2609.34862), judge substitution (2611.00505, 2610.28826, 2610.34875), capability limits (2610.24929, 2611.14309), executed apps (2610.18612, 2610.21412). | Only role/granularity-conditional effectiveness on *executed* outcomes with a deterministic baseline; partially probed by 2611.11571/2610.27620. |
+| RQ2 efficiency/cost | **Occupied** | End-to-end: 2610.24649 (+19% cost, placebo-controlled), 2610.21412 (−81.1–89% cost), 2610.28826 (73–294× cheaper), 2610.25768 (71.3% saved), 2611.00505 (1/16 cost), 2611.02155 ($0.46/1k, 120 ms), 2610.34875 (7.7× faster), 2611.02815 (higher cost). | No cost-effectiveness frontier conditioned on executed security outcome across models × granularities. |
+| RQ3 robustness | **Occupied / crowded** | 2611.03759 (7 models, 32–99%), 2610.38895 (universal suffixes 43%/90–100%), 2611.02522 (monitor misses 51–100%), 2611.08229 (held-out families, 43% bypass), 2610.34329/2610.26325 (shift), 2611.12521 (perturbations), 2611.06384/2611.09803 (presentation), 2611.09264 (nudges), 2610.25947 (records), 2610.18612 (228 apps). | Adaptive attack on the *gate policy* with executed harm (B/C modes) and config×attack interaction. |
+| RQ4 configurations | **Partially occupied** | 2611.02155 (boundaries +5.5–26.1pp), 2610.36311 (threshold promise 147/190 vs 0/190), 2610.37688/2611.01370 (language thresholds), 2611.12521 (batching 11.7–22.4%), 2611.06384/2611.09803 (position/framing), 2610.34329/2610.26325 (shift), 2610.14404 (interface). | **Open**: factorial configuration × granularity interaction on one model zoo, with executed security and cost outcomes. |
+
+## 5. Strongest defensible delta (falsifiable)
+
+**Claim.** In the current 12-model zoo, *granularity is a stronger determinant of a judge's security utility than model identity or configuration*: moving a model between input-level, pre-action and full-trace judgment changes its security ranking more than swapping models or configurations, and the configuration that maximizes executed security at fixed benign utility is granularity-specific, with no single configuration non-inferior across all three.
+
+**Operationalization.** 12 models (jev, d3mini, laya, secjev, jevguard, gliguard, shieldstral, qwen3guard, qwen35, gpt6luna, claudehaiku, kev) × 4 modes (A input, B pre-action, C prefix, D trace) × pre-registered configurations {preamble/boundaries × threshold policy × option/presentation format × batching}; outcomes = executed attack success, benign task completion, cost.
+
+**Falsification.** Claim is false if (i) Kendall τ between per-model security rankings on A vs B and A vs D is ≥0.7 (top-3 overlap ≥2), or (ii) one configuration achieves ΔASR ≤ −10pp, Δbenign-completion ≤ 5pp and cost ≤ 1.25× the cost-minimal arm at all granularities with CI excluding 0, or (iii) a pre-registered factorial test shows the granularity main effect smaller than the model or configuration main effect. Existing indirect support: 2610.27620 (per-action vs cross-execution structural gap), 2610.21412 (isolated-question accuracy vs agent control), 2611.00505/2611.01370 (benchmark/suite-dependent rankings).
+
+## 6. Does any work already do (4)?
+
+- **≥4 decision/guard models across input/action/trajectory granularities: No.** Closest: 2610.27620 (9 LLM judges, per-action vs cross-execution; two scopes only, no decision models, no cost; peer-reviewed); 2610.21412 (decision models from isolated questions to running-agent control; not security-labelled and count not stated in abstract); 2610.11773 (14 models, trajectory only); 2611.02155 (24 models, action only); 2611.00505 (18 models, input/judge only); 2609.34862 (Jev + 4 generative judges, trajectory only). No single protocol spans all three granularities.
+- **Cost-effectiveness frontiers: partially published, not as a frontier.** 2611.00505 (accuracy parity at 1/16 cost, 11 benchmarks), 2610.28826 (73–294× cheaper, 7–57× faster, 12+ LLM judges), 2610.25768 (71.3% cost for −0.58pp), 2610.24649 (cost ratio + placebo), 2611.02155 ($0.46/1k), 2610.34875 (7.7× faster), 2611.08229 (escalation vs benign budget). No Pareto frontier across model families × granularities conditioned on executed security.
+
+## 7. Must-cite delta vs the October 20
+
+- **Tier 1 (model-level pre-emption; cite and position explicitly):** 2611.02155, 2611.00505, 2611.08845, 2610.24649, 2611.03759.
+- **Tier 2 (granularity/novelty positioning):** 2610.21412*, 2610.18612*, 2610.27620, 2610.11773*, 2610.14404*, 2611.08229, 2610.38620.
+- **Tier 3 (numbers for RQ2/RQ3/RQ4):** 2610.38895, 2611.02522, 2610.26325, 2610.34329, 2610.36311, 2610.37688, 2611.01370, 2611.06384, 2611.09803, 2611.12521, 2610.25947, 2610.24929, 2610.33775, 2610.40588, 2611.14309.
+- **Tier 4 (cost/judge comparators):** 2610.28826, 2610.25768, 2610.34875, 2610.21412*, 2611.02815, 2611.11571, Zenodo 22885291*.
+- * = pre-window/October gap, not in the 2026-10-17 list. October items that new work supersedes in argument: 2610.02267 (no end-to-end ledger) is now complemented/contradicted by 2610.24649 and 2610.21412; "first Jev cost/latency" and "first multi-model judge comparison" are dead.
+
+## 8. Scope-check: title framing
+
+The actual zoo (data/workspace-evidence/2026-11-04-experiment-summary-v7/metrics.csv) is **12 models: 5 decision models** (jev, d3mini, laya, secjev, kev), **4 guard/safety classifiers** (jevguard, gliguard, shieldstral, qwen3guard), **3 general LLMs** (qwen35, gpt6luna, claudehaiku). Only 5/12 are System One/typed-decision models in the now-standard sense used by 2611.00505/2610.11773; guard classifiers and generative judges are not. Recommendation: title **"Small Decision and Guard Models as Security Judges for LLM Agents: A Multi-Granularity Evaluation"**, and use "System One / typed decision model" only for the Jev-class subset. "System One models" would (a) mislabel 7/12 arms, (b) collide with 2611.00505 and 2610.33775 which already own the System-1 umbrella, and (c) invite a dual-process-theory objection that the paper does not test. If the study is deliberately restricted to the 5 TDMs, "System One models" is accurate — but then the guard-classifier and LLM-judge arms (and much of RQ1's comparison) must be dropped.
+
+## 9. Caveats
+
+- All in-window rows are arXiv preprints unless noted; 2610.27620 is peer-reviewed (IEEE TPS 2026). 2611.04510 says "submitted for review"; 2611.09264 "Under Review". Do not describe any of these as "established".
+- Numbers are abstract-reported and not independently reproduced; 2610.24649 is the strongest design among new works (pre-specified, placebo-controlled, CI); 2611.08845 and 2611.02155 report held-out/sealed checks.
+- Coverage limit: 7 of 86 in-window "Jev" API hits were not retrieved; non-Jev keyword sweeps were not exhaustive. An unseen paper could change a verdict — re-run before submission.
+- Dates are v1 submission dates; versions read on 2026-11-12 may differ from later revisions.
+- No model API calls; no repo file modified except this deliverable. 

@@ -1,0 +1,43 @@
+# rq1 — 已收集实验数据汇总
+
+整理时间：2026-11-08 (Asia/Shanghai)。时间与 token 汇总补于 2026-11-11。服务器本地 StepShield 结果同步于 2026-11-11。本目录存放数据副本/快照；原始 runs 仍在
+`data/agent-security-study/runs`（未删除、未改动生成结果）。
+
+## 目录结构
+
+- `tsbench/server-local/` — 服务器本地模型 TS-Bench（已跑完，从 172.17.210.135 下载）
+  - `full-local-tsbench-server-v1/` 9 个模型 × 7182
+  - `full-local-tsbench-repair-v1/` 失败项重测（laya / kev / gliguard / jevguard / qwen3guard；secjev 124 条按决定保留失败）
+- `tsbench/api/` — API TS-Bench
+  - `full-api-tsbench-v1/`（claudehaiku, gpt6luna）
+- `stepshield/api/` — API StepShield（**进行中快照**，本次未重新同步）
+  - `full-api-stepshield-v1/`（claudehaiku 部分完成，gpt6luna 未开始）
+- `stepshield/server-local/` — 服务器本地模型 StepShield（已跑完，从 172.17.210.135 下载）
+  - `full-local-stepshield-server-v1/` 9 个模型 × 8151，全部成功
+  - 完整含 raw 的压缩包：`_ingest/rq1-stepshield-local-download.tar.gz`（解压时未展开 raw/，避免约 135 万个小文件）
+- `agentharm/` — AgentHarm（api: claude / gpt / jev 系列；local: full-local-agentharm-v1）
+- `injecagent/` — InjecAgent（local: full-local-injecagent-v1）
+- `wildguard/` — WildGuard + TSBench（local + api 混合 campaign）
+
+## 汇总表
+
+位于 `summary/`。非 StepShield 口径与 2026-11-10 bundle 相同：11 个模型 × TS-Bench / AgentHarm / InjecAgent / WildGuard。服务器本地 StepShield 已另表汇总。
+
+- `non_stepshield_summary.md` / `.csv` — 准确率与 F1
+- `non_stepshield_metrics_full.md` / `.csv` — 全指标（FNR/FPR/TNR/MCC）
+- `non_stepshield_time_tokens.md` / `.csv` — 时间与 token（2026-11-11 补：成功样本墙钟、调用延迟、已知输入/输出 token）
+- `server_local_stepshield_summary.md` / `.csv` — 服务器 9 个本地模型 StepShield 准确率与 F1（test / test_holdout 分列）
+- `server_local_stepshield_metrics_full.md` / `.csv` — 全指标（含 EIR@3、干预差）
+- `server_local_stepshield_time_tokens.md` / `.csv` — StepShield 时间与 token
+
+## 关键说明
+
+- 服务器 TS-Bench 由 `172.17.210.135` 打包下载（`rq1-tsbench-download.tar.gz`，333MB），解压到 `tsbench/server-local/`。
+- secjev 的 TS-Bench 124 条超长输入因 fp32 CUDA OOM，按用户决定保留 `TransportError` 失败标记，未重测。
+- 服务器本地 StepShield（`full-local-stepshield-server-v1`）已于 2026-11-11 07:56 Asia/Shanghai 全部完成，2026-11-11 同步到 `stepshield/server-local/`。完整压缩包 `_ingest/rq1-stepshield-local-download.tar.gz`（约 812 MB，sha256 `1271a0542c051782dd955cef0150dad614a646b8cc472034a1c99557f26250cd`）含 raw/；目录中展开了 analysis / episodes / events / telemetry 等，未展开 raw/。
+- API StepShield 仍是进行中快照，完成后需重新同步。
+- 除 StepShield raw/ 按上条说明留在压缩包外，每个 campaign 内的 `effective-config.json` / `manifest.json` / `plan.jsonl` / `cases.jsonl` / `episodes.jsonl` / `events.jsonl` / `telemetry/` / `raw/` 均按原结构原样保留。
+
+## 未纳入（仍可在原 runs 目录找到）
+
+各 50 条/2 条的 pilot、smoke、relay 等开发期小规模记录，以及尚未完成的 API StepShield。

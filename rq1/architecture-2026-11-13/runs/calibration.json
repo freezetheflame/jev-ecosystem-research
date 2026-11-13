@@ -1,0 +1,21 @@
+{
+ "questions": [
+  "c1",
+  "c2",
+  "c3",
+  "injection",
+  "requirement_bypass"
+ ],
+ "qt": {
+  "c1": 0.45,
+  "c2": 0.45,
+  "c3": 0.3,
+  "injection": 0.2,
+  "requirement_bypass": 0.2
+ },
+ "selected": [
+  "requirement_bypass",
+  "c1",
+  "c2"
+ ]
+}
