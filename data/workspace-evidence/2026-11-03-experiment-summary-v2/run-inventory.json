@@ -1,0 +1,373 @@
+{
+  "record_kind": "existing_run_index_not_new_execution",
+  "runs": [
+    {
+      "run": "2026-10-30-agentharm-pilot-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-10-30-agentharm-relay-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 300,
+      "recorded": 13,
+      "statuses": {
+        "ok": 12,
+        "failed": 1
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-10-30-agentharm-relay-50-v2",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 300,
+      "recorded": 300,
+      "statuses": {
+        "ok": 288,
+        "provider_policy_refusal": 11,
+        "failed": 1
+      },
+      "primary_for": [
+        "gpt6luna",
+        "claudehaiku"
+      ]
+    },
+    {
+      "run": "2026-10-30-agentharm-relay-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 4,
+      "recorded": 1,
+      "statuses": {
+        "failed": 1
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-10-30-agentharm-relay-smoke-02",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 4,
+      "recorded": 4,
+      "statuses": {
+        "ok": 4
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-10-30-agentharm-relay-smoke-03",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 4,
+      "recorded": 4,
+      "statuses": {
+        "ok": 3,
+        "provider_policy_refusal": 1
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-10-30-smoke-01",
+      "phase": "pilot",
+      "datasets": [
+        "injecagent",
+        "tsbench",
+        "agentharm",
+        "atbench"
+      ],
+      "planned": 8,
+      "recorded": 1,
+      "statuses": {
+        "failed": 1
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-10-30-smoke-02",
+      "phase": "pilot",
+      "datasets": [
+        "injecagent",
+        "tsbench",
+        "agentharm",
+        "atbench"
+      ],
+      "planned": 8,
+      "recorded": 8,
+      "statuses": {
+        "ok": 8
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-01-agentharm-gliguard-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "gliguard"
+      ]
+    },
+    {
+      "run": "2026-11-01-agentharm-gliguard-smoke-02",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-01-agentharm-laya-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "laya"
+      ]
+    },
+    {
+      "run": "2026-11-01-agentharm-laya-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-01-agentharm-qwen3guard-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-01-agentharm-qwen3guard-raw-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "qwen3guard"
+      ]
+    },
+    {
+      "run": "2026-11-01-agentharm-qwen3guard-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "failed": 1,
+        "ok": 1
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-01-agentharm-qwen3guard-smoke-02",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-02-agentharm-d3mini-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "d3mini"
+      ]
+    },
+    {
+      "run": "2026-11-02-agentharm-d3mini-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-02-agentharm-qwen35-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "qwen35"
+      ]
+    },
+    {
+      "run": "2026-11-02-agentharm-qwen35-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-02-agentharm-secjev-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "secjev"
+      ]
+    },
+    {
+      "run": "2026-11-02-agentharm-secjev-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-02-agentharm-shieldstral-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "shieldstral"
+      ]
+    },
+    {
+      "run": "2026-11-02-agentharm-shieldstral-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    },
+    {
+      "run": "2026-11-03-agentharm-jev-relay-50",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 150,
+      "recorded": 150,
+      "statuses": {
+        "ok": 150
+      },
+      "primary_for": [
+        "jev"
+      ]
+    },
+    {
+      "run": "2026-11-03-agentharm-jev-relay-smoke",
+      "phase": "pilot",
+      "datasets": [
+        "agentharm"
+      ],
+      "planned": 2,
+      "recorded": 2,
+      "statuses": {
+        "ok": 2
+      },
+      "primary_for": []
+    }
+  ]
+}

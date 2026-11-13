@@ -1,0 +1,16 @@
+{
+  "registered_local_models": 9,
+  "restored_models": [
+    "gliguard",
+    "laya",
+    "qwen3guard"
+  ],
+  "new_local_inference_calls": 6,
+  "paid_api_calls": 0,
+  "offline_tests_passed": 58,
+  "all_12_request_previews_passed": true,
+  "all_managed_services_stopped": true,
+  "original_monitor_unchanged": true,
+  "canonical_manual": "docs/infrastructure/local-model-operations.md",
+  "environment_dependency_consistency": "Not claimed; unrelated existing WSL pip conflicts recorded in original log"
+}

@@ -1,0 +1,2195 @@
+
+
+
+Specialized Decision Models vs. General-Purpose LLMs:Benchmarking Jev Across Knowledge, Reasoning, and Multilingual Tasks
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ Report GitHub Issue
+ ×
+ 
+
+ 
+ Title:
+ 
+
+ 
+Content selection saved. Describe the issue below:
+
+ Description:
+ 
+ 
+
+ 
+ Submit without GitHub
+ Submit in GitHub
+ 
+ 
+
+ 
+ arXiv is now an independent nonprofit!
+ Learn more
+ ×
+ 
+
+
+ 
+ 
+ Back to arXiv
+ 
+ 
+ 
+ 
+ Why HTML?
+ 
+ 
+ 
+ 
+ Report Issue
+ 
+ 
+ 
+ 
+ 
+ 
+ Back to Abstract
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+Abstract
+
+1 Introduction
+
+2 Related Work
+
+
+LLM benchmarks.
+
+Jev and its evaluations.
+
+General-purpose and specialized models.
+
+
+3 Experiments
+
+
+3.1 Experimental Setup
+
+
+Benchmarks.
+
+Models.
+
+Evaluation protocol.
+
+
+3.2 Results
+
+
+Knowledge versus math.
+
+Knowledge coverage.
+
+Reasoning demands.
+
+Translated versus native questions.
+
+Agreement with an independent evaluation.
+
+
+
+4 Conclusion
+
+References
+
+A Evaluation Details
+
+
+Benchmarks.
+
+Aggregation.
+
+TruthfulQA.
+
+Uncertainty.
+
+
+B Additional Results
+
+
+Gap to the frontier.
+
+
+C Sources of Published Scores
+
+
+
+
+ 
+ License: arXiv.org perpetual non-exclusive license
+ 
+ 
+arXiv:2610.11978v1 [cs.CL] 08 Oct 2026
+
+
+
+Specialized Decision Models vs. General-Purpose LLMs:
+Benchmarking Jev Across Knowledge, Reasoning, and Multilingual Tasks
+
+
+Xing Li
+††thanks: Equal contribution.
+Affiliation: Dalian Maritime University
+
+Email: lllxxx@dlmu.edu.cn
+
+  
+Qingcheng Chang11footnotemark: 
+ 1
+ 
+ 
+ 
+ 
+
+Affiliation: Dalian Maritime University
+
+Email: cqc@dlmu.edu.cn
+
+  
+Jinzhong Ning
+††thanks: Corresponding author.
+Affiliation: Dalian Maritime University
+
+Email: ningjinzhong@dlmu.edu.cn
+
+  
+Changfeng Xu
+
+Affiliation: Dalian Maritime University
+
+Email: xuchangfeng@dlmu.edu.cn
+
+  
+Shenlong Zhang
+
+Affiliation: Dalian Maritime University
+
+Email: zhangshenlong@dlmu.edu.cn
+
+  
+Yijia Zhang
+
+Affiliation: Dalian Maritime University
+
+Email: lingluonlp@outlook.com
+
+  
+Ling Luo
+
+Affiliation: Dalian University of Technology
+
+Email: hflin@dlut.edu.cn
+
+  
+Hongfei Lin
+
+Affiliation: Dalian University of Technology
+
+
+Abstract
+ 
+
+Jev is a “System One” model that returns a choice among given options instead of generating text. We study how such a specialized decision model compares with general-purpose large language models (LLMs). We evaluate Jev on 13 multiple-choice benchmarks covering knowledge, reasoning, and multilingual understanding, and compare it with 19 LLMs in three tiers: frontier, representative, and small. Jev is competitive with frontier LLMs on knowledge and commonsense benchmarks and obtains the best score on MMLU-Redux and ARC-Challenge. Outside mathematics, it also outperforms most representative LLMs and all small LLMs. However, it falls behind on mathematical word problems: on MathQA, it is 17.7 points below the frontier median and scores lower than all 19 LLMs. These results indicate that a specialized decision model can match general-purpose LLMs on decisions that rely mainly on knowledge, but not on decisions that require multi-step calculation.
+ 
+
+
+
+
+
+
+
+
+
+
+Category
+Benchmark
+Lang.
+Options
+
+
+Knowledge
+MMLU-Pro
+En
+10
+
+
+
+MMLU-Redux
+En
+4
+
+
+
+MMLU
+En
+4
+
+
+
+GPQA Diamond
+En
+4
+
+
+
+C-Eval
+Zh
+4
+
+
+
+HellaSwag
+En
+4
+
+
+
+WinoGrande
+En
+2
+
+
+
+TruthfulQA
+En
+varies
+
+
+Reasoning
+ARC-Challenge
+En
+4
+
+
+
+MathQA
+En
+5
+
+
+
+AQuA-RAT
+En
+5
+
+
+Multilingual
+MMLU-ProX
+29
+10
+
+
+
+MMMLU
+14
+4
+
+
+Table 1: Benchmarks used in this study, with their language (or number of languages) and number of answer options.
+
+
+Figure 1: Jev and three tiers of LLMs on 13 benchmarks. Each marker is the score of one model, and the black line marks Jev. Filled markers are scores evaluated in this work; hollow markers are published scores (Appendix C).
+
+
+
+1 Introduction
+
+
+
+Large language models (LLMs) have achieved strong performance across a wide range of language understanding and reasoning tasks (OpenAI, 2026a; DeepSeek-AI, 2024; Yang et al., 2025). Beyond generating text, they are increasingly used to make decisions in applications such as question answering, text classification, information verification, and AI agents. Many of these decisions involve choosing an answer or action from a predefined set of options. Although general-purpose LLMs can handle such tasks effectively, their broad capabilities are not always required by the application. This motivates an important question: to what extent can specialized decision models match general-purpose LLMs on tasks with finite answer spaces, and where do their capabilities begin to diverge?
+
+
+
+Jev, developed by TypeSafe AI, provides an opportunity to investigate this question. It is a specialized “System One” model designed to make structured decisions rather than generate open-ended text (TypeSafe AI, 2026a). Given an input and a set of candidate options, Jev directly selects an answer and returns a probability distribution over the options. Since its release, several studies have explored its performance in text classification, routing, medical and legal applications, model evaluation, and scientific decision making (Deußer et al., 2026; Madrid-García and Merino-Barbancho, 2026; Zhang et al., 2026; Li et al., 2026; Wang and Gao, 2026; Deng et al., 2026). These studies provide initial evidence of Jev’s effectiveness in specific settings. However, its broader capability profile remains insufficiently understood. In particular, previous evaluations either focus on individual applications or include a limited range of comparison models. Even the most comprehensive existing study, which evaluates 37 datasets, compares Jev with only two open-weight LLMs (Deußer et al., 2026). As a result, it remains unclear how Jev compares with LLMs at different capability levels, and whether its relative performance changes across tasks requiring different types of knowledge and reasoning.
+
+
+
+In this work, we conduct a systematic empirical evaluation of Jev against general-purpose LLMs on standard multiple-choice benchmarks. We evaluate 13 benchmarks covering general knowledge, commonsense reasoning, scientific question answering, mathematical reasoning, and multilingual understanding (Table 1). To provide a broad comparison, we include 19 LLMs organized into three tiers: current frontier models, representative models from earlier generations, and small models with fewer than 10B parameters (Figure 1). All models are evaluated within a finite-answer setting, allowing us to examine their ability to select correct answers under the same candidate constraints. Rather than focusing only on overall accuracy, we investigate how Jev’s relative performance varies across benchmarks with different task demands.
+
+
+
+Our results show that Jev exhibits a distinctive capability profile. It performs competitively with general-purpose LLMs on several knowledge-intensive and commonsense benchmarks, achieving the highest accuracy among the evaluated models on MMLU-Redux and ARC-Challenge. It also approaches frontier-level performance on MMLU, WinoGrande, and TruthfulQA. However, this competitiveness does not extend uniformly to all tasks. Jev performs substantially worse on mathematical reasoning benchmarks, falling 17.7 percentage points below the frontier-model median on MathQA and ranking behind all 19 comparison models. These findings suggest that specialized decision models can be effective alternatives to general-purpose LLMs for some constrained decision tasks, but their effectiveness depends strongly on the capabilities required by the task. In particular, selecting from a fixed set of answers does not necessarily make a task easy: some decisions still require substantial calculation and multi-step reasoning.
+
+
+
+Our contributions are summarized as follows:
+
+
+• 
+
+
+We investigate the capability boundary between specialized decision models and general-purpose LLMs in finite-answer tasks, using Jev as a representative case study.
+
+
+• 
+
+
+We systematically compare Jev with 19 LLMs across three capability tiers on 13 standard benchmarks, revealing its strengths and limitations across knowledge, commonsense, mathematical reasoning, and multilingual understanding.
+
+
+• 
+
+
+We identify task-dependent performance differences that provide empirical evidence for selecting between specialized decision models and general-purpose LLMs in future decision-making systems.
+
+
+
+
+
+
+2 Related Work
+
+
+
+LLM benchmarks.
+
+
+
+Multiple-choice benchmarks are the standard tools for measuring the knowledge and commonsense of LLMs. They include MMLU, ARC, and HellaSwag (Hendrycks et al., 2021; Clark et al., 2018; Zellers et al., 2019) and harder or cleaner successors such as MMLU-Pro, MMLU-Redux, and GPQA (Wang et al., 2024; Gema et al., 2025; Rein et al., 2023). C-Eval and the multilingual extensions of MMLU cover other languages (Huang et al., 2023; Xuan et al., 2025; OpenAI, 2024). We use these benchmarks unchanged and apply them to a new type of model, a specialized decision model.
+
+
+
+
+Jev and its evaluations.
+
+
+
+Jev answers typed questions about a given input. Choice selects one of up to 255 options, Score places the input on an ordered rubric, and Noul returns the probability of a yes/no statement (TypeSafe AI, 2026a; Deußer et al., 2026). Its documentation lists arithmetic, counting, and multi-hop instructions as known weaknesses (TypeSafe AI, 2026b). Jev has been evaluated on classification and routing (Deußer et al., 2026), medicine (Madrid-García and Merino-Barbancho, 2026), legal documents (Zhang et al., 2026), judging (Li et al., 2026; Wang and Gao, 2026), scientific decisions (Deng et al., 2026), and social-science annotation (Ibrahim and Zaki, 2026). Other work studies its sensitivity to option names (Sun and Xu, 2026) and its application ecosystem (Ling et al., 2026). These studies address specific applications or compare Jev with only a few models, whereas we compare it with three tiers of general-purpose LLMs on standard benchmarks.
+
+
+
+
+General-purpose and specialized models.
+
+
+
+General-purpose LLMs are increasingly used for text classification and annotation (Gilardi et al., 2023). However, on text classification, smaller models fine-tuned for the task often still outperform zero-shot LLMs (Bucher and Martini, 2024). Model routing and cascades exploit such differences by sending each query to the cheapest model likely to answer it well (Chen et al., 2023; Ding et al., 2024; Ong et al., 2024). These methods choose among general-purpose LLMs of different sizes. We study a different kind of component, a specialized decision model, and examine which constrained decisions it can take over.
+
+
+
+
+
+3 Experiments
+
+
+
+
+
+
+
+
+Knowledge
+Reasoning
+Multilingual
+
+
+Model
+Pro
+Redux
+MMLU
+GPQA
+C-Eval
+HSwag
+Wino
+TQA
+ARC-C
+MathQA
+AQuA
+ProX
+MMMLU
+
+
+Jev
+82.3
+95.0
+91.3
+74.2
+85.3
+89.3
+91.8
+87.5
+97.6
+75.0
+83.1
+83.2
+85.0
+
+
+Frontier LLMs
+
+
+GPT-5.6 Sol†
+84.5
+90.0
+90.7
+94.6
+89.6
+89.8
+70.2
+76.0
+95.1
+92.0
+89.0
+68.9
+85.0
+
+
+Claude Opus 5.5†
+86.6
+94.2
+92.6
+75.8
+83.1
+96.8
+92.7
+92.0
+94.8
+85.8
+89.8
+82.1
+87.2
+
+
+Gemini 3.8 Flash†
+93.8
+93.8
+94.4
+95.3
+94.7
+97.5
+97.1
+97.9
+97.5
+92.7
+91.3
+87.6
+92.6
+
+
+Qwen3.8-Flash
+88.6
+92.5
+92.4
+83.1
+93.7
+94.4
+94.4
+85.4
+96.2
+93.3
+91.7
+83.4
+88.3
+
+
+Qwen3.8-Max
+89.6
+94.3
+93.8
+92.4
+93.4
+88.0
+88.0
+80.5
+91.4
+94.4
+94.1
+87.4
+90.3
+
+
+DeepSeek-V4.1-Flash
+87.5
+91.8
+87.5
+90.9
+93.8
+93.1
+91.5
+80.0
+95.9
+92.6
+90.6
+85.5
+88.8
+
+
+Representative LLMs
+
+
+GPT-4o†
+72.6
+88.0
+87.2
+49.9
+76.0
+92.6
+87.1
+86.0
+96.1
+86.0
+88.0
+71.1
+77.9
+
+
+Claude 3.5 Sonnet†
+78.0
+88.9
+88.3
+65.0
+76.7
+88.6
+85.0
+81.5
+93.7
+90.0
+86.0
+68.7
+81.1
+
+
+DeepSeek-R1
+84.0
+92.9
+90.8
+71.5
+91.8
+91.5
+89.7
+84.5
+96.6
+88.8
+88.8
+74.6
+86.8
+
+
+DeepSeek-V3
+81.2
+90.4
+88.5
+59.1
+86.5
+89.2
+84.9
+82.1
+95.3
+87.8
+86.3
+70.8
+79.4
+
+
+Qwen3-32B
+79.1
+90.9
+81.0
+68.4
+87.3
+71.1
+69.8
+58.6∗
+69.0
+91.9
+88.6
+69.2
+80.6
+
+
+Qwen2.5-72B-Inst.
+71.6
+85.6
+85.3
+49.0
+86.1
+87.2
+82.7
+80.1
+92.7
+85.7
+83.7
+58.7
+76.9
+
+
+Llama-3.1-405B-Inst.
+73.3
+86.2
+88.6
+51.1
+61.5
+88.3
+87.2
+82.4
+96.9
+84.7
+81.0
+59.8
+75.0
+
+
+Small LLMs
+
+
+Qwen3-8B
+74.6
+87.5
+72.0
+62.0
+83.4
+56.5
+66.0
+53.2∗
+61.7
+92.3
+86.3
+60.0
+74.4
+
+
+Qwen3-4B
+70.4
+83.7
+66.8
+55.9
+77.5
+52.8
+58.4
+51.8∗
+50.2
+90.0
+83.0
+56.6
+69.8
+
+
+Llama-3.1-8B-Inst.
+48.3
+61.7
+69.4
+32.8
+52.0
+73.5
+64.7
+69.2
+83.4
+81.2
+61.5
+28.6
+44.4
+
+
+Phi-4-mini-inst.
+52.8
+73.1
+67.3
+32.0
+61.4
+69.1
+67.0
+66.4∗
+83.7
+82.8
+72.8
+28.4
+59.8
+
+
+Gemma-3-4B-IT
+43.6
+71.1
+58.4
+30.8
+59.5
+75.0
+70.3
+51.9∗
+56.6
+84.3
+72.2
+25.1
+57.1
+
+
+Mistral-7B-v0.3
+31.5
+58.4
+63.5
+30.2
+45.9
+75.8
+77.6
+64.7
+72.2
+76.7
+61.0
+31.1
+41.9
+
+
+
+Table 2: Accuracy (%) of Jev and 19 LLMs across 13 benchmarks, grouped into three model tiers. Scores in italics are published scores; all others are evaluated in this work. Bold marks the best score in each column. ∗Reported with the MC2 metric. †Closed-source. Pro = MMLU-Pro; Redux = MMLU-Redux; GPQA = GPQA Diamond; HSwag = HellaSwag; Wino = WinoGrande; TQA = TruthfulQA; ARC-C = ARC-Challenge; AQuA = AQuA-RAT; ProX = MMLU-ProX.
+
+
+
+3.1 Experimental Setup
+
+
+
+Benchmarks.
+
+
+
+We use 13 multiple-choice benchmarks in three categories (Table 1). The knowledge category contains eight benchmarks. MMLU (Hendrycks et al., 2021) tests academic knowledge in 57 subjects. MMLU-Redux (Gema et al., 2025) is a re-annotated subset of MMLU with corrected labels. MMLU-Pro (Wang et al., 2024) makes MMLU harder with ten options and more reasoning-focused questions. GPQA Diamond (Rein et al., 2023) contains graduate-level science questions written by domain experts. C-Eval (Huang et al., 2023) covers 52 disciplines in Chinese. HellaSwag (Zellers et al., 2019) asks for the most plausible continuation of a context. WinoGrande (Sakaguchi et al., 2020) requires commonsense to resolve an ambiguous reference. TruthfulQA (Lin et al., 2022) contains questions that people often answer wrongly because of common misconceptions. The reasoning category contains three benchmarks. ARC-Challenge (Clark et al., 2018) consists of grade-school science questions that retrieval-based methods fail to answer. MathQA (Amini et al., 2019) and AQuA-RAT (Ling et al., 2017) consist of math word problems that require multi-step calculation. The multilingual category contains MMLU-ProX (Xuan et al., 2025) and MMMLU (OpenAI, 2024), which translate MMLU-Pro and MMLU into 29 and 14 languages, respectively.
+
+
+
+
+Models.
+
+
+
+We compare Jev with 19 LLMs in three tiers. Frontier LLMs are recently released models: GPT-5.6 Sol, Claude Opus 5.5, Gemini 3.8 Flash, Qwen3.8-Flash, Qwen3.8-Max, and DeepSeek-V4.1-Flash. Representative LLMs are widely used earlier models: GPT-4o, Claude 3.5 Sonnet, DeepSeek-R1, DeepSeek-V3, Qwen3-32B, Qwen2.5-72B-Instruct, and Llama-3.1-405B-Instruct. Small LLMs have fewer than 10B parameters: Qwen3-8B, Qwen3-4B, Llama-3.1-8B-Instruct, Phi-4-mini-instruct, Gemma-3-4B-IT, and Mistral-7B-v0.3.
+
+
+
+
+Evaluation protocol.
+
+
+
+We follow the standard evaluation split of each benchmark and report accuracy (%). For each item, Jev receives the question and the candidate answers as a single Choice request, and its selected option is taken as the prediction. We evaluate Jev and the frontier LLMs ourselves, each with a single run. On GPQA Diamond, the scores of three frontier LLMs are taken from vendor reports and marked as such. The 13 representative and small LLMs and the 13 benchmarks form 169 model–benchmark pairs. For 104 of them, we use scores published by model developers or independent evaluators, and we evaluate the other 65 ourselves. Published scores differ in prompts, few-shot examples, and reasoning settings, so we use them only for rough comparison. Appendix C gives the source of each one. To compare Jev with the frontier tier on a single benchmark, we use the median score of the six frontier LLMs. Appendix A gives further details.
+
+
+
+
+
+3.2 Results
+
+
+
+Table 2 reports the accuracy of Jev and the 19 LLMs, and Figure 2 shows the difference between Jev and the frontier median on each benchmark. We discuss five contrasts that stand out in these results.
+
+
+Figure 2: Difference between Jev and the frontier median on each benchmark. Gray bands show the range of the six frontier LLMs. ∗On GPQA Diamond, the median and range cover only the three frontier LLMs evaluated in this work.
+
+
+
+Knowledge versus math.
+
+
+
+Jev is competitive with frontier LLMs on knowledge and commonsense benchmarks but falls behind them on math word problems. It obtains the best score among all models on MMLU-Redux and ARC-Challenge. On TruthfulQA, WinoGrande, and MMLU, it is above the frontier median or within about one point of it. However, it scores below all six frontier LLMs on both MathQA and AQuA-RAT, and it trails their median by 17.7 points on MathQA. This contrast reflects the different demands of the two kinds of tasks. A knowledge or commonsense question can be answered by identifying the correct option among the candidates. A math word problem requires several calculation steps before an option can be chosen. A plausible explanation is that general-purpose LLMs can work through these steps in generated text, whereas Jev selects an option directly. Consistent with this, the developer of Jev lists arithmetic among its known weaknesses (TypeSafe AI, 2026b).
+
+
+
+
+Knowledge coverage.
+
+
+
+Outside math, Jev is ahead of the representative and small LLMs in almost every comparison, yet all 13 of them outperform it on MathQA. It is ahead of the representative LLMs in 68 of 76 such comparisons, with the largest margins on GPQA Diamond and MMLU-ProX. Against the small LLMs, it is ahead in all 62 such comparisons, mostly by a wide margin. On AQuA-RAT, six representative LLMs and Qwen3-8B also outperform Jev. Even Mistral-7B-v0.3, which is at least 13 points behind Jev on every other benchmark, is slightly ahead on MathQA. Most of our benchmarks test knowledge, so the lead outside math suggests that Jev covers more knowledge than the earlier generation of LLMs. Small models have limited capacity to store knowledge, which explains their large gap to Jev. The lead of both groups on math may come from working through the calculation before answering. This again suggests that the weakness of Jev lies in multi-step calculation rather than in knowledge. Even a small general-purpose model can solve math word problems that Jev cannot.
+
+
+
+
+Reasoning demands.
+
+
+
+The gap between Jev and the frontier median grows as a benchmark demands more calculation and multi-step reasoning. It is small on MMLU, moderate on MMLU-Pro, and large on GPQA Diamond, AQuA-RAT, and MathQA. On the graduate-level questions of GPQA Diamond, Jev scores about the same as Claude Opus 5.5 but well below the other frontier LLMs. The MMLU family shows this trend most clearly, because MMLU-Pro covers subjects similar to those of MMLU but contains more reasoning-focused questions. Wang et al. (2024) report that chain-of-thought prompting (Wei et al., 2022) improves GPT-4o by 1.5 points on MMLU but by 19.1 points on MMLU-Pro, so intermediate reasoning matters far more on MMLU-Pro. Consistent with this difference, Jev is 1.2 points below the frontier median on MMLU but 5.8 points below it on MMLU-Pro. The same pattern appears when Jev is used as a judge (Li et al., 2026) and in medicine (Madrid-García and Merino-Barbancho, 2026). Among the representative LLMs, the strongest is DeepSeek-R1, which is slightly ahead of Jev on average (Table 5). Besides the two math benchmarks, it leads Jev on MMLU-Pro, C-Eval, HellaSwag, and MMMLU. As a reasoning model, it works through every question before answering, which may explain its lead on the reasoning-focused MMLU-Pro. The gaps on C-Eval and HellaSwag have other causes, which we discuss below.
+
+
+
+
+Translated versus native questions.
+
+
+
+Jev transfers well to translated questions but falls behind on questions from Chinese exams. From MMLU to its multilingual version MMMLU, the accuracy of Jev drops by about six points, a decrease similar to those of GPT-5.6 Sol and Claude Opus 5.5. On MMLU-ProX, it is about one point below the frontier median and above all representative and small LLMs. Both benchmarks consist of translated questions, so they test whether the same knowledge can be used in other languages. For Jev, it largely can. C-Eval shows a different result: Jev is about eight points below the frontier median and behind all representative LLMs from Chinese developers. C-Eval is built from Chinese exams rather than translated questions, so it requires knowledge specific to the Chinese curriculum. Models from Chinese developers likely cover this knowledge better.
+
+
+
+
+
+
+Benchmark
+Ours
+Deußer et al.
+Items
+
+
+
+
+MMLU
+91.3
+91.8
+14,042
+
+
+C-Eval
+85.3
+83.9
+12,342
+
+
+HellaSwag
+89.3
+95.5
+10,042
+
+
+WinoGrande
+91.8
+91.4
+1,267
+
+
+ARC
+97.6
+98.8
+3,548
+
+
+Table 3: Accuracy (%) of Jev in this work and in Deußer et al. (2026), with the number of items in their evaluation. Our ARC score is on ARC-Challenge; theirs is on ARC-Easy and ARC-Challenge.
+
+
+
+
+Agreement with an independent evaluation.
+
+
+
+Our scores for Jev agree closely with those of an independent evaluation, except on HellaSwag. Five of our benchmarks are also used by Deußer et al. (2026), which lets us compare the two sets of scores (Table 3). The two evaluations agree within 0.5 points on MMLU and WinoGrande and within 1.4 points on C-Eval. Their ARC score, which also covers the easier ARC-Easy set, is slightly higher than our score on ARC-Challenge. On HellaSwag, our score is 6.2 points lower. The most likely cause is that the two evaluations use different request templates: Jev is known to be sensitive to how the options are presented (TypeSafe AI, 2026b; Sun and Xu, 2026). The gap on HellaSwag in Figure 2 may therefore partly reflect our template.
+
+
+
+
+
+
+4 Conclusion
+
+
+
+We evaluated Jev, a specialized decision model, against 19 general-purpose LLMs in three tiers on 13 multiple-choice benchmarks. Jev is competitive with frontier LLMs on knowledge and commonsense benchmarks and outperforms most representative LLMs and all small LLMs there. However, it falls behind on mathematical word problems and scores below all 19 LLMs on MathQA. These results suggest that a specialized decision model can handle many constrained decisions on its own, while decisions that require multi-step calculation still call for a general-purpose LLM. In future work, we will evaluate all tiers under one protocol. We will also study whether the option probabilities of Jev can indicate when a question should be passed to a reasoning model.
+
+
+
+
+References
+
+
+
+Alkiek et al. (2025)
+K. Alkiek, D. Jurgens, and V. Vydiswaran
+
+Big reasoning with small models: instruction retrieval at inference time.
+
+arXiv preprint arXiv:2510.13935.
+
+Cited by: Table 7.
+
+
+Amini et al. (2019)
+A. Amini, S. Gabriel, S. Lin, R. Koncel-Kedziorski, Y. Choi, and H. Hajishirzi
+
+MathQA: towards interpretable math word problem solving with operation-based formalisms.
+
+In Proceedings of NAACL,
+
+Cited by: §3.1.
+
+
+Bucher and Martini (2024)
+M. J. J. Bucher and M. Martini
+
+Fine-tuned ‘small’ LLMs (still) significantly outperform zero-shot generative AI models in text classification.
+
+arXiv preprint arXiv:2406.08660.
+
+Cited by: §2.
+
+
+Chen et al. (2023)
+L. Chen, M. Zaharia, and J. Zou
+
+FrugalGPT: how to use large language models while reducing cost and improving performance.
+
+arXiv preprint arXiv:2305.05176.
+
+Cited by: §2.
+
+
+Clark et al. (2018)
+P. Clark, I. Cowhey, O. Etzioni, et al.
+
+Think you have solved question answering? Try ARC, the AI2 reasoning challenge.
+
+arXiv preprint arXiv:1803.05457.
+
+Cited by: §2,
+§3.1.
+
+
+DeepSeek-AI (2024)
+DeepSeek-AI
+
+DeepSeek-V3 technical report.
+
+arXiv preprint arXiv:2412.19437.
+
+Cited by: Table 7,
+§1.
+
+
+DeepSeek-AI (2025)
+DeepSeek-AI
+
+DeepSeek-R1: incentivizing reasoning capability in LLMs via reinforcement learning.
+
+arXiv preprint arXiv:2501.12948.
+
+Cited by: Table 7.
+
+
+DeepSeek (2026)
+DeepSeek
+
+API update notes.
+
+External Links: Link
+
+Cited by: Table 7.
+
+
+Deng et al. (2026)
+B. Deng, S. Fan, H. Zhang, and X. Xie
+
+Jev for scientific decisions: evaluating semantic choices and their consequences.
+
+arXiv preprint arXiv:2609.24965.
+
+Cited by: §1,
+§2.
+
+
+Deußer et al. (2026)
+T. Deußer, L. Sparrenberg, and R. Sifa
+
+Evaluating and benchmarking the system one model Jev.
+
+arXiv preprint arXiv:2609.37647.
+
+Cited by: §1,
+§2,
+§3.2,
+Table 3,
+Table 3.
+
+
+Ding et al. (2024)
+D. Ding, A. Mallick, C. Wang, R. Sim, S. Mukherjee, V. Rühle, L. V. S. Lakshmanan, and A. H. Awadallah
+
+Hybrid LLM: cost-efficient and quality-aware query routing.
+
+In International Conference on Learning Representations,
+
+Cited by: §2.
+
+
+Gema et al. (2025)
+A. P. Gema, J. O. J. Leang, G. Hong, et al.
+
+Are we done with MMLU?.
+
+In Proceedings of NAACL,
+
+Cited by: §2,
+§3.1.
+
+
+Gilardi et al. (2023)
+F. Gilardi, M. Alizadeh, and M. Kubli
+
+ChatGPT outperforms crowd workers for text-annotation tasks.
+
+Proceedings of the National Academy of Sciences 120 (30), pp. e2305016120.
+
+Cited by: §2.
+
+
+Google (2026)
+Google
+
+Gemma 3 model card.
+
+External Links: Link
+
+Cited by: Table 7.
+
+
+Hendrycks et al. (2021)
+D. Hendrycks, C. Burns, S. Basart, A. Zou, M. Mazeika, D. Song, and J. Steinhardt
+
+Measuring massive multitask language understanding.
+
+In International Conference on Learning Representations,
+
+Cited by: §2,
+§3.1.
+
+
+Huang et al. (2023)
+Y. Huang, Y. Bai, Z. Zhu, et al.
+
+C-Eval: a multi-level multi-discipline Chinese evaluation suite for foundation models.
+
+In Advances in Neural Information Processing Systems,
+
+Cited by: §2,
+§3.1.
+
+
+Ibrahim and Zaki (2026)
+Ibrahim and Zaki
+
+Evaluating decision models for text annotation in computational social science.
+
+arXiv preprint arXiv:2609.24574.
+
+Cited by: §2.
+
+
+Li et al. (2026)
+Y. Li, Y. Miao, R. Krishnan, and R. Padman
+
+JEV-as-a-judge: accept when confident, escalate when unsure.
+
+arXiv preprint arXiv:2609.26550.
+
+Cited by: §1,
+§2,
+§3.2.
+
+
+Lin et al. (2022)
+S. Lin, J. Hilton, and O. Evans
+
+TruthfulQA: measuring how models mimic human falsehoods.
+
+In Proceedings of ACL,
+
+Cited by: §3.1.
+
+
+Ling et al. (2026)
+G. Ling, M. Xue, and Z. Ye
+
+Jev in the wild: a data-driven analysis of the Jev model’s functionality, applications and ecosystem.
+
+arXiv preprint arXiv:2609.30216.
+
+Cited by: §2.
+
+
+Ling Team (2025)
+Ling Team
+
+LING technical report.
+
+arXiv preprint arXiv:2503.05139.
+
+Cited by: Table 7.
+
+
+Ling et al. (2017)
+W. Ling, D. Yogatama, C. Dyer, and P. Blunsom
+
+Program induction by rationale generation: learning to solve and explain algebraic word problems.
+
+In Proceedings of ACL,
+
+Cited by: §3.1.
+
+
+Madrid-García and Merino-Barbancho (2026)
+A. Madrid-García and B. Merino-Barbancho
+
+Jev in medicine: a benchmark evaluation. preliminary results.
+
+arXiv preprint arXiv:2609.34024.
+
+Cited by: §1,
+§2,
+§3.2.
+
+
+Meta (2026)
+Meta
+
+Llama 3.1 model card.
+
+External Links: Link
+
+Cited by: Table 7.
+
+
+Microsoft (2026)
+Microsoft
+
+Phi-4-mini-instruct model card.
+
+External Links: Link
+
+Cited by: Table 7.
+
+
+Ong et al. (2024)
+I. Ong, A. Almahairi, V. Wu, W. Chiang, T. Wu, J. E. Gonzalez, M. W. Kadous, and I. Stoica
+
+RouteLLM: learning to route LLMs with preference data.
+
+arXiv preprint arXiv:2406.18665.
+
+Cited by: §2.
+
+
+OpenAI (2024)
+OpenAI
+
+MMMLU: multilingual massive multitask language understanding.
+
+Note: Dataset
+
+External Links: Link
+
+Cited by: §2,
+§3.1.
+
+
+OpenAI (2026a)
+OpenAI
+
+GPT-5.6 release report.
+
+External Links: Link
+
+Cited by: Table 7,
+§1.
+
+
+OpenAI (2026b)
+OpenAI
+
+GPT-6 Astra release report.
+
+External Links: Link
+
+Cited by: Table 7.
+
+
+Qwen Team (2025)
+Qwen Team
+
+Qwen3-VL technical report.
+
+arXiv preprint arXiv:2511.21631.
+
+Cited by: Table 7.
+
+
+Red Hat AI (2026)
+Red Hat AI
+
+Model cards with baseline evaluations of the unquantized models: Qwen3-32B, Qwen3-8B, Qwen3-4B, gemma-3-4b-it, and Meta-Llama-3.1-405B-Instruct.
+
+Note: Hugging Face
+
+External Links: Link
+
+Cited by: Table 7.
+
+
+Rein et al. (2023)
+D. Rein, B. L. Hou, A. C. Stickland, et al.
+
+GPQA: a graduate-level google-proof Q&A benchmark.
+
+arXiv preprint arXiv:2311.12022.
+
+Cited by: §2,
+§3.1.
+
+
+Sakaguchi et al. (2020)
+K. Sakaguchi, R. Le Bras, C. Bhagavatula, and Y. Choi
+
+WinoGrande: an adversarial winograd schema challenge at scale.
+
+In Proceedings of AAAI,
+
+Cited by: §3.1.
+
+
+Stephan et al. (2025)
+A. Stephan, D. Zhu, M. Aßenmacher, X. Shen, and B. Roth
+
+From calculation to adjudication: examining LLM judges on mathematical reasoning tasks.
+
+In Proceedings of the GEM Workshop,
+
+Cited by: Table 7.
+
+
+Sun and Xu (2026)
+Sun and Xu
+
+Type-safe is not error-free: a constrained decision head follows the option name, not the rubric bound to it.
+
+arXiv preprint arXiv:2609.26758.
+
+Cited by: §2,
+§3.2.
+
+
+TypeSafe AI (2026a)
+TypeSafe AI
+
+Introducing system one models & Jev.
+
+Note: Blog post, September 15
+
+External Links: Link
+
+Cited by: §1,
+§2.
+
+
+TypeSafe AI (2026b)
+TypeSafe AI
+
+Jev 1.13 jaggedness.
+
+Note: Documentation, last reviewed October 2
+
+External Links: Link
+
+Cited by: §2,
+§3.2,
+§3.2.
+
+
+Wang et al. (2024)
+Y. Wang, X. Ma, G. Zhang, et al.
+
+MMLU-Pro: a more robust and challenging multi-task language understanding benchmark.
+
+In Advances in Neural Information Processing Systems (Datasets and Benchmarks Track),
+
+Cited by: §2,
+§3.1,
+§3.2.
+
+
+Wang and Gao (2026)
+Z. Wang and Y. Gao
+
+JEV as a judge for agent trace security: an empirical comparison with generative LLM judges.
+
+arXiv preprint arXiv:2609.34862.
+
+Cited by: §1,
+§2.
+
+
+Wei et al. (2022)
+J. Wei, X. Wang, D. Schuurmans, M. Bosma, B. Ichter, F. Xia, E. H. Chi, Q. V. Le, and D. Zhou
+
+Chain-of-thought prompting elicits reasoning in large language models.
+
+In Advances in Neural Information Processing Systems,
+
+Cited by: §3.2.
+
+
+Xuan et al. (2025)
+W. Xuan, R. Yang, H. Qi, et al.
+
+MMLU-ProX: a multilingual benchmark for advanced large language model evaluation.
+
+In Proceedings of EMNLP,
+
+Cited by: Table 7,
+§2,
+§3.1.
+
+
+Yang et al. (2025)
+A. Yang, A. Li, B. Yang, et al.
+
+Qwen3 technical report.
+
+arXiv preprint arXiv:2505.09388.
+
+Cited by: Table 7,
+§1.
+
+
+Zellers et al. (2019)
+R. Zellers, A. Holtzman, Y. Bisk, A. Farhadi, and Y. Choi
+
+HellaSwag: can a machine really finish your sentence?.
+
+In Proceedings of ACL,
+
+Cited by: §2,
+§3.1.
+
+
+Zhang et al. (2026)
+F. Zhang, Y. Chen, Z. Xie, et al.
+
+Same scores, different decisions: evaluating JEV and language models for legal document understanding.
+
+arXiv preprint arXiv:2609.27678.
+
+Cited by: §1,
+§2.
+
+
+
+
+
+Appendix A Evaluation Details
+
+
+
+Benchmarks.
+
+
+
+The evaluation sets contain 14,042 items for MMLU, 817 for TruthfulQA, 198 for GPQA Diamond, 1,172 for ARC-Challenge, and 254 for AQuA-RAT.
+
+
+
+
+Aggregation.
+
+
+
+The frontier median on each benchmark is taken over the frontier scores evaluated in this work: three on GPQA Diamond and six on each of the other 12 benchmarks. All derived numbers are computed from the scores shown in Table 2, and medians are rounded to one decimal place before differences are taken.
+
+
+
+
+TruthfulQA.
+
+
+
+Our TruthfulQA scores are the accuracy of the selected option. The published scores from sources h and j (Table 7) use the MC2 metric, which measures the probability assigned to true answers. They are marked with ∗ and excluded from the counts and mean differences in Tables 5 and 6.
+
+
+
+
+Uncertainty.
+
+
+
+The 95% Wilson intervals for Jev are [67.7, 79.8] on GPQA Diamond, [78.0, 87.2] on AQuA-RAT, and [96.6, 98.3] on ARC-Challenge. The interval for Claude Opus 5.5 on GPQA Diamond is [69.3, 81.2].
+
+
+
+
+
+Appendix B Additional Results
+
+
+
+Gap to the frontier.
+
+
+
+Table 4 gives the numbers behind Figure 2.
+
+
+
+
+
+
+Benchmark
+Jev
+Median
+Range
+𝚫\Delta
+Rank
+
+
+
+
+TruthfulQA
+87.5
+83.0
+76.0–97.9
++4.5
+3/7
+
+
+ARC-Challenge
+97.6
+95.5
+91.4–97.5
++2.1
+1/7
+
+
+MMLU-Redux
+95.0
+93.2
+90.0–94.3
++1.8
+1/7
+
+
+WinoGrande
+91.8
+92.1
+70.2–97.1
+−-0.3
+4/7
+
+
+MMLU
+91.3
+92.5
+87.5–94.4
+−-1.2
+5/7
+
+
+MMLU-ProX
+83.2
+84.5
+68.9–87.6
+−-1.3
+5/7
+
+
+MMMLU
+85.0
+88.6
+85.0–92.6
+−-3.6
+6/7
+
+
+HellaSwag
+89.3
+93.8
+88.0–97.5
+−-4.5
+6/7
+
+
+MMLU-Pro
+82.3
+88.1
+84.5–93.8
+−-5.8
+7/7
+
+
+AQuA-RAT
+83.1
+91.0
+89.0–94.1
+−-7.9
+7/7
+
+
+C-Eval
+85.3
+93.6
+83.1–94.7
+−-8.3
+6/7
+
+
+GPQA Diamond
+74.2
+83.1
+75.8–92.4
+−-8.9
+4/4
+
+
+MathQA
+75.0
+92.7
+85.8–94.4
+−-17.7
+7/7
+
+
+Table 4: Jev against the six frontier LLMs: the median and range of their scores, the difference Δ\Delta between Jev and the median, and the rank of Jev among the evaluated models. On GPQA Diamond, only the three frontier LLMs evaluated in this work are counted.
+
+
+
+
+
+Appendix C Sources of Published Scores
+
+
+
+Tables 5 and 6 give the source of every published score of the representative and small LLMs, and Table 7 lists the sources and their protocols. Scores without a source are evaluated in this work. All sources were accessed on September 30, 2026. The published DeepSeek-V3 scores on MMLU-Pro and MMLU-Redux are those of the V3-0324 checkpoint, and its other published scores are those of the original V3.
+
+
+
+
+
+
+
+Benchmark
+Jev
+GPT-4o
+Claude 3.5 Sonnet
+DeepSeek-R1
+DeepSeek-V3
+Qwen3-32B
+Qwen2.5-72B
+Llama-405B
+
+
+MMLU-Pro
+82.3
+72.6a
+78.0a
+84.0c
+81.2b
+79.1e
+71.6a
+73.3a
+
+
+MMLU-Redux
+95.0
+88.0a
+88.9a
+92.9c
+90.4e
+90.9d
+85.6a
+86.2a
+
+
+MMLU
+91.3
+87.2a
+88.3a
+90.8c
+88.5a
+81.0h
+85.3a
+88.6a
+
+
+GPQA Diamond
+74.2
+49.9a
+65.0a
+71.5c
+59.1a
+68.4d
+49.0a
+51.1a
+
+
+C-Eval
+85.3
+76.0a
+76.7a
+91.8c
+86.5a
+87.3d
+86.1a
+61.5a
+
+
+HellaSwag
+89.3
+92.6
+88.6
+91.5
+89.2
+71.1h
+87.2
+88.3h
+
+
+WinoGrande
+91.8
+87.1
+85.0
+89.7
+84.9
+69.8h
+82.7
+87.2h
+
+
+TruthfulQA
+87.5
+86.0
+81.5
+84.5
+82.1
+58.6h∗
+80.1
+82.4
+
+
+ARC-Challenge
+97.6
+96.1
+93.7
+96.6
+95.3
+69.0h
+92.7
+96.9i
+
+
+MathQA
+75.0
+86.0
+90.0
+88.8
+87.8
+91.9
+85.7
+84.7
+
+
+AQuA-RAT
+83.1
+88.0
+86.0
+88.8
+86.3
+88.6
+83.7g
+81.0
+
+
+MMLU-ProX
+83.2
+71.1f
+68.7
+74.6f
+70.8f
+69.2f
+58.7f
+59.8
+
+
+MMMLU
+85.0
+77.9
+81.1
+86.8
+79.4
+80.6d
+76.9d
+75.0
+
+
+Jev ahead / compared
+
+10/13
+11/13
+7/13
+10/13
+9/12
+10/13
+12/13
+
+
+Mean difference
+
++4.8
++3.8
+−-0.9
++3.0
++7.2
++7.3
++8.0
+
+
+
+Table 5: Jev and the representative LLMs. Bold marks the best score on each benchmark. Scores in italics are published, and their superscripts refer to the sources in Table 7; the other scores are evaluated in this work. ∗MC2 metric, excluded from the last two rows. Qwen2.5-72B and Llama-405B are the Instruct models.
+
+
+
+
+
+
+Benchmark
+Jev
+Qwen3-8B
+Qwen3-4B
+Llama-3.1-8B
+Phi-4-mini
+Gemma-3-4B
+Mistral-7B
+
+
+MMLU-Pro
+82.3
+74.6e
+70.4e
+48.3i
+52.8j
+43.6k
+31.5l
+
+
+MMLU-Redux
+95.0
+87.5d
+83.7d
+61.7d
+73.1
+71.1
+58.4l
+
+
+MMLU
+91.3
+72.0h
+66.8h
+69.4i
+67.3j
+58.4h
+63.5l
+
+
+GPQA Diamond
+74.2
+62.0d
+55.9d
+32.8d
+32.0
+30.8k
+30.2
+
+
+C-Eval
+85.3
+83.4d
+77.5d
+52.0d
+61.4
+59.5
+45.9l
+
+
+HellaSwag
+89.3
+56.5h
+52.8h
+73.5
+69.1j
+75.0h
+75.8l
+
+
+WinoGrande
+91.8
+66.0h
+58.4h
+64.7
+67.0j
+70.3h
+77.6l
+
+
+TruthfulQA
+87.5
+53.2h∗
+51.8h∗
+69.2
+66.4j∗
+51.9h∗
+64.7
+
+
+ARC-Challenge
+97.6
+61.7h
+50.2h
+83.4i
+83.7j
+56.6h
+72.2l
+
+
+MathQA
+75.0
+92.3
+90.0m
+81.2
+82.8
+84.3
+76.7
+
+
+AQuA-RAT
+83.1
+86.3
+83.0
+61.5g
+72.8
+72.2
+61.0
+
+
+MMLU-ProX
+83.2
+60.0f
+56.6f
+28.6f
+28.4f
+25.1f
+31.1
+
+
+MMMLU
+85.0
+74.4d
+69.8d
+44.4d
+59.8
+57.1
+41.9
+
+
+Jev ahead / compared
+
+10/12
+11/12
+12/13
+11/12
+11/12
+12/13
+
+
+Mean difference
+
++13.0
++18.2
++26.9
++23.6
++27.4
++30.0
+
+
+Table 6: Jev and the small LLMs. Bold marks the best score on each benchmark. Scores in italics are published, and their superscripts refer to the sources in Table 7; the other scores are evaluated in this work. ∗MC2 metric, excluded from the last two rows. Llama-3.1-8B and Phi-4-mini are the Instruct models, Gemma-3-4B is the IT model, and Mistral-7B is the v0.3 base model.
+
+
+
+
+
+
+Key
+Source
+
+
+Models and protocol
+
+
+
+
+
+a
+DeepSeek-V3 report (DeepSeek-AI, 2024)
+
+
+Chat models: GPT-4o (0513), Claude 3.5 Sonnet (1022), Qwen2.5-72B-Instruct, Llama-3.1-405B-Instruct, and the original DeepSeek-V3.
+
+
+
+b
+DeepSeek update notes (DeepSeek, 2026)
+
+
+DeepSeek-V3-0324 on MMLU-Pro; DeepSeek-V4.1-Flash on GPQA Diamond.
+
+
+
+c
+DeepSeek-R1 report (DeepSeek-AI, 2025)
+
+
+Original DeepSeek-R1.
+
+
+
+d
+Qwen3 report (Yang et al., 2025)
+
+
+Qwen3 in thinking mode; Llama-3.1-8B-Instruct as a baseline; MMMLU over 14 languages.
+
+
+
+e
+Qwen3-VL report (Qwen Team, 2025)
+
+
+Text-only Qwen3 baselines in thinking mode; DeepSeek-V3-0324 on MMLU-Redux.
+
+
+
+f
+MMLU-ProX (Xuan et al., 2025)
+
+
+29 languages, full set, 5-shot with chain-of-thought.
+
+
+
+g
+Stephan et al. (2025)
+
+
+AQuA-RAT test set, 4-shot with chain-of-thought.
+
+
+
+h
+Red Hat AI model cards (Red Hat AI, 2026)
+
+
+Unquantized baselines scored by log-likelihood: MMLU 5-shot, ARC-Challenge 25-shot, HellaSwag 10-shot, WinoGrande 5-shot, TruthfulQA MC2 zero-shot.
+
+
+
+i
+Llama 3.1 model card (Meta, 2026)
+
+
+MMLU 5-shot, MMLU-Pro 5-shot with chain-of-thought, ARC-Challenge zero-shot.
+
+
+
+j
+Phi-4-mini model card (Microsoft, 2026)
+
+
+MMLU 5-shot, MMLU-Pro zero-shot with chain-of-thought, ARC-Challenge 10-shot, HellaSwag and WinoGrande 5-shot, TruthfulQA MC2 10-shot.
+
+
+
+k
+Gemma 3 model card (Google, 2026)
+
+
+Instruction-tuned model, zero-shot.
+
+
+
+l
+LING report (Ling Team, 2025)
+
+
+Mistral-7B-v0.3 base model, 5-shot.
+
+
+
+m
+Alkiek et al. (2025)
+
+
+Qwen3-4B-Instruct on MathQA, zero-shot.
+
+
+
+n
+GPT-5.6 report (OpenAI, 2026a)
+
+
+GPT-5.6 Sol on GPQA Diamond.
+
+
+
+o
+GPT-6 Astra report (OpenAI, 2026b)
+
+
+Gemini 3.8 Flash on GPQA Diamond.
+
+
+
+Table 7: Sources and protocols of the published scores. Keys n, o, and b also cover the vendor-reported GPQA Diamond scores of GPT-5.6 Sol, Gemini 3.8 Flash, and DeepSeek-V4.1-Flash in Table 2.
+
+
+
+
+
+
+ 
+ Experimental support, please
+ view the build logs
+ for errors. Generated by
+ 
+ 
+ L
+ A
+ T
+ E
+ 
+ xml
+ 
+ .
+ 
+ 
+ 
+Instructions for reporting errors
+ 
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below:
+ 
+ 
+Click the "Report Issue" (
+ 
+ ) button, located in the page header.
+ 
+ 
+Tip: You can select the relevant text first, to include it in your report.
+ 
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all.
+ 
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+ 
+
+ 
+ 
+ 
+ We gratefully acknowledge support from
+ our major funders,
+ member institutions, ,
+ and all contributors.
+ 
+ 
+ About
+ ·
+ Help
+ ·
+ Contact
+ ·
+ Subscribe
+ ·
+ Copyright
+ ·
+ Privacy
+ ·
+ Accessibility
+ ·
+ Operational Status (opens in new tab)
+ 
+ 
+
+ 
+ Major funding support from
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+

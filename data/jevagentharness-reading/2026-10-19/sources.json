@@ -1,0 +1,74 @@
+{
+  "date": "2026-10-19",
+  "paper_version": "2610.21412v1",
+  "code_commit": "f2932199e1ef1d9f089b51d39430c87be0f560b5",
+  "note": "Source snapshots for reading and arithmetic checks; not an independent model experiment. Upstream materials retain their original licenses.",
+  "files": [
+    {
+      "path": "sources/paper.html",
+      "source_url": "https://arxiv.org/html/2610.21412v1",
+      "sha256": "0bb8f2bfd8f5ee6cd04f9d07e66a2b4fd22770175a95b50e7e00eafaf77abbe3",
+      "bytes": 2573973
+    },
+    {
+      "path": "sources/research/results/stage2/stage2.json",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/research/results/stage2/stage2.json",
+      "sha256": "d1e855aefe58bf0a045a311adecc379cc438f89ed59d97183f2b41255f66fbe6",
+      "bytes": 368804
+    },
+    {
+      "path": "sources/research/results/stage2/economics.md",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/research/results/stage2/economics.md",
+      "sha256": "bc3c6b5ad5544688bfef20c2570eba0e9d82400eba664241e6fb7b5fb3b1cac2",
+      "bytes": 13911
+    },
+    {
+      "path": "sources/research/README.md",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/research/README.md",
+      "sha256": "4547f5536fa1029414715ebaff1366b447a7c08885d3f6ef467279099462525d",
+      "bytes": 30910
+    },
+    {
+      "path": "sources/research/src/jevharness/bench/threshold_theory.py",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/research/src/jevharness/bench/threshold_theory.py",
+      "sha256": "cb48d6bf04a395977387d56d1c486f637b41486f9c5806e1d68e55703ba6e140",
+      "bytes": 95633
+    },
+    {
+      "path": "sources/src/jevagentharness/router.py",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/src/jevagentharness/router.py",
+      "sha256": "ca6ce9205fd1ea042ffbf7d2ba015e054a031b98aee1826130c0ff94b9fc7866",
+      "bytes": 10643
+    },
+    {
+      "path": "sources/src/jevagentharness/points.py",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/src/jevagentharness/points.py",
+      "sha256": "4976fcb33b83dbe7e4ab831fecff33ce73d7cdc67475db141d6d196a048111e2",
+      "bytes": 30101
+    },
+    {
+      "path": "sources/src/jevagentharness/server.py",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/src/jevagentharness/server.py",
+      "sha256": "d8742fe46f551cd87e104398e0c3b452ac211c93a475499d3117115c574a51f9",
+      "bytes": 38335
+    },
+    {
+      "path": "sources/research/src/jevharness/harness/agent.py",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/research/src/jevharness/harness/agent.py",
+      "sha256": "11f508b265af89c49ae3a55da2db567b661a5d4386e2164feb2c5834c53069e2",
+      "bytes": 111277
+    },
+    {
+      "path": "sources/research/src/jevharness/bench/env.py",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/research/src/jevharness/bench/env.py",
+      "sha256": "98a1a74366ee6d035ef67f2275b024f5673c873196ad61e2d284aff0fc2b876a",
+      "bytes": 1802
+    },
+    {
+      "path": "sources/research/src/jevharness/harness/trajectory.py",
+      "source_url": "https://raw.githubusercontent.com/JevAgentHarness/JevAgentHarness/f2932199e1ef1d9f089b51d39430c87be0f560b5/research/src/jevharness/harness/trajectory.py",
+      "sha256": "939fa843732b97fccb1f6905dff0d832adb90a1b62cd5ac0f02d524697ed11d2",
+      "bytes": 6982
+    }
+  ]
+}

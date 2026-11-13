@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jev 开源生态深度调研报告</title>
+<style>
+:root{--bg:#ffffff;--fg:#1b1f24;--muted:#5b6570;--line:#e3e7ec;--accent:#2563eb;--soft:#f5f7fa;--warn:#b45309;--ok:#15803d;--bad:#b91c1c;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:15.5px;line-height:1.75;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1080px;margin:0 auto;padding:48px 28px 96px;}
+h1{font-size:30px;line-height:1.35;margin:0 0 18px;letter-spacing:-.01em;font-weight:700;}
+h2{font-size:22px;margin:52px 0 16px;padding-bottom:10px;border-bottom:2px solid var(--line);font-weight:700;}
+h3{font-size:17.5px;margin:34px 0 12px;font-weight:650;}
+h4{font-size:15.5px;margin:24px 0 10px;font-weight:650;color:var(--muted);}
+p{margin:12px 0;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+strong{font-weight:670;}
+blockquote{margin:18px 0;padding:14px 18px;background:var(--soft);border-left:4px solid var(--accent);
+  border-radius:0 6px 6px 0;color:#33404d;}
+blockquote p{margin:6px 0;}
+hr{border:0;border-top:1px solid var(--line);margin:40px 0;}
+code{background:var(--soft);padding:1.5px 5px;border-radius:4px;font-size:13.5px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+ul,ol{padding-left:24px;margin:12px 0;}
+li{margin:6px 0;}
+.tw{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:8px;}
+table{border-collapse:collapse;width:100%;font-size:13.5px;background:var(--bg);}
+th,td{border-bottom:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top;}
+th{background:var(--soft);font-weight:650;position:sticky;top:0;white-space:nowrap;}
+tbody tr:hover{background:#fafbfc;}
+tbody tr:last-child td{border-bottom:0;}
+td:nth-child(n+6){font-variant-numeric:tabular-nums;}
+h2 + .tw, h3 + .tw{margin-top:12px;}
+</style>
+</head>
+<body><div class="wrap">
+<h1 id="jev">基于 Jev 的开源模型生态深度调研报告</h1>
+<blockquote>
+<p><strong>调研时间</strong>：2026 年 10 月 1 日
+<strong>数据基准</strong>：JevBench v1.4.2.2（2026-09-27 冻结，95 个系统 / 91 个已排名）
+<strong>核心结论前置</strong>：Jev 发布 16 天内，社区已产出 <strong>90+ 个开源决策模型/服务</strong>，其中 <strong>3 个开源模型的综合分超过 Jev 官方 1.13.0</strong>。但"超过"几乎全部来自速度与成本轴；一旦题目换成模型从未见过的密封题，<strong>所有 Jev 类模型（含原版）的准确率从 ~86% 崩到 ~35%</strong>，而同期通用大模型仍有 90%+。Jev 类模型打破的是"决策的成本结构"，不是"决策的能力上限"。</p>
+</blockquote>
+<hr />
+<h2 id="jev_1">一、Jev 是什么，为什么会在两周内被复刻几十次</h2>
+<h3 id="11">1.1 模型本身</h3>
+<p>2026 年 9 月 15 日，前 OpenAI 研究员、RLHF 共同发明者 Diogo Almeida 创办的 <strong>TypeSafe AI</strong> 发布 <strong>Jev</strong>（当前版本 <code>jev-1.13.0</code>），并提出一个新类别名：<strong>System One Model（系统一模型）</strong>。</p>
+<p>它的形态与 LLM 完全不同：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>通用 LLM</th>
+<th>Jev</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输出</td>
+<td>逐 token 自回归生成文本</td>
+<td>一次前向，直接返回<strong>类型化答案 + 每选项概率</strong></td>
+</tr>
+<tr>
+<td>问题类型</td>
+<td>任意</td>
+<td>三种原语：<code>choice</code>（从你给的选项里选一个）、<code>noul</code>（是/否概率）、<code>score</code>（有序量表打分）</td>
+</tr>
+<tr>
+<td>延迟</td>
+<td>秒级到分钟级</td>
+<td>官方称 70–500 ms</td>
+</tr>
+<tr>
+<td>计费</td>
+<td>输入+输出</td>
+<td>输入 \$0.042 / 百万 token，<strong>输出免费</strong></td>
+</tr>
+<tr>
+<td>幻觉</td>
+<td>可能编造</td>
+<td>输出被选项集封死，"不可能编出选项外的答案"</td>
+</tr>
+<tr>
+<td>上下文</td>
+<td>—</td>
+<td>32K token 状态，单个 choice 最多 255 个选项</td>
+</tr>
+<tr>
+<td>权重</td>
+<td>—</td>
+<td><strong>闭源，仅托管 API</strong>（未向中国大陆开放）</td>
+</tr>
+</tbody>
+</table></div>
+<p>名字取自 19 世纪经济学家杰文斯（Jevons），暗合"杰文斯悖论"：智能使用成本暴跌 → 智能用量暴涨。</p>
+<p>官方定位不是"用来聊天的模型"，而是程序里的<strong>"聪明的 if-else"</strong>：Agent 循环里最高频的原子判断（这条工单归哪个组、这个工具调用要不要批准、这份草稿过不过审）交给它，昂贵的慢思考留给大模型。负责组装这套"快慢分工"的工程层，业界称为 <strong>Harness</strong>。</p>
+<h3 id="12">1.2 为什么复刻潮来得这么快</h3>
+<p>三个原因叠加：</p>
+<ol>
+<li><strong>核心机制极其简单</strong>。把每个候选选项映射成 tokenizer 里的单个 token（A/B/C/D…），组织好 prompt，跑一次前向传播，直接读答案位置上的 logits，在你给的选项集上做 softmax。不做解码循环，不生成任何文本，不解析 JSON。这套"单 token logits 打分"几小时就能写出来。</li>
+<li><strong>底座现成</strong>。绝大多数复现都站在 <strong>Qwen3.5</strong>（0.8B / 2B / 4B / 9B / 35B-A3B）或 <strong>ModernBERT / DeBERTa / Gemma 4</strong> 上，Apache-2.0，可直接商用。</li>
+<li><strong>训练成本近乎为零</strong>。<strong>Together AI 的 Tev1 训练只花了约 \$17、25 分钟</strong>；个人开发者 mohit67890 的 Imajev-4B 总共 \$1,200、15 天；Jeff 系列在一张家用工作站 GPU 上训练约 2 小时。</li>
+</ol>
+<p>Latent Space 当时的统计是"两天出了 6 个 Jev 克隆"。到 9 月底，GitHub 上名字里带 JEV 的仓库已达 <strong>13,000+</strong>，其中 50 star 以上、经过源码评审的精选清单（Awesome JEV）收录 <strong>228 个</strong>，内有 <strong>31 个属于"开源模型/权重"类</strong>。</p>
+<hr />
+<h2 id="_1">二、生态规模：到底有多少个</h2>
+<h3 id="21">2.1 分层计数（从严格到宽泛）</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>层次</th>
+<th style="text-align: right;">数量</th>
+<th>口径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>进入 JevBench 独立评测的开源决策模型/服务</strong></td>
+<td style="text-align: right;"><strong>81</strong></td>
+<td>JevBench v1.4.2.2 的 95 个系统中，<code>open=yes/True/weights</code> 的条目</td>
+</tr>
+<tr>
+<td>其中：<strong>真正独立训练/微调过的 Jev 复现</strong></td>
+<td style="text-align: right;">59</td>
+<td>JevBench 分类 <code>jev-rebuild</code></td>
+</tr>
+<tr>
+<td>其中：<strong>开放接口的 System-One 实现</strong></td>
+<td style="text-align: right;">5</td>
+<td><code>system-one-open</code>（如 Mapika/decider、blockbrain 系列）</td>
+</tr>
+<tr>
+<td>其中：<strong>纯 logits 读出（未训练）</strong></td>
+<td style="text-align: right;">4</td>
+<td><code>native-logit</code>（如 Jobe、NInfer）</td>
+</tr>
+<tr>
+<td>其中：<strong>小分类器 / 零样本编码器</strong></td>
+<td style="text-align: right;">5</td>
+<td><code>classifier</code>（Laya、GLiNER2.5、OpenDecision 等）</td>
+</tr>
+<tr>
+<td><strong>JevBench 中的对照组</strong></td>
+<td style="text-align: right;">10</td>
+<td><code>raw-logit-control</code> 5（裸 Qwen logits）+ <code>reranker</code> 5</td>
+</tr>
+<tr>
+<td><strong>Awesome JEV 精选（50+ star、源码评审）</strong></td>
+<td style="text-align: right;">228（Open models 类 31）</td>
+<td>2026-09-28 版</td>
+</tr>
+<tr>
+<td><strong>GitHub 含 JEV 的仓库</strong></td>
+<td style="text-align: right;">13,000+</td>
+<td>含大量应用、SDK、玩具项目</td>
+</tr>
+<tr>
+<td><strong>HF "Jev Decision Index" 追踪的权重条目</strong></td>
+<td style="text-align: right;">60+</td>
+<td>multimodalart/jev-decision-index</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>一句话回答"有多少"</strong>：<strong>有可信第三方评测背书的、能真正跑起来的开源 Jev 类模型，约 80 个；其中经过微调/训练的不是几个，而是 60 个以上。</strong> 加上应用层项目，整个生态在两周内膨胀到两百多个有质量的项目、一万三千多个仓库。</p>
+<h3 id="22-16">2.2 时间线：16 天的爆发</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>事件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>09-15</td>
+<td>TypeSafe 发布 Jev 1.13.0（闭源 API）</td>
+</tr>
+<tr>
+<td>09-17</td>
+<td>browser-use 开源 <code>jev-ultrafast</code>（HN 首页，18.2K star）</td>
+</tr>
+<tr>
+<td>09-18</td>
+<td>Convai Innovations 发布 <strong>Laya</strong>（ModernBERT 421M）；JevBench v1.0 出现（242 题）</td>
+</tr>
+<tr>
+<td>09-19</td>
+<td><strong>APUS</strong>（麒麟合盛）发布全球首批独立开源复现，封装为 <code>fast-browser-use</code> Agent Skill</td>
+</tr>
+<tr>
+<td>09-20</td>
+<td>Jared Palmer 发布 <strong>kev</strong> 家族（0.5B/0.8B/4B/9B）</td>
+</tr>
+<tr>
+<td>09-21</td>
+<td>诺基亚应用研究院 + 腾讯混元发布 <strong>AnyJev</strong>（免训练）；JevBench 扩到 534 题</td>
+</tr>
+<tr>
+<td>09-22</td>
+<td>JevBench v1.3.0 首次公开榜单（48 行）；Hanno Labs 发布 <strong>DecisionBench</strong>（43 任务 / 23,900 行）+ <strong>Bosun v3.1</strong></td>
+</tr>
+<tr>
+<td>09-23</td>
+<td>Together AI 发布 <strong>Tev1-4B-experimental</strong>；Mapika 发布 <strong>decider</strong> 家族</td>
+</tr>
+<tr>
+<td>09-24</td>
+<td>JevBench <strong>v1.4.2 引入 308 条密封题</strong>，decider-4b v2 首次登顶；Fastino 发布 GLiNER2.5-Decide</td>
+</tr>
+<tr>
+<td>09-25</td>
+<td><strong>JevK5 v0.3</strong>（Apache-2.0，4B/9B，双教师蒸馏）</td>
+</tr>
+<tr>
+<td>09-26</td>
+<td>上海 AI Lab / 书生·InternLM 发布 <strong>Intern-Decision</strong>（0.8B/2B/4B）</td>
+</tr>
+<tr>
+<td>09-27</td>
+<td>JevBench v1.4.2.2，<strong>Imajev-4B 登顶</strong></td>
+</tr>
+<tr>
+<td>09-28</td>
+<td><strong>Jeff</strong> 系列（0.8B/2B，HN 353 分）；ImageJevBench v0.1.3 发布</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_2">三、技术路线：六种复刻方式</h2>
+<p>社区把"做一次决策"这件事拆出了六条不同路径，成本和能力差异极大。</p>
+<h3 id="a-logits">A. 冻结基座 + 直接读 logits（<strong>零训练</strong>）</h3>
+<p>不做任何梯度更新，把选项映射成单 token，读答案位置的 logits。
+- 代表：<strong>AnyJev</strong>（诺基亚 + 腾讯混元，Apache-2.0）、<strong>Jobe</strong>、<strong>local-jev</strong>、JevBench 的 <code>raw-logit-control</code> 对照组
+- 优点：零成本、零数据、任意 LLM 立即可用
+- 致命问题：<strong>位置偏置 + 标签偏置</strong>。AnyJev 实测，同一题把选项顺序倒过来，裸 logits 的答案翻转率 <strong>23%</strong>；Qwen3-8B 上不同位置之间的先验 logit 差最大达 <strong>6.81</strong>（≈900 倍权重）；校准误差 ECE <strong>0.240</strong>（嘴上说 90% 把握，实际只有六七成）
+- AnyJev 的解法：L0 层做<strong>循环移位边际化</strong>（把选项做 K 种循环移位各读一次，在 log 空间取平均）+ 无标签先验校正 → 翻转率 23% → <strong>7.3%</strong>，一条标签都不用</p>
+<h3 id="b-lora-logits">B. LoRA / 全参微调 + 选项字母 logits 读出（<strong>主流路线</strong>）</h3>
+<ul>
+<li>代表：<strong>JevK5</strong>、<strong>decider</strong>、<strong>Plumb-4B</strong>、<strong>reflex</strong>、<strong>Hopper</strong>、<strong>Jeff</strong>、<strong>metask-jev-4b</strong>、<strong>Intern-Decision</strong>、<strong>Tev1</strong>、<strong>Bosun v3.1</strong></li>
+<li>做法：1 个 epoch，batch 256，对选项字母做交叉熵，训完再拟合<strong>一个温度</strong>做校准</li>
+<li>成本：Tev1 \$17 / 25 分钟；Jeff 单卡 2 小时；Imajev-4B \$1,200 / 15 天</li>
+<li>这条路线出了榜单前 10 名里的 8 个</li>
+</ul>
+<h3 id="c-cpu">C. 编码器 + 打分头（<strong>超小、可 CPU、可离线</strong>）</h3>
+<ul>
+<li>代表：<strong>Laya</strong>（ModernBERT-large 421M + 322M 多语言版）、<strong>GLiNER2.5-Decide</strong>（340M，GLiNER 原班人马）、<strong>Von</strong>（395M）、<strong>verdict-small</strong>（118M）、<strong>openJev Verdict</strong>（ModernBERT 151M）、<strong>open-jev-deberta-v3-large</strong></li>
+<li>优点：可在 CPU / Apple Silicon / 气隙环境跑；成本极低（Laya 榜上 \$0.0029/千次）</li>
+<li>缺点：<strong>上下文与选项数受限</strong>（Laya 512–1024 token），泛化最弱，基线 checkpoint 在域外<strong>接近随机</strong></li>
+</ul>
+<h3 id="d">D. 离散扩散路径</h3>
+<ul>
+<li>代表：<strong>djev</strong>（Maisa，DiffusionGemma 26B-A4B）、<strong>razorback16/OpenJev</strong>（同一底座 + vLLM PR #57250）</li>
+<li>思路：不逐 token 生成，而是把答案模板写进"画布"，只留标签槽位做噪声，一次去噪步读出全部分布</li>
+<li>注意：djev 明确声明<strong>不是独立训练的模型，而是一种推理方法</strong>，无自有权重</li>
+</ul>
+<h3 id="e-head">E. 闭式解 head / 提前退出（<strong>免梯度的新方向</strong>）</h3>
+<ul>
+<li><strong>AnyJev L2</strong>：前向只跑到约 2/3 深度，用闭式线性 head 从中间隐状态直接读决策。反直觉结果——<strong>砍掉深度是净赚</strong>：Qwen3-1.7B 只用 64% 深度达 0.730（Jev 公布值 0.727），Qwen3-4B 达 0.786；速度是完整前向的 0.68 倍，100 条标签即可拟合</li>
+<li><strong>CLM-8B</strong>（Stanford，冻结 Qwen3-8B + 75MB 投影）：JevBench 排 <strong>78/89</strong>，且被三个独立后端复现发现<strong>三种问题类型中有一种恒定返回同一答案</strong>——是重要的负面证据</li>
+<li><strong>typecastlm</strong>、<strong>Cygnet</strong>（冻结 Gemma-4-12B-it + MIT shim，榜上第 6）</li>
+</ul>
+<h3 id="f-jev">F. 多模态扩展（Jev 本身做不到）</h3>
+<ul>
+<li><strong>Imajev</strong>（2B/4B/9B）：图 + 记录 + 类型化问题 → 带"unknown"选项的校准概率，<strong>ImageJevBench v0.1.3 第 1 名</strong></li>
+<li><strong>decider-2b-vision</strong>、<strong>Jev-Omni</strong>（Gemma-4-12B + 256 路决策头）、<strong>Intern-Decision</strong>（多模态）</li>
+</ul>
+<hr />
+<h2 id="jevbench-v1422">四、效果到底如何：JevBench v1.4.2.2 全量解读</h2>
+<h3 id="41">4.1 先说评测方法（这决定了分数怎么读）</h3>
+<p>JevBench 是目前唯一由<strong>独立第三方（Benchmark Heaven）</strong>运行、且<strong>开源权重参赛者一律在断网只读容器里、用评测方自己的 GPU 离线跑完</strong>的榜单。这比各家模型卡的自报数字可信得多。</p>
+<ul>
+<li><strong>题目</strong>：每系统 842 道决策 = 534 道公开（easy 72 / standard 96 / judge 146 / hard 220）+ <strong>308 道全新密封题</strong></li>
+<li><strong>四轴，等权调和平均</strong>（ weakest axis dominates ）：
+  <code>Score = 4 / (1/I + 1/C + 1/S + 1/K)</code></li>
+<li><strong>I 智能</strong>：机会校正后准确率，tier 权重 hard 30% / judge 28% / standard 28% / easy 14%；混入 20% 密封题；公开→密封差距 &gt;25pp 要扣分</li>
+<li><strong>C 校准</strong>：hard tier 上的 ECE + 对 gold 分布的忠实度</li>
+<li><strong>S 速度</strong>：<code>100 − 20·log10(p50/0.1s)</code>，每慢 10 倍扣 20 分</li>
+<li><strong>K 成本</strong>：<code>100 − 30·log10($/千次 ÷ 0.001)</code>，每贵 10 倍扣 30 分</li>
+<li><strong>密封集随机猜测基线 = 29.3%</strong></li>
+</ul>
+<h3 id="42">4.2 榜单前十</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>系统</th>
+<th>开源</th>
+<th style="text-align: center;">总分</th>
+<th style="text-align: right;">I 智能</th>
+<th style="text-align: right;">C 校准</th>
+<th style="text-align: right;">S 速度</th>
+<th style="text-align: right;">K 成本</th>
+<th style="text-align: right;">公开%</th>
+<th style="text-align: right;">密封%</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">\$/千次</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td><strong>Imajev-4B</strong> (mohit67890)</td>
+<td>✅</td>
+<td style="text-align: center;"><strong>67.37</strong></td>
+<td style="text-align: right;">52.2</td>
+<td style="text-align: right;">80.4</td>
+<td style="text-align: right;">90.6</td>
+<td style="text-align: right;">59.7</td>
+<td style="text-align: right;">86.1</td>
+<td style="text-align: right;">37.0</td>
+<td style="text-align: right;">0.229s</td>
+<td style="text-align: right;">\$0.022</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td><strong>Plumb-4B</strong> (crh225, JevK5+LoRA)</td>
+<td>✅</td>
+<td style="text-align: center;"><strong>65.84</strong></td>
+<td style="text-align: right;">53.0</td>
+<td style="text-align: right;">75.5</td>
+<td style="text-align: right;">93.5</td>
+<td style="text-align: right;">55.8</td>
+<td style="text-align: right;">89.6</td>
+<td style="text-align: right;">38.0</td>
+<td style="text-align: right;">0.183s</td>
+<td style="text-align: right;">\$0.030</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td><strong>decider-4b v2</strong> (Mapika)</td>
+<td>✅</td>
+<td style="text-align: center;"><strong>64.13</strong></td>
+<td style="text-align: right;">49.4</td>
+<td style="text-align: right;">75.0</td>
+<td style="text-align: right;">92.9</td>
+<td style="text-align: right;">60.9</td>
+<td style="text-align: right;">83.5</td>
+<td style="text-align: right;">34.7</td>
+<td style="text-align: right;">0.185s</td>
+<td style="text-align: right;">\$0.020</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td><strong>Jev 1.13.0</strong> (TypeSafe，原版)</td>
+<td>❌</td>
+<td style="text-align: center;"><strong>63.29</strong></td>
+<td style="text-align: right;"><strong>53.1</strong></td>
+<td style="text-align: right;">76.3</td>
+<td style="text-align: right;">83.3</td>
+<td style="text-align: right;">52.0</td>
+<td style="text-align: right;">86.6</td>
+<td style="text-align: right;">36.7</td>
+<td style="text-align: right;">0.652s</td>
+<td style="text-align: right;">\$0.040</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td><strong>JevK5 v0.2.0</strong> (allebee)</td>
+<td>✅</td>
+<td style="text-align: center;">62.04</td>
+<td style="text-align: right;">48.9</td>
+<td style="text-align: right;">74.5</td>
+<td style="text-align: right;">91.1</td>
+<td style="text-align: right;">59.5</td>
+<td style="text-align: right;">85.3</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">\$0.022</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td><strong>Cygnet</strong> (blockbrain, 冻结 Gemma-4-12B)</td>
+<td>✅</td>
+<td style="text-align: center;">61.76</td>
+<td style="text-align: right;">49.5</td>
+<td style="text-align: right;">74.9</td>
+<td style="text-align: right;">90.7</td>
+<td style="text-align: right;">52.8</td>
+<td style="text-align: right;">87.9</td>
+<td style="text-align: right;">33.8</td>
+<td style="text-align: right;">0.220s</td>
+<td style="text-align: right;">\$0.037</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td><strong>Hopper</strong> (HopitAI)</td>
+<td>✅</td>
+<td style="text-align: center;">59.43</td>
+<td style="text-align: right;">48.0</td>
+<td style="text-align: right;"><strong>79.1</strong></td>
+<td style="text-align: right;">86.8</td>
+<td style="text-align: right;">58.7</td>
+<td style="text-align: right;">82.3</td>
+<td style="text-align: right;">34.1</td>
+<td style="text-align: right;">0.408s</td>
+<td style="text-align: right;">\$0.024</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>Winnow-12B Q8 (Eldan Ring)</td>
+<td>✅</td>
+<td style="text-align: center;">55.58</td>
+<td style="text-align: right;">48.3</td>
+<td style="text-align: right;">64.8</td>
+<td style="text-align: right;">82.3</td>
+<td style="text-align: right;">52.9</td>
+<td style="text-align: right;">85.7</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">0.600s</td>
+<td style="text-align: right;">\$0.037</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>reflex 4B (kshetrajna12)</td>
+<td>✅</td>
+<td style="text-align: center;">53.99</td>
+<td style="text-align: right;">47.5</td>
+<td style="text-align: right;">70.4</td>
+<td style="text-align: right;">68.0</td>
+<td style="text-align: right;">59.7</td>
+<td style="text-align: right;">79.2</td>
+<td style="text-align: right;">28.2</td>
+<td style="text-align: right;">3.749s</td>
+<td style="text-align: right;">\$0.022</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>djev (Maisa, DiffusionGemma)</td>
+<td>✅</td>
+<td style="text-align: center;">52.23</td>
+<td style="text-align: right;">47.0</td>
+<td style="text-align: right;">55.4</td>
+<td style="text-align: right;">91.4</td>
+<td style="text-align: right;">57.6</td>
+<td style="text-align: right;">84.0</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.237s</td>
+<td style="text-align: right;">\$0.026</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>读法</strong>：
+- 前 3 名全开源，原版 Jev 掉到第 4。但<strong>第 1 到第 4 只差 4.08 分</strong>，而榜单作者自己声明 <strong>~1 分差距可能是噪声</strong>。说"开源全面超越"是过度解读。
+- <strong>开源赢在哪</strong>：速度（S 90+ vs Jev 83.3）和成本（K 55–61 vs Jev 52.0），以及延迟绝对值——Plumb-4B 调整后 p50 <strong>183 ms</strong>，Jev <strong>652 ms</strong>。
+- <strong>Jev 仍赢在哪</strong>：智能轴 I=53.1 是所有 Jev 类模型里最高的（Plumb 53.0、Imajev 52.2 紧咬），校准 76.3 也在第一梯队。
+- <strong>校准反超</strong>：<strong>Hopper 79.1 &gt; Jev 76.3</strong>；另有实测称 Laya 的 ECE 0.081 vs Jev 0.246。开源在"概率是否可信"这件事上已经不输甚至更好。</p>
+<h3 id="43">4.3 最重要的发现：公开 → 密封的坍塌</h3>
+<p>这是整份报告里最需要记住的一张表。</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>系统</th>
+<th style="text-align: right;">公开题准确率</th>
+<th style="text-align: right;">密封题准确率</th>
+<th style="text-align: right;">落差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Imajev-4B</td>
+<td style="text-align: right;">86.1%</td>
+<td style="text-align: right;"><strong>37.0%</strong></td>
+<td style="text-align: right;">−49.1pp</td>
+</tr>
+<tr>
+<td>Plumb-4B</td>
+<td style="text-align: right;">89.6%</td>
+<td style="text-align: right;"><strong>38.0%</strong></td>
+<td style="text-align: right;">−51.6pp</td>
+</tr>
+<tr>
+<td>decider-4b v2</td>
+<td style="text-align: right;">83.5%</td>
+<td style="text-align: right;"><strong>34.7%</strong></td>
+<td style="text-align: right;">−48.8pp</td>
+</tr>
+<tr>
+<td><strong>Jev 1.13.0</strong></td>
+<td style="text-align: right;">86.6%</td>
+<td style="text-align: right;"><strong>36.7%</strong></td>
+<td style="text-align: right;"><strong>−49.9pp</strong></td>
+</tr>
+<tr>
+<td>JevK5 v0.2.0</td>
+<td style="text-align: right;">85.3%</td>
+<td style="text-align: right;">33.1%</td>
+<td style="text-align: right;">−52.2pp</td>
+</tr>
+<tr>
+<td>Cygnet</td>
+<td style="text-align: right;">87.9%</td>
+<td style="text-align: right;">33.8%</td>
+<td style="text-align: right;">−54.1pp</td>
+</tr>
+<tr>
+<td>—</td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+<tr>
+<td><strong>GPT-6 Luna</strong></td>
+<td style="text-align: right;">99.6%</td>
+<td style="text-align: right;"><strong>95.5%</strong></td>
+<td style="text-align: right;">−4.1pp</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V4.1 Flash</strong></td>
+<td style="text-align: right;">97.8%</td>
+<td style="text-align: right;"><strong>94.8%</strong></td>
+<td style="text-align: right;">−3.0pp</td>
+</tr>
+<tr>
+<td><strong>GPT-5.6 Luna</strong></td>
+<td style="text-align: right;">97.4%</td>
+<td style="text-align: right;"><strong>89.0%</strong></td>
+<td style="text-align: right;">−8.4pp</td>
+</tr>
+<tr>
+<td><em>（密封集随机猜测）</em></td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;"><em>29.3%</em></td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>结论非常硬</strong>：</p>
+<ol>
+<li><strong>坍塌是普遍的，不是开源的问题</strong>。原版 Jev 自己就塌了 49.9pp，和开源复现塌的幅度完全一致（48–57pp）。这说明它反映的是<strong>这条技术路线的共同上限</strong>，而非"开源没做好"。</li>
+<li><strong>最好的 Jev 类系统（Imajev-4B）在密封题上 37.0%，只比随机猜测 29.3% 高 7.7 个百分点</strong>。榜单作者自己的原话是：密封集"非常难"，"大多数系统的分数接近随机"。</li>
+<li><strong>同期通用大模型在密封题上是 89%–95.5%</strong>。Jev 类模型在"见过的、同分布的、边界清晰的"任务上高效得惊人，但对<strong>真正没见过的问题几乎没有泛化</strong>。</li>
+<li>那为什么大模型总分那么低？因为<strong>四轴等权调和平均下，最弱的轴说了算</strong>：GPT-6 Luna 总分 33.27（I=97.4 但 K=36.0、S=72.6），DeepSeek V4.1 Flash 总分 4.77（I=94.0 但 K=16.8）。它们被打死在成本和速度上，不是能力上。</li>
+</ol>
+<p><strong>换句话说</strong>：Jev 类模型解决的是"<strong>已经知道该怎么判的判据，能否用 1/400 的成本、1/200 的时间执行</strong>"，而不是"<strong>面对新问题时能否判对</strong>"。把两者混为一谈，是当前社区宣传里最大的误导。</p>
+<h3 id="44">4.4 其他独立实测（含负面证据）</h3>
+<p>不能只看一个榜单。以下是<strong>非关联第三方</strong>的实测：</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>来源</th>
+<th>对比</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>某中文技术团队实测（同语料/同样本/同阈值）</td>
+<td>Jev vs openjev vs SemIf</td>
+<td><strong>Jev 92.2% vs openjev 75.9% / SemIf 79.7%</strong>；开源版延迟漂亮（0.71s 最快档），但<strong>校准差一截、放行过多</strong></td>
+</tr>
+<tr>
+<td>xyspace 400 道新题</td>
+<td>Jev vs Together 的 Tev1</td>
+<td><strong>Jev 97.2% vs Tev 90.0%</strong>；难题子集 <strong>95.9% vs 84.1%</strong>；ECE Jev 2.0 vs Tev 3.1；Brier 0.041 vs 0.158</td>
+</tr>
+<tr>
+<td>Jeff 的 HN 讨论（569 分）</td>
+<td>Jeff vs Jev 在真实分类场景</td>
+<td>一位实践者报 <strong>70% vs 94%</strong>，原话"unacceptable"；另一位说 0.8B 在职位分类上"completely useless"，2B 仍漏掉核心标签</td>
+</tr>
+<tr>
+<td>Milvus / Zilliz 三个真实项目</td>
+<td>Jev 接入 DeepSearcher / MemSearch / Vector Graph RAG</td>
+<td>DeepSearcher 100 道多跳题：与 DeepSeek V4 Flash <strong>同为 93.25% Recall@5</strong>，延迟中位数 2.23s→<strong>0.55s</strong>，成本约 <strong>1/7</strong>。MemSearch：Recall@5 74.71%→79.41%，仍落后 Voyage rerank-3 的 81.87%</td>
+</tr>
+<tr>
+<td>Milvus RAG 重排专项（80 条 SciFact）</td>
+<td>Jev vs qwen3.7-text-rerank</td>
+<td>Jev nDCG@10 <strong>+0.0778</strong>（最好），但 <strong>P50 重排延迟高 10.2 倍、单次成本 6.7 倍</strong></td>
+</tr>
+<tr>
+<td>AnyJev 的运营视角指标</td>
+<td>校准前后可自动放行流量</td>
+<td>5% 错误率红线内，可自动决策的流量从 <strong>7.7% → 52.0%</strong>（7 倍）。作者认为这个数字比准确率重要得多</td>
+</tr>
+<tr>
+<td>Stanford CLM-8B</td>
+<td>三个独立后端复现</td>
+<td><strong>三种问题类型中有一种恒定返回同一答案</strong>（与输入无关）；JevBench 排 78/89</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>规律</strong>：在<strong>有边界、高频、可枚举</strong>的任务上（工单路由、相关性判定、停止搜索、内容过滤），开源复现已经能用，且性价比极高；在<strong>需要规则推理、多跳、数值/日期比较</strong>的任务上，开源与 Jev 的差距是 7–16 个百分点，且两者都不如直接上大模型。</p>
+<h3 id="45">4.5 交叉验证：其他榜单</h3>
+<ul>
+<li><strong>DecisionBench</strong>（Hanno Labs，43 任务 / 23,900 行 / 28 域，含 1,200 行推理专项）</li>
+<li>Bosun v3.1 0.6B：整体 <strong>81.18%</strong>，ECE 0.0659；但<strong>推理专项只有 43.08%</strong>，ECE 0.2019 —— 再次印证"非推理任务强、推理任务崩"</li>
+<li>Imajev-4B：<strong>第 3 / 56</strong>，79.65，超过 GLM-5.3 Flash(320B)、Jev 1.13、DeepSeek V4.1 Flash(552B)、GPT-5.6 Luna</li>
+<li><strong>ImageJevBench v0.1.3</strong>（89 张合成图，49 个系统）：Imajev-4B <strong>#1（76.39）</strong>，领先 Jev-Omni 12B（73.10）、NeoHorse Jev 4B（71.94）。跑完前 5 名全榜只花 <strong>\$0.0217</strong></li>
+<li><strong>JevBench 子榜 Capability 排名</strong>："在 Jev 2 倍成本与延迟以内的系统中，Imajev-4B 以 66.3 领先 Jev 类系统"</li>
+</ul>
+<hr />
+<h2 id="_3">五、重点模型逐一剖析</h2>
+<h3 id="imajev-4bmohit67890">🥇 Imajev-4B（mohit67890）— 当前综合实力第一</h3>
+<ul>
+<li><strong>底座</strong>：Qwen3.5-4B + LoRA + 小型决策头；<strong>支持图片</strong>（照片 + 记录 + 类型化问题）</li>
+<li><strong>许可</strong>：Apache-2.0；MLX 可跑 Mac，PyTorch 可跑单 GPU</li>
+<li><strong>训练</strong>：\$1,200 租金、15 天、 solo 开发者（一位做过财富 500 强流程改进咨询的顾问）</li>
+<li><strong>关键教训</strong>：第一版用 50 万条短决策样本训 9B，<strong>推理能力反而从 64.9 掉到 42.3</strong>（学会了模式匹配而非思考）。改法是生成真正的难题，并<strong>只保留两个不同 AI 答案一致的样本</strong>，才拉回来</li>
+<li><strong>特色</strong>：每个答案都带一个 <strong>"unknown"（无法判断）概率</strong>，可主动弃权</li>
+<li><strong>成绩</strong>：JevBench #1/91（67.37）、ImageJevBench #1/49（76.39）、DecisionBench #3/56（79.65）</li>
+<li><strong>诚实 caveat</strong>：作者自己说明——第一名是四轴等权的结果，<strong>单看准确率只排第三</strong></li>
+</ul>
+<h3 id="plumb-4bcrh225">🥈 Plumb-4B（crh225）</h3>
+<ul>
+<li>JevK5 v0.2 之上再叠 LoRA；Apache-2.0，NOTICE 中署名 JevK5 / Qwen / SemIf</li>
+<li><strong>I=53.0 是所有开源里最高的</strong>（比 Jev 的 53.1 只低 0.1），S=93.5 速度第一梯队</li>
+<li>在 H100 上 p50 原始 <strong>16.5 ms</strong>，调整后 183 ms</li>
+</ul>
+<h3 id="decider-4b-v2mapika">🥉 decider-4b v2（Mapika）— 最早登顶的那个</h3>
+<ul>
+<li>9/24 曾在 v1.4.2 上 <strong>64.13 &gt; Jev 63.29</strong>，是第一个在综合分上压过原版的开源模型</li>
+<li><strong>完整家族</strong>：decider-0.8b / 2b (v11) / 4b (v2.1) / 35b-a3b / 35b-a3b-nvfp4 / 2b-vision，共享统一接口与读出方式</li>
+<li>自报数字：regression set 0.831 in-task / 0.784 held-out；JevBench hard 0.649；live browser 93% sampled</li>
+<li>作者对版本选择很严谨：v2.1 默认、v2 在 hard 多步题上校准更好（0.104 vs）、v1 适合表单填写与网格导航</li>
+</ul>
+<h3 id="jevk5allebee">JevK5（allebee）— 文档最扎实的一个</h3>
+<ul>
+<li>Apache-2.0，4B / 9B / 2B / GGUF 全套；基座 Qwen3.5-4B，LoRA rank 16 合并进权重</li>
+<li><strong>训练数据可审计</strong>：v0.3 用 17,408 道教师题（Qwen3.6-27B + GPT-6 Luna 双教师）+ 26 个公开数据集 train split 的 30,052 条人工标注做 replay，<strong>明确不用任何数据集的 test/validation split，完全不用 MMLU/MMLU-Pro/BBH</strong></li>
+<li><strong>运行时</strong>：每个 padded 长度一个 CUDA graph，H100 上 <strong>~13 ms/决策</strong></li>
+<li>9B v0.3.3：hard tier 0.775（v0.3 是 0.730），hard ECE 0.071（v0.3 是 0.126）</li>
+<li>兼容性：GGUF Q8_0 在 231 道公开题上与 bf16 一致 229 道</li>
+</ul>
+<h3 id="anyjev">AnyJev（诺基亚应用研究院 + 腾讯混元）— 唯一的"零训练"路线</h3>
+<ul>
+<li>Apache-2.0，<strong>一个参数都不动</strong></li>
+<li>三档：L0 零标签（循环移位消位置偏置）→ L1 温度缩放（每题 100–500 条标签）→ L2 闭式 head（提前退出到 2/3 深度）</li>
+<li><strong>效果</strong>：BANKING77 20 分类上，顺序翻转率 23% → 7.3%；准确率 0.747 → 0.807；<strong>ECE 0.240 → 0.095</strong>；5% 错误率红线内可自动决策流量 <strong>7.7% → 52.0%</strong></li>
+<li>L2 反直觉结论：<strong>Qwen3-1.7B 只用 64% 深度达 0.730 ≈ Jev 公布的 0.727</strong>；Qwen3-4B 0.786 追平微调过的 421M Laya（0.768）</li>
+<li>自适应早停：18 选 1 时平均只读 4.1 轮，与读满 18 轮结果一致率 98.7%，吞吐 2.2–2.7 倍</li>
+<li>局限：head 按问题拟合、不能迁移到新问题；目前只发了 Qwen3 系列 head；字母读法上限 26 个选项；官方明确说"迷宫、扫雷这类模型本身就答不出来的任务，校准也救不了"</li>
+</ul>
+<h3 id="layaconvai-innovations">Laya（Convai Innovations）— 最"能落地"的小模型</h3>
+<ul>
+<li>ModernBERT-large <strong>421M</strong>，另有 322M 多语言版；Apache-2.0；<strong>17.1K star</strong></li>
+<li>可在 CPU / Apple Silicon（有 CoreML 移植）跑；榜上成本 <strong>\$0.0029/千次</strong>（全场最低档）</li>
+<li><strong>重要警告</strong>：作者自己说明<strong>基座 checkpoint 在 typed-decisions 上接近随机</strong>，只有<strong>微调过的 checkpoint 才有 0.766</strong>（vs Jev 0.727）。"下载通用 checkpoint 直接上生产"是最常见的踩坑</li>
+<li>有实测称其 ECE 0.081 vs Jev 0.246</li>
+</ul>
+<h3 id="intern-decision-ai-lab-internlm">Intern-Decision（上海 AI Lab / 书生·InternLM）— 国内最强</h3>
+<ul>
+<li>2026-09-26 上线，<strong>0.8B / 2B / 4B</strong> 三档，Apache-2.0，Qwen3.5 对应尺寸微调</li>
+<li>机制：选项映射成单 token 符号（A-Z/a-z/0-9）+ prompt 渲染完整 JSON skeleton 与每字段占位 + 占位前 logits 取 softmax + 校准</li>
+<li><strong>厂商自报（未经第三方复现）</strong>：4B 七套件均分 <strong>90.02</strong>，高于 Jev 的 <strong>88.74</strong>；单卡 RTX 4090 端到端 <strong>44.16 ms</strong>，约为 Jev 109.70 ms 的四成</li>
+<li>分项：JevBench-Hard 73.87 / Typed Decision 80.55 / ToolACE 96.45 / WildJailBreak 89.86</li>
+<li><strong>注意</strong>：中间档 2B 在 ECE 校准上偏弱，落地建议自拟合温度；<strong>准确率与延迟均为厂商自报，第三方复现仍在进行</strong></li>
+<li>团队还用经典概率题（掷骰子、蒙提霍尔）搭了校准基准，称 Jev 的预测分布偏离 golden 分布较远</li>
+</ul>
+<h3 id="_4">其他值得记的名字</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>作者</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tev1-4B / 0.8B</strong></td>
+<td>Together AI</td>
+<td><strong>\$17、25 分钟</strong>训出来的 4B（Qwen3.5-4B LoRA）；Ollama 0.35+ 可直接 <code>ollama pull tev1</code>；<strong>保留自回归头</strong>，是"写字母"而非"读 logits"，严格说不还原 Jev 的并行接口</td>
+</tr>
+<tr>
+<td><strong>Jeff</strong> (0.8B/2B/Gemma4-E2B)</td>
+<td>Logan Markewich</td>
+<td>fork 自 AutoJev 配方，压到笔记本可跑；0.8B 在 RTX PRO 6000 上 <strong>22 ms</strong>、M4 Max 上 28 ms；HN 353 分；<strong>实践者实测不如 Jev</strong>（70% vs 94%）</td>
+</tr>
+<tr>
+<td><strong>Hopper</strong></td>
+<td>HopitAI</td>
+<td><strong>校准轴 79.1，全场最高</strong>（超过 Jev 76.3）</td>
+</tr>
+<tr>
+<td><strong>Bosun v3.1</strong> (0.6B/1.7B)</td>
+<td>Hanno Labs</td>
+<td>Qwen3 + rank-16 LoRA + <strong>256 个学习到的决策 token</strong>；DecisionBench 81.18% / ECE 0.0659；推理专项 43.08%</td>
+</tr>
+<tr>
+<td><strong>kev</strong> (0.5B/0.8B/4B/9B)</td>
+<td>Jared Palmer</td>
+<td>评测透明度最好，有训练代码 + 预注册测试集</td>
+</tr>
+<tr>
+<td><strong>GLiNER2.5-Decide</strong> (340M)</td>
+<td>Fastino（GLiNER 原班）</td>
+<td>CPU 可跑，含气隙环境</td>
+</tr>
+<tr>
+<td><strong>fast-browser-use</strong></td>
+<td>APUS（麒麟合盛）</td>
+<td>MIT，本地 Qwen3.5-9B/35B-A3B；M2 Pro 消费级笔记本上<strong>决策 79 ms</strong>，维基检索中位 <strong>18 秒</strong>、表单填报约 3 秒，<strong>单任务仅 4 次模型打分</strong>，零云端调用</td>
+</tr>
+<tr>
+<td><strong>jev-ultrafast</strong></td>
+<td>browser-use</td>
+<td>MIT，18.2K star；Google Flights 苏黎世→伦敦 <strong>7.07 秒</strong>（含页面加载），中位 Jev 延迟 178 ms；协议调用从 1092 → 101</td>
+</tr>
+<tr>
+<td><strong>hoi4-jevai</strong></td>
+<td>zwh20081</td>
+<td>最有意思的垂直微调：DeBERTa-v3-large + 选项打分头，在《钢铁雄心 4》33 局观测数据（44.6 万状态、240 万问题）上微调，让 AI 国家选战略姿态；Intel NPU 上 233 ms/序列</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<h2 id="_5">六、局限、陷阱与风险（务必读完再选型）</h2>
+<h3 id="61">6.1 模型能力层面</h3>
+<ol>
+<li><strong>泛化断层</strong>：公开→密封坍塌 48–57pp（含原版）。<strong>不要在"没见过的问题类型"上依赖它</strong>。</li>
+<li><strong>选项顺序敏感</strong>：<code>open-alternative-jev</code> 在榜上被发现——同一模型、同一题，只把 <code>A. yes, B. no</code> 反转为 <code>A. no, B. yes</code>，在 answer-judging 项上 <strong>72% → 21%</strong>。小模型对选项顺序极其敏感。<strong>选型时必须做顺序轮换测试</strong>。</li>
+<li><strong>长选项列表退化</strong>：多数实现在超过 16–26 个选项时明显退化（Jeff v1.0 曾有"选不出第 26 个之后的选项"的 bug，v1.1 修到 254 个，0.8B 长列表测试从 40.3% → 94.7%）。</li>
+<li><strong>推理/多跳/数值/日期弱</strong>：这是所有 Jev 类模型的共同短板，不是开源的短板。</li>
+<li><strong>Harness 决定一半表现</strong>：有实测者发现，把三张"防御牌"列成三个独立选项后，概率被拆成三份，Jev 因此选了"结束回合"然后被打死。<strong>哪些动作算一个选项、要不要合并，是工程师的设计责任</strong>。</li>
+</ol>
+<h3 id="62">6.2 评测可信度层面</h3>
+<ol>
+<li><strong>自报数字泛滥</strong>：多数模型卡的分数是作者自己跑的。JevBench 是目前唯一把开源权重拉到断网容器里用评测方硬件重跑的榜单——<strong>优先看它</strong>。</li>
+<li><strong>延迟调整是假设不是测量</strong>：JevBench 对自托管/演示端点做了 <strong>×2 + 0.15s</strong> 的调整来近似生产负载，作者明确标注"这是假设"。原始 p50/p95 在结果文件里。</li>
+<li><strong>成本多是估算不是账单</strong>：自托管行的成本用基座模型的公开挂牌价 × 实测 token 计算，<strong>不是 GPU 账单</strong>。JevBench 把这类行标为 <code>estimate</code>。</li>
+<li><strong>只发布聚合密封统计</strong>：v1.4.2.2 起，公开半区可被训练或针对性选择，因此 held-out 部分会随领域变化演进。</li>
+</ol>
+<h3 id="63">6.3 法律与工程层面</h3>
+<ol>
+<li><strong>许可证是三个独立事实</strong>：代码许可证、权重可用性、权重许可证。宽松的仓库许可证 ≠ 基座模型的许可证。必须分别检查：<ul>
+<li>Qwen 系列：Apache-2.0</li>
+<li>Gemma 4：Apache-2.0 <strong>但附带 Google 的 Prohibited Use Policy</strong></li>
+<li><strong>Malkuth-4B/2B 是 CC-BY-NC-4.0（仅研究用）</strong>，因为训练混合里有 XNLI 和 RACE —— <strong>不能商用</strong></li>
+<li>榜上有 2 个系统"截至评测时仓库中没有许可证文件"</li>
+<li><code>openjev-sglang</code>（ekzhang）未声明许可证，商用前需确认</li>
+</ul>
+</li>
+<li><strong>英文为主</strong>：JevBench 全英文；Laya 有 322M 多语言版；Jev-Style v3 声称 51 种语言。</li>
+<li><strong>项目成熟度</strong>：jev-ultrafast 约两周大、<strong>约 120 个未合并 PR、零 release</strong>；很多模型是一周内的产物。榜单每天都在动。</li>
+</ol>
+<hr />
+<h2 id="_6">七、选型建议</h2>
+<h3 id="71">7.1 按场景选</h3>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>纯本地 / 数据不出网 / 气隙</strong></td>
+<td>Laya（CPU 可跑）、GLiNER2.5-Decide（340M）、Jeff-0.8B、decider-0.8b</td>
+</tr>
+<tr>
+<td><strong>综合最强、要图片</strong></td>
+<td><strong>Imajev-4B</strong>（Apache-2.0，唯一支持图 + 主动弃权）</td>
+</tr>
+<tr>
+<td><strong>纯文本、要最高智能轴</strong></td>
+<td><strong>Plumb-4B</strong>（I=53.0）或 <strong>decider-4b v2</strong></td>
+</tr>
+<tr>
+<td><strong>要最可信的概率（设阈值做自动放行）</strong></td>
+<td><strong>Hopper</strong>（校准 79.1 全场最高）、AnyJev L1/L2（ECE 0.240→0.095）</td>
+</tr>
+<tr>
+<td><strong>完全不想训练、手头只有现成 LLM</strong></td>
+<td><strong>AnyJev L0</strong>（零标签，先跑起来再说）</td>
+</tr>
+<tr>
+<td><strong>想要自己训、要可审计配方</strong></td>
+<td><strong>JevK5</strong>（训练数据可审计，不用任何 test split）、<strong>kev</strong>（预注册测试集）、Together 的 Tev1 配方（\$17）</td>
+</tr>
+<tr>
+<td><strong>要中文/国产</strong></td>
+<td><strong>Intern-Decision 4B</strong>（上海 AI Lab，自报 90.02 均分；等第三方复现）</td>
+</tr>
+<tr>
+<td><strong>浏览器 Agent</strong></td>
+<td>jev-ultrafast（云端 API 版，最快）、fast-browser-use（本地离线版，数据不出机）</td>
+</tr>
+<tr>
+<td><strong>选项超过 26 个</strong></td>
+<td>JevK5-9B（&gt;16 选项更强）、Jeff v1.1（支持到 254）、decider-35b-a3b</td>
+</tr>
+<tr>
+<td><strong>多跳推理、数值、日期</strong></td>
+<td><strong>不要用 Jev 类模型</strong>，直接用大模型</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="72">7.2 落地前必做的六项验收</h3>
+<p>参考社区实践者的清单：</p>
+<ol>
+<li><strong>真实标签准确率</strong>（不是教师模型一致率）</li>
+<li><strong>概率校准</strong>（ECE / Brier）—— 这决定了你能不能设阈值</li>
+<li><strong>候选项顺序与改写的稳定性</strong> —— 必做顺序轮换</li>
+<li><strong>长输入拒绝率</strong></li>
+<li><strong>目标设备上的 P95 延迟、内存、每千次决策成本</strong></li>
+<li><strong>阈值按错误成本设定</strong>，不要因为输出了 0.9 就直接放行</li>
+</ol>
+<h3 id="73">7.3 推荐的引入姿势</h3>
+<p>不要一上来就替换。更稳妥的是<strong>影子运行</strong>：与现有流程并行打分、不执行动作、记录分歧，再由人工或已发生的业务结果核验。AnyJev 的"从 7.7% 到 52.0%"正是这种渐进式路径的收益——它衡量的不是"模型多准"，而是"多少流量可以安全地不用人看"。</p>
+<hr />
+<h2 id="_7">八、三个判断</h2>
+<ol>
+<li>
+<p><strong>数量上：生态已经饱和竞争。</strong> 两周 90+ 个开源决策模型进入独立评测，前 3 名被个人开发者的 4B 模型占据。这个赛道的<strong>训练壁垒已经被抹平</strong>（\$17 起），剩下的壁垒是数据质量与校准。</p>
+</li>
+<li>
+<p><strong>效果上：开源在"成本-速度-校准"三轴上已经追平或超过，在"泛化"上所有人（含原版）都还很差。</strong> 前三名与 Jev 的 4 分差距里，绝大部分来自 S 和 K 轴；智能轴 Jev 仍是 Jev 类模型第一。真正的能力天花板是那个 <strong>37% 的密封准确率</strong>——它同时约束着开源和闭源。</p>
+</li>
+<li>
+<p><strong>价值上：Jev 真正的产品不是模型，是接口契约。</strong> <code>/v1/systemone</code> + choice/noul/score 三原语，让"决策"从提示词工程变成了一个可替换、可压测、可设阈值的工程组件。开源复刻们复制的是这个契约，而不是 Jev 的权重——<strong>而事实证明，在大多数有边界的判断任务上，复制契约就够了。</strong></p>
+</li>
+</ol>
+<hr />
+<h2 id="ajevbench-v1422-95">附录 A：JevBench v1.4.2.2 完整榜单（95 个系统）</h2>
+<blockquote>
+<p>数据源：<code>fstandhartinger/jevbench</code> → <code>results/v1.4.2.2/jevbench-v1.4.2.2-results.json</code>（生成于 2026-09-27 18:49 UTC，status: final）
+列说明：<strong>I</strong>=智能（机会校正）| <strong>C</strong>=校准 | <strong>S</strong>=速度 | <strong>K</strong>=成本 | 公开%/密封%=534 公开题 / 308 密封题准确率 | p50 为调整后中位延迟 | \$/千次为每 1000 次决策成本（<strong>不是</strong>每千 token）
+类别：<code>jev-rebuild</code> 独立复现 | <code>system-one-open</code> 开放实现 | <code>native-logit</code> 原生 logits 读出 | <code>raw-logit-control</code> 裸模型对照组 | <code>classifier</code> 小分类器 | <code>reranker</code> 重排模型 | <code>llm-baseline</code> 通用大模型 | <code>jev</code> 官方 Jev 及同类</p>
+</blockquote>
+<div class="tw"><table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>系统</th>
+<th>作者</th>
+<th>类别</th>
+<th>开源</th>
+<th style="text-align: right;">总分</th>
+<th style="text-align: right;">I</th>
+<th style="text-align: right;">C</th>
+<th style="text-align: right;">S</th>
+<th style="text-align: right;">K</th>
+<th style="text-align: right;">公开%</th>
+<th style="text-align: right;">密封%</th>
+<th style="text-align: right;">p50(s)</th>
+<th style="text-align: right;">$/千次</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>Imajev-4B</td>
+<td>mohit67890</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">67.37</td>
+<td style="text-align: right;">52.2</td>
+<td style="text-align: right;">80.4</td>
+<td style="text-align: right;">90.6</td>
+<td style="text-align: right;">59.7</td>
+<td style="text-align: right;">86.1</td>
+<td style="text-align: right;">37.0</td>
+<td style="text-align: right;">0.229</td>
+<td style="text-align: right;">0.022</td>
+<td><a href="https://github.com/mohit67890/imajev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>Plumb-4B (crh225, JevK5 v0.2 + LoRA)</td>
+<td>crh225</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">65.84</td>
+<td style="text-align: right;">53.0</td>
+<td style="text-align: right;">75.5</td>
+<td style="text-align: right;">93.5</td>
+<td style="text-align: right;">55.8</td>
+<td style="text-align: right;">89.6</td>
+<td style="text-align: right;">38.0</td>
+<td style="text-align: right;">0.183</td>
+<td style="text-align: right;">0.0298</td>
+<td><a href="https://github.com/crh225/plumb">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>decider-4b v2 (Mapika)</td>
+<td>Mapika</td>
+<td>system-one-open</td>
+<td>✅</td>
+<td style="text-align: right;">64.13</td>
+<td style="text-align: right;">49.4</td>
+<td style="text-align: right;">75.0</td>
+<td style="text-align: right;">92.9</td>
+<td style="text-align: right;">60.9</td>
+<td style="text-align: right;">83.5</td>
+<td style="text-align: right;">34.7</td>
+<td style="text-align: right;">0.185</td>
+<td style="text-align: right;">0.0201</td>
+<td><a href="https://github.com/Mapika/decider">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>Jev 1.13.0 (TypeSafe AI)</td>
+<td>TypeSafe AI</td>
+<td>jev</td>
+<td>❌</td>
+<td style="text-align: right;">63.29</td>
+<td style="text-align: right;">53.1</td>
+<td style="text-align: right;">76.3</td>
+<td style="text-align: right;">83.3</td>
+<td style="text-align: right;">52.0</td>
+<td style="text-align: right;">86.6</td>
+<td style="text-align: right;">36.7</td>
+<td style="text-align: right;">0.652</td>
+<td style="text-align: right;">0.0399</td>
+<td><a href="https://docs.typesafe.ai">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>JevK5 v0.2.0</td>
+<td>allebee</td>
+<td>jev-rebuild</td>
+<td>None</td>
+<td style="text-align: right;">62.04</td>
+<td style="text-align: right;">48.9</td>
+<td style="text-align: right;">74.5</td>
+<td style="text-align: right;">91.1</td>
+<td style="text-align: right;">59.5</td>
+<td style="text-align: right;">85.3</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0224</td>
+<td><a href="https://github.com/allebee/jevk5">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>Cygnet (blockbrain, frozen Gemma-4-12B-it)</td>
+<td>blockbrain</td>
+<td>system-one-open</td>
+<td>✅</td>
+<td style="text-align: right;">61.76</td>
+<td style="text-align: right;">49.5</td>
+<td style="text-align: right;">74.9</td>
+<td style="text-align: right;">90.7</td>
+<td style="text-align: right;">52.8</td>
+<td style="text-align: right;">87.9</td>
+<td style="text-align: right;">33.8</td>
+<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">0.0374</td>
+<td><a href="https://github.com/blockbrain-ai/cygnet-recipe">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>Hopper</td>
+<td>HopitAI</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">59.43</td>
+<td style="text-align: right;">48.0</td>
+<td style="text-align: right;">79.1</td>
+<td style="text-align: right;">86.8</td>
+<td style="text-align: right;">58.7</td>
+<td style="text-align: right;">82.3</td>
+<td style="text-align: right;">34.1</td>
+<td style="text-align: right;">0.408</td>
+<td style="text-align: right;">0.0238</td>
+<td><a href="https://huggingface.co/HopitAI/hopper">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>Winnow-12B Q8</td>
+<td>Eldan Ring</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">55.58</td>
+<td style="text-align: right;">48.3</td>
+<td style="text-align: right;">64.8</td>
+<td style="text-align: right;">82.3</td>
+<td style="text-align: right;">52.9</td>
+<td style="text-align: right;">85.7</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.0371</td>
+<td><a href="https://huggingface.co/EldanRing/Winnow-12B">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>reflex 4B (kshetrajna12)</td>
+<td>kshetrajna12</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">53.99</td>
+<td style="text-align: right;">47.5</td>
+<td style="text-align: right;">70.4</td>
+<td style="text-align: right;">68.0</td>
+<td style="text-align: right;">59.7</td>
+<td style="text-align: right;">79.2</td>
+<td style="text-align: right;">28.2</td>
+<td style="text-align: right;">3.749</td>
+<td style="text-align: right;">0.0221</td>
+<td><a href="https://github.com/kshetrajna12/reflex">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>djev (Maisa, diffusion-gemma)</td>
+<td>Maisa (David Villalón)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">52.23</td>
+<td style="text-align: right;">47.0</td>
+<td style="text-align: right;">55.4</td>
+<td style="text-align: right;">91.4</td>
+<td style="text-align: right;">57.6</td>
+<td style="text-align: right;">84.0</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.237</td>
+<td style="text-align: right;">0.026</td>
+<td><a href="https://github.com/Davipar/djev-dev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td>Jev-Omni (akhilaaa3, Gemma-4-12B merged)</td>
+<td>akhilaaa3</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">51.34</td>
+<td style="text-align: right;">46.8</td>
+<td style="text-align: right;">64.1</td>
+<td style="text-align: right;">81.5</td>
+<td style="text-align: right;">53.0</td>
+<td style="text-align: right;">88.7</td>
+<td style="text-align: right;">32.1</td>
+<td style="text-align: right;">0.584</td>
+<td style="text-align: right;">0.0368</td>
+<td><a href="https://huggingface.co/akhilaaa3/Jev-Omni">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td>metask-jev-4b</td>
+<td>Wayfind (metask-ai)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">47.78</td>
+<td style="text-align: right;">44.7</td>
+<td style="text-align: right;">66.9</td>
+<td style="text-align: right;">89.1</td>
+<td style="text-align: right;">54.5</td>
+<td style="text-align: right;">79.7</td>
+<td style="text-align: right;">27.6</td>
+<td style="text-align: right;">0.281</td>
+<td style="text-align: right;">0.0328</td>
+<td><a href="https://github.com/metask-ai/metask-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td>SemIf, formerly OpenJev (Qwen3.5-4B, TheoLeeCJ)</td>
+<td>Theodore Lee (TheoLeeCJ)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">47.69</td>
+<td style="text-align: right;">44.4</td>
+<td style="text-align: right;">66.8</td>
+<td style="text-align: right;">83.7</td>
+<td style="text-align: right;">59.5</td>
+<td style="text-align: right;">81.0</td>
+<td style="text-align: right;">26.3</td>
+<td style="text-align: right;">0.546</td>
+<td style="text-align: right;">0.0224</td>
+<td><a href="https://github.com/TheoLeeCJ/openjev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td>Jobe Qwen3.5-4B (frozen)</td>
+<td>MantisShrimpdev</td>
+<td>native-logit</td>
+<td>✅</td>
+<td style="text-align: right;">46.94</td>
+<td style="text-align: right;">44.1</td>
+<td style="text-align: right;">66.1</td>
+<td style="text-align: right;">85.6</td>
+<td style="text-align: right;">59.5</td>
+<td style="text-align: right;">81.0</td>
+<td style="text-align: right;">25.6</td>
+<td style="text-align: right;">0.419</td>
+<td style="text-align: right;">0.0224</td>
+<td><a href="https://github.com/MantisShrimpdev/jobe">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td>local-jev Qwen3.5-4B</td>
+<td>Amith Chandrappa (amithgc)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">46.8</td>
+<td style="text-align: right;">44.4</td>
+<td style="text-align: right;">73.3</td>
+<td style="text-align: right;">75.0</td>
+<td style="text-align: right;">55.8</td>
+<td style="text-align: right;">80.5</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">1.565</td>
+<td style="text-align: right;">0.0297</td>
+<td><a href="https://github.com/amithgc/local-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td>system-one-open (Gemma 4 E2B LoRA on an L4)</td>
+<td>mithalouni</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">45.11</td>
+<td style="text-align: right;">44.2</td>
+<td style="text-align: right;">54.9</td>
+<td style="text-align: right;">77.0</td>
+<td style="text-align: right;">64.8</td>
+<td style="text-align: right;">73.2</td>
+<td style="text-align: right;">27.6</td>
+<td style="text-align: right;">1.303</td>
+<td style="text-align: right;">0.0149</td>
+<td><a href="https://github.com/mithalouni/system-one-open">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td>spark-s1-4b-v6 (Open Spark Jev, abhishek085)</td>
+<td>Abhishek Rai (abhishek085)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">44.62</td>
+<td style="text-align: right;">45.1</td>
+<td style="text-align: right;">47.6</td>
+<td style="text-align: right;">81.0</td>
+<td style="text-align: right;">57.9</td>
+<td style="text-align: right;">79.2</td>
+<td style="text-align: right;">26.6</td>
+<td style="text-align: right;">0.779</td>
+<td style="text-align: right;">0.0253</td>
+<td><a href="https://github.com/abhishek085/open-spark-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td>Malkuth-4B (newfull5, Kev post-train)</td>
+<td>newfull5 (dhtocks)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">44.45</td>
+<td style="text-align: right;">43.1</td>
+<td style="text-align: right;">61.5</td>
+<td style="text-align: right;">88.3</td>
+<td style="text-align: right;">61.5</td>
+<td style="text-align: right;">74.9</td>
+<td style="text-align: right;">23.4</td>
+<td style="text-align: right;">0.327</td>
+<td style="text-align: right;">0.0192</td>
+<td><a href="https://github.com/newfull5/malkuth">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td>jqv (Qwen3-32B zero-shot)</td>
+<td>hjmurmur (Octalab)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">44.35</td>
+<td style="text-align: right;">46.4</td>
+<td style="text-align: right;">71.6</td>
+<td style="text-align: right;">74.6</td>
+<td style="text-align: right;">47.5</td>
+<td style="text-align: right;">80.1</td>
+<td style="text-align: right;">28.2</td>
+<td style="text-align: right;">1.645</td>
+<td style="text-align: right;">0.0564</td>
+<td><a href="https://github.com/Octalab-Inc/jqv">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td>Qwen3-Reranker-4B</td>
+<td>Qwen</td>
+<td>reranker</td>
+<td>✅</td>
+<td style="text-align: right;">43.49</td>
+<td style="text-align: right;">44.6</td>
+<td style="text-align: right;">65.2</td>
+<td style="text-align: right;">78.7</td>
+<td style="text-align: right;">49.2</td>
+<td style="text-align: right;">68.0</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">0.0495</td>
+<td><a href="https://huggingface.co/Qwen/Qwen3-Reranker-4B">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td>decider-35b-a3b (Mapika)</td>
+<td>Mapika</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">41.18</td>
+<td style="text-align: right;">47.2</td>
+<td style="text-align: right;">65.3</td>
+<td style="text-align: right;">80.8</td>
+<td style="text-align: right;">45.3</td>
+<td style="text-align: right;">83.1</td>
+<td style="text-align: right;">31.5</td>
+<td style="text-align: right;">0.734</td>
+<td style="text-align: right;">0.0666</td>
+<td><a href="https://huggingface.co/Mapika/decider-35b-a3b">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td>Raw Qwen3 4B Instruct 2507 direct logits</td>
+<td>Alibaba Qwen / neutral reproduction</td>
+<td>raw-logit-control</td>
+<td>✅</td>
+<td style="text-align: right;">40.95</td>
+<td style="text-align: right;">46.4</td>
+<td style="text-align: right;">29.1</td>
+<td style="text-align: right;">87.6</td>
+<td style="text-align: right;">59.7</td>
+<td style="text-align: right;">69.7</td>
+<td style="text-align: right;">27.3</td>
+<td style="text-align: right;">0.315</td>
+<td style="text-align: right;">0.0221</td>
+<td><a href="https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td>OpenSourceJev (Qwen3.5-4B Q4_K_M, native llama.cpp)</td>
+<td>sabeel111</td>
+<td>jev-rebuild</td>
+<td>None</td>
+<td style="text-align: right;">40.87</td>
+<td style="text-align: right;">41.8</td>
+<td style="text-align: right;">60.3</td>
+<td style="text-align: right;">82.0</td>
+<td style="text-align: right;">64.0</td>
+<td style="text-align: right;">78.4</td>
+<td style="text-align: right;">26.3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0159</td>
+<td><a href="https://github.com/sabeel111/OpenSourceJev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td>ZeroEntropy zerank-2</td>
+<td>ZeroEntropy</td>
+<td>reranker</td>
+<td>✅</td>
+<td style="text-align: right;">40.21</td>
+<td style="text-align: right;">42.1</td>
+<td style="text-align: right;">75.8</td>
+<td style="text-align: right;">79.0</td>
+<td style="text-align: right;">49.8</td>
+<td style="text-align: right;">70.1</td>
+<td style="text-align: right;">28.6</td>
+<td style="text-align: right;">0.403</td>
+<td style="text-align: right;">0.0473</td>
+<td><a href="https://huggingface.co/zeroentropy/zerank-2-reranker">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">25</td>
+<td>decision-machine-1 (milliseconds.ai)</td>
+<td>milliseconds.ai (Baptiste Laget)</td>
+<td>decision-api</td>
+<td>❌</td>
+<td style="text-align: right;">39.94</td>
+<td style="text-align: right;">41.3</td>
+<td style="text-align: right;">68.3</td>
+<td style="text-align: right;">92.9</td>
+<td style="text-align: right;">53.7</td>
+<td style="text-align: right;">67.5</td>
+<td style="text-align: right;">25.6</td>
+<td style="text-align: right;">0.172</td>
+<td style="text-align: right;">0.035</td>
+<td><a href="https://www.milliseconds.ai">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">26</td>
+<td>Malkuth-2B (newfull5, Kev post-train)</td>
+<td>newfull5 (dhtocks)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">38.93</td>
+<td style="text-align: right;">41.3</td>
+<td style="text-align: right;">53.5</td>
+<td style="text-align: right;">91.4</td>
+<td style="text-align: right;">61.5</td>
+<td style="text-align: right;">69.7</td>
+<td style="text-align: right;">24.4</td>
+<td style="text-align: right;">0.24</td>
+<td style="text-align: right;">0.0192</td>
+<td><a href="https://github.com/newfull5/malkuth">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">27</td>
+<td>Raw Phi-4 mini direct logits</td>
+<td>Microsoft / neutral reproduction</td>
+<td>raw-logit-control</td>
+<td>✅</td>
+<td style="text-align: right;">37.96</td>
+<td style="text-align: right;">41.8</td>
+<td style="text-align: right;">58.8</td>
+<td style="text-align: right;">88.8</td>
+<td style="text-align: right;">49.6</td>
+<td style="text-align: right;">65.8</td>
+<td style="text-align: right;">29.2</td>
+<td style="text-align: right;">0.278</td>
+<td style="text-align: right;">0.048</td>
+<td><a href="https://huggingface.co/microsoft/Phi-4-mini-instruct">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">28</td>
+<td>JEV Qwen3.5-9B Base NVFP4</td>
+<td>WilfLin</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">37.7</td>
+<td style="text-align: right;">46.8</td>
+<td style="text-align: right;">67.7</td>
+<td style="text-align: right;">93.3</td>
+<td style="text-align: right;">43.3</td>
+<td style="text-align: right;">75.3</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">0.189</td>
+<td style="text-align: right;">0.0775</td>
+<td><a href="https://huggingface.co/WIlfLin/JEV-Qwen3.5-9B-Base-NVFP4">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">29</td>
+<td>OpenJev (DiffusionGemma 26B-A4B NVFP4, razorback16)</td>
+<td>razorback16 / Codiv</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">36.85</td>
+<td style="text-align: right;">45.4</td>
+<td style="text-align: right;">55.0</td>
+<td style="text-align: right;">83.2</td>
+<td style="text-align: right;">45.5</td>
+<td style="text-align: right;">81.8</td>
+<td style="text-align: right;">28.6</td>
+<td style="text-align: right;">0.633</td>
+<td style="text-align: right;">0.0656</td>
+<td><a href="https://github.com/razorback16/openjev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">30</td>
+<td>kev 4B (research preview)</td>
+<td>Jared Palmer</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">36.14</td>
+<td style="text-align: right;">42.1</td>
+<td style="text-align: right;">39.6</td>
+<td style="text-align: right;">75.7</td>
+<td style="text-align: right;">61.8</td>
+<td style="text-align: right;">66.2</td>
+<td style="text-align: right;">22.4</td>
+<td style="text-align: right;">1.25</td>
+<td style="text-align: right;">0.0188</td>
+<td><a href="https://github.com/jaredpalmer/kev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">31</td>
+<td>Decision 2B (FlyMy.AI, v59)</td>
+<td>FlyMy.AI (@denti)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">35.8</td>
+<td style="text-align: right;">38.8</td>
+<td style="text-align: right;">74.1</td>
+<td style="text-align: right;">84.3</td>
+<td style="text-align: right;">62.5</td>
+<td style="text-align: right;">75.3</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">0.528</td>
+<td style="text-align: right;">0.0178</td>
+<td><a href="https://huggingface.co/flymy-ai/decision-2b-preview">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">32</td>
+<td>Qwen3.5-9B Jev-like data-mix v2</td>
+<td>jsaurabh</td>
+<td>jev-rebuild</td>
+<td>None</td>
+<td style="text-align: right;">35.24</td>
+<td style="text-align: right;">47.4</td>
+<td style="text-align: right;">61.3</td>
+<td style="text-align: right;">82.0</td>
+<td style="text-align: right;">42.4</td>
+<td style="text-align: right;">78.4</td>
+<td style="text-align: right;">29.2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0834</td>
+<td><a href="https://huggingface.co/jsaurabh/qwen3.5-9b-jev-data-mix-v2">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">33</td>
+<td>GPT-6 Luna (low reasoning effort)</td>
+<td>OpenAI</td>
+<td>llm-baseline</td>
+<td>None</td>
+<td style="text-align: right;">35.11</td>
+<td style="text-align: right;">95.8</td>
+<td style="text-align: right;">92.0</td>
+<td style="text-align: right;">73.7</td>
+<td style="text-align: right;">36.9</td>
+<td style="text-align: right;">99.1</td>
+<td style="text-align: right;">92.9</td>
+<td style="text-align: right;">1.442</td>
+<td style="text-align: right;">0.127</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: right;">34</td>
+<td>SimpleJev Qwen3.8-27B</td>
+<td>Featherless AI</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">34.57</td>
+<td style="text-align: right;">51.6</td>
+<td style="text-align: right;">74.5</td>
+<td style="text-align: right;">71.2</td>
+<td style="text-align: right;">39.5</td>
+<td style="text-align: right;">86.6</td>
+<td style="text-align: right;">35.7</td>
+<td style="text-align: right;">2.028</td>
+<td style="text-align: right;">0.104</td>
+<td><a href="https://github.com/featherless-ai/simple-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">35</td>
+<td>NInfer Qwen3.8-Flash-Next mixed</td>
+<td>Igor L. / NInfer contributors</td>
+<td>native-logit</td>
+<td>✅</td>
+<td style="text-align: right;">33.98</td>
+<td style="text-align: right;">49.5</td>
+<td style="text-align: right;">78.6</td>
+<td style="text-align: right;">88.2</td>
+<td style="text-align: right;">38.9</td>
+<td style="text-align: right;">89.6</td>
+<td style="text-align: right;">34.1</td>
+<td style="text-align: right;">0.308</td>
+<td style="text-align: right;">0.1087</td>
+<td><a href="https://github.com/igorls/ninfer">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">36</td>
+<td>swanOne (blockbrain, Qwen3.8-Flash-Next NVFP4)</td>
+<td>blockbrain</td>
+<td>system-one-open</td>
+<td>✅</td>
+<td style="text-align: right;">33.61</td>
+<td style="text-align: right;">52.6</td>
+<td style="text-align: right;">71.0</td>
+<td style="text-align: right;">82.5</td>
+<td style="text-align: right;">38.6</td>
+<td style="text-align: right;">88.7</td>
+<td style="text-align: right;">38.6</td>
+<td style="text-align: right;">0.712</td>
+<td style="text-align: right;">0.111</td>
+<td><a href="https://github.com/blockbrain-ai/swanone-recipe">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">37</td>
+<td>GPT-6 Luna (default medium reasoning effort)</td>
+<td>OpenAI</td>
+<td>llm-baseline</td>
+<td>None</td>
+<td style="text-align: right;">33.27</td>
+<td style="text-align: right;">97.4</td>
+<td style="text-align: right;">93.5</td>
+<td style="text-align: right;">72.6</td>
+<td style="text-align: right;">36.0</td>
+<td style="text-align: right;">99.6</td>
+<td style="text-align: right;">95.5</td>
+<td style="text-align: right;">1.477</td>
+<td style="text-align: right;">0.1354</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: right;">38</td>
+<td>open-alternative-jev (Qwen3.5-4B, IkerMoel)</td>
+<td>IkerMoel</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">33.24</td>
+<td style="text-align: right;">38.6</td>
+<td style="text-align: right;">58.7</td>
+<td style="text-align: right;">83.5</td>
+<td style="text-align: right;">59.6</td>
+<td style="text-align: right;">74.0</td>
+<td style="text-align: right;">24.4</td>
+<td style="text-align: right;">0.564</td>
+<td style="text-align: right;">0.0222</td>
+<td><a href="https://github.com/ikermoel/open-alternative-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">39</td>
+<td>jev-local (Qwen3.5-9B)</td>
+<td>us (GitHub)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">32.54</td>
+<td style="text-align: right;">45.2</td>
+<td style="text-align: right;">64.2</td>
+<td style="text-align: right;">69.2</td>
+<td style="text-align: right;">43.3</td>
+<td style="text-align: right;">74.9</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">2.24</td>
+<td style="text-align: right;">0.0775</td>
+<td><a href="https://github.com/us/jev-local">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td>Decision Fast (FlyMy.AI, v53a)</td>
+<td>FlyMy.AI (@denti)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">32.49</td>
+<td style="text-align: right;">37.1</td>
+<td style="text-align: right;">65.3</td>
+<td style="text-align: right;">81.6</td>
+<td style="text-align: right;">76.1</td>
+<td style="text-align: right;">63.2</td>
+<td style="text-align: right;">25.6</td>
+<td style="text-align: right;">0.631</td>
+<td style="text-align: right;">0.0063</td>
+<td><a href="https://huggingface.co/flymy-ai/decision-fast-preview">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">41</td>
+<td>decider-2b (Mapika)</td>
+<td>Mapika</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">30.74</td>
+<td style="text-align: right;">38.5</td>
+<td style="text-align: right;">43.5</td>
+<td style="text-align: right;">83.2</td>
+<td style="text-align: right;">61.0</td>
+<td style="text-align: right;">71.0</td>
+<td style="text-align: right;">24.7</td>
+<td style="text-align: right;">0.672</td>
+<td style="text-align: right;">0.02</td>
+<td><a href="https://huggingface.co/Mapika/decider-2b">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">42</td>
+<td>jeff (Logan Markewich, GLiFormer 400M)</td>
+<td>Logan Markewich</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">30.58</td>
+<td style="text-align: right;">36.8</td>
+<td style="text-align: right;">67.9</td>
+<td style="text-align: right;">63.5</td>
+<td style="text-align: right;">76.6</td>
+<td style="text-align: right;">62.8</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">2.026</td>
+<td style="text-align: right;">0.006</td>
+<td><a href="https://github.com/logan-markewich/jeff">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">43</td>
+<td>Laya (Convai Innovations, ModernBERT-large 421M)</td>
+<td>Convai Innovations</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">30.25</td>
+<td style="text-align: right;">36.1</td>
+<td style="text-align: right;">63.7</td>
+<td style="text-align: right;">71.1</td>
+<td style="text-align: right;">86.2</td>
+<td style="text-align: right;">58.4</td>
+<td style="text-align: right;">30.8</td>
+<td style="text-align: right;">1.724</td>
+<td style="text-align: right;">0.0029</td>
+<td><a href="https://huggingface.co/convaiinnovations/laya">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">44</td>
+<td>Autoloops – Gemma 4 31B IT</td>
+<td>Autoloops</td>
+<td>jev</td>
+<td>❌</td>
+<td style="text-align: right;">29.96</td>
+<td style="text-align: right;">59.8</td>
+<td style="text-align: right;">79.2</td>
+<td style="text-align: right;">84.0</td>
+<td style="text-align: right;">36.0</td>
+<td style="text-align: right;">92.8</td>
+<td style="text-align: right;">45.8</td>
+<td style="text-align: right;">0.604</td>
+<td style="text-align: right;">0.1363</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: right;">45</td>
+<td>Standard One 8B (Standard Thinking)</td>
+<td>Standard Thinking (myeongho12)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">29.07</td>
+<td style="text-align: right;">46.2</td>
+<td style="text-align: right;">65.9</td>
+<td style="text-align: right;">92.0</td>
+<td style="text-align: right;">39.4</td>
+<td style="text-align: right;">76.6</td>
+<td style="text-align: right;">26.6</td>
+<td style="text-align: right;">0.198</td>
+<td style="text-align: right;">0.1044</td>
+<td><a href="https://huggingface.co/StandardThinking/StandardOne-8B">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">46</td>
+<td>lev-350m (Franck Verrot, LFM2.5-350M)</td>
+<td>Franck Verrot (franckverrot)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">28.5</td>
+<td style="text-align: right;">34.8</td>
+<td style="text-align: right;">70.6</td>
+<td style="text-align: right;">85.3</td>
+<td style="text-align: right;">76.1</td>
+<td style="text-align: right;">58.4</td>
+<td style="text-align: right;">25.0</td>
+<td style="text-align: right;">0.494</td>
+<td style="text-align: right;">0.0063</td>
+<td><a href="https://github.com/franckverrot/lev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">47</td>
+<td>openjev-sglang (Qwen3.6-35B-A3B on SGLang)</td>
+<td>ekzhang</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">27.65</td>
+<td style="text-align: right;">49.4</td>
+<td style="text-align: right;">69.2</td>
+<td style="text-align: right;">77.1</td>
+<td style="text-align: right;">36.5</td>
+<td style="text-align: right;">85.3</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">1.355</td>
+<td style="text-align: right;">0.1313</td>
+<td><a href="https://github.com/ekzhang/openjev-sglang">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">48</td>
+<td>Von (wfzyx, Option-Marker 395M)</td>
+<td>wfzyx (Victor Hugo)</td>
+<td>jev-rebuild</td>
+<td>None</td>
+<td style="text-align: right;">27.48</td>
+<td style="text-align: right;">34.5</td>
+<td style="text-align: right;">75.7</td>
+<td style="text-align: right;">70.5</td>
+<td style="text-align: right;">77.8</td>
+<td style="text-align: right;">57.1</td>
+<td style="text-align: right;">27.9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0055</td>
+<td><a href="https://github.com/wfzyx/von">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">49</td>
+<td>NInfer Qwen3.8-27B NVFP4 (T=1.5)</td>
+<td>Igor L. / NInfer contributors</td>
+<td>native-logit</td>
+<td>✅</td>
+<td style="text-align: right;">26.92</td>
+<td style="text-align: right;">51.5</td>
+<td style="text-align: right;">76.0</td>
+<td style="text-align: right;">80.1</td>
+<td style="text-align: right;">35.2</td>
+<td style="text-align: right;">83.1</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">0.886</td>
+<td style="text-align: right;">0.1449</td>
+<td><a href="https://github.com/igorls/ninfer">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">50</td>
+<td>NInfer Qwen3.8-27B NVFP4</td>
+<td>Igor L. / NInfer contributors</td>
+<td>native-logit</td>
+<td>✅</td>
+<td style="text-align: right;">26.3</td>
+<td style="text-align: right;">51.5</td>
+<td style="text-align: right;">67.2</td>
+<td style="text-align: right;">80.1</td>
+<td style="text-align: right;">35.2</td>
+<td style="text-align: right;">83.1</td>
+<td style="text-align: right;">33.1</td>
+<td style="text-align: right;">0.886</td>
+<td style="text-align: right;">0.1449</td>
+<td><a href="https://github.com/igorls/ninfer">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">51</td>
+<td>kev 8B (research preview)</td>
+<td>Jared Palmer</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">25.56</td>
+<td style="text-align: right;">41.8</td>
+<td style="text-align: right;">40.2</td>
+<td style="text-align: right;">74.9</td>
+<td style="text-align: right;">44.0</td>
+<td style="text-align: right;">71.4</td>
+<td style="text-align: right;">21.8</td>
+<td style="text-align: right;">1.331</td>
+<td style="text-align: right;">0.0733</td>
+<td><a href="https://github.com/jaredpalmer/kev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">52</td>
+<td>JevOne</td>
+<td>Juspay</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">25.51</td>
+<td style="text-align: right;">47.6</td>
+<td style="text-align: right;">77.6</td>
+<td style="text-align: right;">88.5</td>
+<td style="text-align: right;">35.9</td>
+<td style="text-align: right;">89.6</td>
+<td style="text-align: right;">33.8</td>
+<td style="text-align: right;">0.323</td>
+<td style="text-align: right;">0.1373</td>
+<td><a href="https://huggingface.co/juspay/jev-one">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">53</td>
+<td>typecastlm (Mikhail Gribov, Qwen3.5-4B computed head)</td>
+<td>Mikhail Gribov</td>
+<td>system-one-open</td>
+<td>✅</td>
+<td style="text-align: right;">25.28</td>
+<td style="text-align: right;">34.0</td>
+<td style="text-align: right;">62.1</td>
+<td style="text-align: right;">92.6</td>
+<td style="text-align: right;">60.2</td>
+<td style="text-align: right;">77.9</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">0.206</td>
+<td style="text-align: right;">0.0213</td>
+<td><a href="https://github.com/mihail-gribov/typecastlm">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">54</td>
+<td>SimpleJev Qwen3.6-35B-A3B</td>
+<td>Featherless AI</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">24.86</td>
+<td style="text-align: right;">45.7</td>
+<td style="text-align: right;">59.8</td>
+<td style="text-align: right;">75.0</td>
+<td style="text-align: right;">38.1</td>
+<td style="text-align: right;">81.4</td>
+<td style="text-align: right;">28.2</td>
+<td style="text-align: right;">1.704</td>
+<td style="text-align: right;">0.1156</td>
+<td><a href="https://github.com/featherless-ai/simple-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">55</td>
+<td>kev 0.6B (research preview)</td>
+<td>Jared Palmer</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">24.75</td>
+<td style="text-align: right;">34.2</td>
+<td style="text-align: right;">50.0</td>
+<td style="text-align: right;">75.6</td>
+<td style="text-align: right;">76.1</td>
+<td style="text-align: right;">66.7</td>
+<td style="text-align: right;">24.0</td>
+<td style="text-align: right;">1.331</td>
+<td style="text-align: right;">0.0063</td>
+<td><a href="https://github.com/jaredpalmer/kev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">56</td>
+<td>Raw Qwen3 8B direct logits</td>
+<td>Alibaba Qwen / neutral reproduction</td>
+<td>raw-logit-control</td>
+<td>✅</td>
+<td style="text-align: right;">23.68</td>
+<td style="text-align: right;">45.7</td>
+<td style="text-align: right;">24.1</td>
+<td style="text-align: right;">86.3</td>
+<td style="text-align: right;">41.9</td>
+<td style="text-align: right;">68.4</td>
+<td style="text-align: right;">26.3</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.0866</td>
+<td><a href="https://huggingface.co/Qwen/Qwen3-8B">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">57</td>
+<td>system-one (Qwen3-8B, Sean Goedecke)</td>
+<td>Sean Goedecke</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">23.37</td>
+<td style="text-align: right;">43.6</td>
+<td style="text-align: right;">32.8</td>
+<td style="text-align: right;">84.4</td>
+<td style="text-align: right;">41.5</td>
+<td style="text-align: right;">71.9</td>
+<td style="text-align: right;">24.4</td>
+<td style="text-align: right;">0.482</td>
+<td style="text-align: right;">0.0894</td>
+<td><a href="https://github.com/sgoedecke/system-one">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">58</td>
+<td>OpenDecision (ModernBERT-large zero-shot)</td>
+<td>Deepan Wadhwa</td>
+<td>classifier</td>
+<td>✅</td>
+<td style="text-align: right;">21.64</td>
+<td style="text-align: right;">31.8</td>
+<td style="text-align: right;">57.1</td>
+<td style="text-align: right;">79.9</td>
+<td style="text-align: right;">75.3</td>
+<td style="text-align: right;">53.2</td>
+<td style="text-align: right;">25.6</td>
+<td style="text-align: right;">0.826</td>
+<td style="text-align: right;">0.0066</td>
+<td><a href="https://github.com/deepanwadhwa/OpenDecision">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">59</td>
+<td>LitJev (Qwen3.8-27B)</td>
+<td>Zhengxu Yu</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">19.51</td>
+<td style="text-align: right;">46.3</td>
+<td style="text-align: right;">76.6</td>
+<td style="text-align: right;">66.7</td>
+<td style="text-align: right;">33.6</td>
+<td style="text-align: right;">86.1</td>
+<td style="text-align: right;">30.8</td>
+<td style="text-align: right;">4.2</td>
+<td style="text-align: right;">0.163</td>
+<td><a href="https://github.com/zhengxuyu/litjev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">60</td>
+<td>openJev Verdict 1.4</td>
+<td>Hemant (heman10x)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">19.0</td>
+<td style="text-align: right;">29.4</td>
+<td style="text-align: right;">72.0</td>
+<td style="text-align: right;">78.1</td>
+<td style="text-align: right;">82.4</td>
+<td style="text-align: right;">57.6</td>
+<td style="text-align: right;">27.9</td>
+<td style="text-align: right;">0.777</td>
+<td style="text-align: right;">0.0039</td>
+<td><a href="https://huggingface.co/heman10x/rlcd-modernbert-151m">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">61</td>
+<td>kev 0.5B</td>
+<td>Jared Palmer</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">18.88</td>
+<td style="text-align: right;">30.5</td>
+<td style="text-align: right;">49.7</td>
+<td style="text-align: right;">77.0</td>
+<td style="text-align: right;">76.1</td>
+<td style="text-align: right;">49.4</td>
+<td style="text-align: right;">27.3</td>
+<td style="text-align: right;">1.011</td>
+<td style="text-align: right;">0.0063</td>
+<td><a href="https://github.com/jaredpalmer/kev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">62</td>
+<td>Bespoke Nimble 9B (Bespoke Labs)</td>
+<td>Bespoke Labs</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">18.66</td>
+<td style="text-align: right;">46.3</td>
+<td style="text-align: right;">56.4</td>
+<td style="text-align: right;">78.7</td>
+<td style="text-align: right;">33.4</td>
+<td style="text-align: right;">79.7</td>
+<td style="text-align: right;">28.9</td>
+<td style="text-align: right;">0.928</td>
+<td style="text-align: right;">0.1658</td>
+<td><a href="https://github.com/bespokelabsai/nimble">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">63</td>
+<td>GPT-5.6 Luna (low reasoning effort)</td>
+<td>OpenAI</td>
+<td>llm-baseline</td>
+<td>❌</td>
+<td style="text-align: right;">18.51</td>
+<td style="text-align: right;">93.1</td>
+<td style="text-align: right;">87.4</td>
+<td style="text-align: right;">77.5</td>
+<td style="text-align: right;">28.5</td>
+<td style="text-align: right;">97.4</td>
+<td style="text-align: right;">89.0</td>
+<td style="text-align: right;">0.968</td>
+<td style="text-align: right;">0.2419</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: right;">64</td>
+<td>openJev Verdict (heman10x, ModernBERT-base 151M)</td>
+<td>Hemant (heman10x)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">18.09</td>
+<td style="text-align: right;">30.0</td>
+<td style="text-align: right;">47.0</td>
+<td style="text-align: right;">76.7</td>
+<td style="text-align: right;">83.1</td>
+<td style="text-align: right;">55.4</td>
+<td style="text-align: right;">24.7</td>
+<td style="text-align: right;">0.706</td>
+<td style="text-align: right;">0.0037</td>
+<td><a href="https://github.com/Heman10x-NGU/openJev-verdict-2.0">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">65</td>
+<td>Raw Qwen3 1.7B direct logits</td>
+<td>Alibaba Qwen / neutral reproduction</td>
+<td>raw-logit-control</td>
+<td>✅</td>
+<td style="text-align: right;">18.06</td>
+<td style="text-align: right;">33.2</td>
+<td style="text-align: right;">24.3</td>
+<td style="text-align: right;">89.7</td>
+<td style="text-align: right;">64.9</td>
+<td style="text-align: right;">54.1</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">0.283</td>
+<td style="text-align: right;">0.0148</td>
+<td><a href="https://huggingface.co/Qwen/Qwen3-1.7B">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">66</td>
+<td>reflex-27b (Qwen3.8-27B)</td>
+<td>kshetrajna12</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">17.84</td>
+<td style="text-align: right;">46.4</td>
+<td style="text-align: right;">77.2</td>
+<td style="text-align: right;">67.5</td>
+<td style="text-align: right;">32.3</td>
+<td style="text-align: right;">87.0</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">3.926</td>
+<td style="text-align: right;">0.1811</td>
+<td><a href="https://github.com/kshetrajna12/reflex">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">67</td>
+<td>JevAct (einptein, jev1-2b-v2)</td>
+<td>einptein</td>
+<td>jev-rebuild</td>
+<td>❌</td>
+<td style="text-align: right;">16.93</td>
+<td style="text-align: right;">29.3</td>
+<td style="text-align: right;">55.1</td>
+<td style="text-align: right;">76.5</td>
+<td style="text-align: right;">64.3</td>
+<td style="text-align: right;">61.9</td>
+<td style="text-align: right;">23.4</td>
+<td style="text-align: right;">0.799</td>
+<td style="text-align: right;">0.0155</td>
+<td><a href="https://github.com/fstandhartinger/jevbench/issues/66">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">68</td>
+<td>djev (thinking)</td>
+<td>David Villalon / Maisa</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">15.2</td>
+<td style="text-align: right;">71.6</td>
+<td style="text-align: right;">87.8</td>
+<td style="text-align: right;">75.2</td>
+<td style="text-align: right;">26.9</td>
+<td style="text-align: right;">87.4</td>
+<td style="text-align: right;">60.1</td>
+<td style="text-align: right;">1.002</td>
+<td style="text-align: right;">0.2743</td>
+<td><a href="https://github.com/Davipar/djev-dev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">69</td>
+<td>GLiNER2 large (Fastino)</td>
+<td>Fastino</td>
+<td>classifier</td>
+<td>✅</td>
+<td style="text-align: right;">15.14</td>
+<td style="text-align: right;">31.1</td>
+<td style="text-align: right;">24.8</td>
+<td style="text-align: right;">61.7</td>
+<td style="text-align: right;">73.3</td>
+<td style="text-align: right;">56.7</td>
+<td style="text-align: right;">28.6</td>
+<td style="text-align: right;">2.343</td>
+<td style="text-align: right;">0.0077</td>
+<td><a href="https://huggingface.co/fastino/gliner2-large-v1">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">70</td>
+<td>OpenJev (thinking, BF16)</td>
+<td>razorback16</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">14.83</td>
+<td style="text-align: right;">58.1</td>
+<td style="text-align: right;">58.1</td>
+<td style="text-align: right;">76.1</td>
+<td style="text-align: right;">27.8</td>
+<td style="text-align: right;">88.7</td>
+<td style="text-align: right;">42.2</td>
+<td style="text-align: right;">1.076</td>
+<td style="text-align: right;">0.2546</td>
+<td><a href="https://github.com/razorback16/openjev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">71</td>
+<td>Qwen3.5-0.8B Decision Model (Mourad Ghafiri)</td>
+<td>Mourad Ghafiri</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">14.54</td>
+<td style="text-align: right;">28.1</td>
+<td style="text-align: right;">68.2</td>
+<td style="text-align: right;">49.2</td>
+<td style="text-align: right;">75.7</td>
+<td style="text-align: right;">59.3</td>
+<td style="text-align: right;">34.7</td>
+<td style="text-align: right;">14.45</td>
+<td style="text-align: right;">0.0065</td>
+<td><a href="https://huggingface.co/mghafiri/qwen3.5-0.8B-decision-model">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">72</td>
+<td>Gemini 3.1 Flash-Lite</td>
+<td>Google</td>
+<td>llm-baseline</td>
+<td>❌</td>
+<td style="text-align: right;">14.26</td>
+<td style="text-align: right;">54.5</td>
+<td style="text-align: right;">59.3</td>
+<td style="text-align: right;">81.8</td>
+<td style="text-align: right;">27.4</td>
+<td style="text-align: right;">87.0</td>
+<td style="text-align: right;">38.6</td>
+<td style="text-align: right;">0.756</td>
+<td style="text-align: right;">0.2638</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: right;">73</td>
+<td>open-jev-deberta-v3-large (local CPU)</td>
+<td>Kotoba Labs</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">12.65</td>
+<td style="text-align: right;">25.6</td>
+<td style="text-align: right;">66.6</td>
+<td style="text-align: right;">66.0</td>
+<td style="text-align: right;">74.0</td>
+<td style="text-align: right;">52.4</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">3.685</td>
+<td style="text-align: right;">0.0073</td>
+<td><a href="https://github.com/kotoba-lang/typed-decisions">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">74</td>
+<td>smalljev semantic-v9</td>
+<td>Aditya (isHeSatoshi)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">12.31</td>
+<td style="text-align: right;">25.7</td>
+<td style="text-align: right;">59.2</td>
+<td style="text-align: right;">79.8</td>
+<td style="text-align: right;">57.9</td>
+<td style="text-align: right;">60.6</td>
+<td style="text-align: right;">26.9</td>
+<td style="text-align: right;">0.978</td>
+<td style="text-align: right;">0.0254</td>
+<td><a href="https://github.com/isHeSatoshi/smalljev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">75</td>
+<td>GLiNER2 (Fastino, gliner2.5-base)</td>
+<td>Fastino</td>
+<td>classifier</td>
+<td>✅</td>
+<td style="text-align: right;">11.78</td>
+<td style="text-align: right;">27.4</td>
+<td style="text-align: right;">25.2</td>
+<td style="text-align: right;">71.8</td>
+<td style="text-align: right;">83.1</td>
+<td style="text-align: right;">58.0</td>
+<td style="text-align: right;">29.2</td>
+<td style="text-align: right;">0.776</td>
+<td style="text-align: right;">0.0037</td>
+<td><a href="https://github.com/fastino-ai/GLiNER2">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">76</td>
+<td>Instinct (ZooWork, Qwen3.8-27B)</td>
+<td>rayrain-srp (ZooWork)</td>
+<td>jev-rebuild</td>
+<td>❌</td>
+<td style="text-align: right;">11.45</td>
+<td style="text-align: right;">51.1</td>
+<td style="text-align: right;">78.7</td>
+<td style="text-align: right;">83.9</td>
+<td style="text-align: right;">24.6</td>
+<td style="text-align: right;">86.6</td>
+<td style="text-align: right;">35.1</td>
+<td style="text-align: right;">0.517</td>
+<td style="text-align: right;">0.3253</td>
+<td><a href="https://github.com/fstandhartinger/jevbench/issues/69">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">77</td>
+<td>Open-Jev 9B (Zefan Cai)</td>
+<td>Zefan Cai (@Zefan_Cai)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">11.2</td>
+<td style="text-align: right;">44.2</td>
+<td style="text-align: right;">61.8</td>
+<td style="text-align: right;">72.0</td>
+<td style="text-align: right;">28.1</td>
+<td style="text-align: right;">77.5</td>
+<td style="text-align: right;">29.9</td>
+<td style="text-align: right;">1.66</td>
+<td style="text-align: right;">0.2488</td>
+<td><a href="https://github.com/Zefan-Cai/Open-Jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">78</td>
+<td>Open-Jev 2B (Zefan Cai)</td>
+<td>Zefan Cai (@Zefan_Cai)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">9.98</td>
+<td style="text-align: right;">42.3</td>
+<td style="text-align: right;">55.3</td>
+<td style="text-align: right;">73.5</td>
+<td style="text-align: right;">28.1</td>
+<td style="text-align: right;">64.5</td>
+<td style="text-align: right;">26.3</td>
+<td style="text-align: right;">1.479</td>
+<td style="text-align: right;">0.2488</td>
+<td><a href="https://github.com/Zefan-Cai/Open-Jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">79</td>
+<td>GLiNER2.5 multi (Fastino, 287M)</td>
+<td>Fastino</td>
+<td>classifier</td>
+<td>✅</td>
+<td style="text-align: right;">9.76</td>
+<td style="text-align: right;">23.1</td>
+<td style="text-align: right;">57.2</td>
+<td style="text-align: right;">67.8</td>
+<td style="text-align: right;">82.4</td>
+<td style="text-align: right;">48.9</td>
+<td style="text-align: right;">32.8</td>
+<td style="text-align: right;">1.006</td>
+<td style="text-align: right;">0.0039</td>
+<td><a href="https://huggingface.co/fastino/gliner2.5-multi-v1">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">80</td>
+<td>CLM-8B (Contrastive-LM, clm-latest)</td>
+<td>Contrastive-LM (Kwok, Kang, Suresh, Saad-Falcon, Pavone, Ré, Mirhoseini)</td>
+<td>system-one-open</td>
+<td>✅</td>
+<td style="text-align: right;">8.57</td>
+<td style="text-align: right;">22.4</td>
+<td style="text-align: right;">39.8</td>
+<td style="text-align: right;">93.6</td>
+<td style="text-align: right;">78.4</td>
+<td style="text-align: right;">40.7</td>
+<td style="text-align: right;">24.0</td>
+<td style="text-align: right;">0.184</td>
+<td style="text-align: right;">0.0052</td>
+<td><a href="https://github.com/Contrastive-LM/CLM">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">81</td>
+<td>SimpleJev (Qwen3.5-0.8B, CPU)</td>
+<td>sabeel111 / Featherless AI</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">7.46</td>
+<td style="text-align: right;">21.5</td>
+<td style="text-align: right;">49.1</td>
+<td style="text-align: right;">57.5</td>
+<td style="text-align: right;">68.3</td>
+<td style="text-align: right;">54.5</td>
+<td style="text-align: right;">34.7</td>
+<td style="text-align: right;">8.138</td>
+<td style="text-align: right;">0.0114</td>
+<td><a href="https://github.com/featherless-ai/simple-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">82</td>
+<td>GLiNER2.5 small (Fastino, 74M)</td>
+<td>Fastino</td>
+<td>classifier</td>
+<td>✅</td>
+<td style="text-align: right;">7.19</td>
+<td style="text-align: right;">20.5</td>
+<td style="text-align: right;">50.7</td>
+<td style="text-align: right;">77.8</td>
+<td style="text-align: right;">82.4</td>
+<td style="text-align: right;">45.9</td>
+<td style="text-align: right;">28.6</td>
+<td style="text-align: right;">0.378</td>
+<td style="text-align: right;">0.0039</td>
+<td><a href="https://huggingface.co/fastino/gliner2.5-small-v1">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">83</td>
+<td>Raw Qwen3 0.6B direct logits</td>
+<td>Alibaba Qwen / neutral reproduction</td>
+<td>raw-logit-control</td>
+<td>✅</td>
+<td style="text-align: right;">7.14</td>
+<td style="text-align: right;">22.8</td>
+<td style="text-align: right;">20.7</td>
+<td style="text-align: right;">89.9</td>
+<td style="text-align: right;">73.9</td>
+<td style="text-align: right;">48.1</td>
+<td style="text-align: right;">25.6</td>
+<td style="text-align: right;">0.286</td>
+<td style="text-align: right;">0.0074</td>
+<td><a href="https://huggingface.co/Qwen/Qwen3-0.6B">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">84</td>
+<td>verdict-small (Manavarya09, multilingual-e5-small 118M)</td>
+<td>Manavarya09 (Manav)</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">5.69</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">66.9</td>
+<td style="text-align: right;">85.0</td>
+<td style="text-align: right;">96.6</td>
+<td style="text-align: right;">53.7</td>
+<td style="text-align: right;">28.9</td>
+<td style="text-align: right;">0.257</td>
+<td style="text-align: right;">0.0013</td>
+<td><a href="https://github.com/Manavarya09/verdict">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">85</td>
+<td>DeepSeek V4.1 Flash (thinking default)</td>
+<td>DeepSeek</td>
+<td>llm-baseline</td>
+<td>⚠️</td>
+<td style="text-align: right;">4.77</td>
+<td style="text-align: right;">94.0</td>
+<td style="text-align: right;">95.5</td>
+<td style="text-align: right;">71.6</td>
+<td style="text-align: right;">16.8</td>
+<td style="text-align: right;">97.8</td>
+<td style="text-align: right;">94.8</td>
+<td style="text-align: right;">1.416</td>
+<td style="text-align: right;">0.5937</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: right;">86</td>
+<td>Mirror</td>
+<td>Bluusun</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">2.11</td>
+<td style="text-align: right;">13.6</td>
+<td style="text-align: right;">26.0</td>
+<td style="text-align: right;">70.8</td>
+<td style="text-align: right;">73.3</td>
+<td style="text-align: right;">41.1</td>
+<td style="text-align: right;">9.1</td>
+<td style="text-align: right;">1.799</td>
+<td style="text-align: right;">0.0077</td>
+<td><a href="https://github.com/Bluusun/Decision-API">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">87</td>
+<td>Mixedbread mxbai-rerank-base-v2</td>
+<td>Mixedbread</td>
+<td>reranker</td>
+<td>✅</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">84.1</td>
+<td style="text-align: right;">87.5</td>
+<td style="text-align: right;">67.9</td>
+<td style="text-align: right;">37.2</td>
+<td style="text-align: right;">34.4</td>
+<td style="text-align: right;">0.288</td>
+<td style="text-align: right;">0.0117</td>
+<td><a href="https://huggingface.co/mixedbread-ai/mxbai-rerank-base-v2">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">88</td>
+<td>BAAI bge-reranker-v2-m3</td>
+<td>BAAI</td>
+<td>reranker</td>
+<td>✅</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">84.2</td>
+<td style="text-align: right;">89.5</td>
+<td style="text-align: right;">73.4</td>
+<td style="text-align: right;">39.4</td>
+<td style="text-align: right;">27.9</td>
+<td style="text-align: right;">0.219</td>
+<td style="text-align: right;">0.0077</td>
+<td><a href="https://huggingface.co/BAAI/bge-reranker-v2-m3">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">89</td>
+<td>Alibaba GTE Reranker ModernBERT-base</td>
+<td>Alibaba-NLP</td>
+<td>reranker</td>
+<td>✅</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">78.9</td>
+<td style="text-align: right;">90.6</td>
+<td style="text-align: right;">69.6</td>
+<td style="text-align: right;">33.8</td>
+<td style="text-align: right;">33.4</td>
+<td style="text-align: right;">0.246</td>
+<td style="text-align: right;">0.0103</td>
+<td><a href="https://huggingface.co/Alibaba-NLP/gte-reranker-modernbert-base">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">90</td>
+<td>Certo v1 (AltSlate Labs)</td>
+<td>AltSlate Labs</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">83.0</td>
+<td style="text-align: right;">94.0</td>
+<td style="text-align: right;">100.0</td>
+<td style="text-align: right;">31.6</td>
+<td style="text-align: right;">29.5</td>
+<td style="text-align: right;">0.188</td>
+<td style="text-align: right;">0.001</td>
+<td><a href="https://huggingface.co/altslate/certo-decision-model">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">91</td>
+<td>Open Jev JSON Canvas (JoshuaSP)</td>
+<td>JoshuaSP</td>
+<td>jev-rebuild</td>
+<td>✅</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">48.2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">84.1</td>
+<td style="text-align: right;">45.6</td>
+<td style="text-align: right;">84.4</td>
+<td style="text-align: right;">31.2</td>
+<td style="text-align: right;">0.599</td>
+<td style="text-align: right;">0.065</td>
+<td><a href="https://github.com/JoshuaSP/open-jev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">—</td>
+<td>classifier.dev (fast tier)</td>
+<td>mrmps (@michael_chomsky)</td>
+<td>jev-service</td>
+<td>❌</td>
+<td style="text-align: right;">70.82</td>
+<td style="text-align: right;">51.6</td>
+<td style="text-align: right;">72.4</td>
+<td style="text-align: right;">87.6</td>
+<td style="text-align: right;">84.3</td>
+<td style="text-align: right;">85.3</td>
+<td style="text-align: right;">34.4</td>
+<td style="text-align: right;">0.386</td>
+<td style="text-align: right;">0.0033</td>
+<td><a href="https://classifier.dev">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">—</td>
+<td>Qwen3.8 27B (Chutes TEE)</td>
+<td>Qwen / Chutes</td>
+<td>llm-baseline</td>
+<td>⚠️</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">40.4</td>
+<td style="text-align: right;">93.6</td>
+<td style="text-align: right;">61.3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">71.9</td>
+<td style="text-align: right;">21.8</td>
+<td style="text-align: right;">5.754</td>
+<td style="text-align: right;">2.6691</td>
+<td></td>
+</tr>
+<tr>
+<td style="text-align: right;">—</td>
+<td>Needle 3, options as tools (post-hoc adapter mode)</td>
+<td>Cactus Compute</td>
+<td>small-tool-model</td>
+<td>✅</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">22.1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7.708</td>
+<td style="text-align: right;">0.0144</td>
+<td><a href="https://github.com/cactus-compute/needle">↗</a></td>
+</tr>
+<tr>
+<td style="text-align: right;">—</td>
+<td>Needle 3 (Cactus, 2-bit, local CPU)</td>
+<td>Cactus Compute</td>
+<td>small-tool-model</td>
+<td>✅</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">22.5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3.524</td>
+<td style="text-align: right;">0.0238</td>
+<td><a href="https://github.com/cactus-compute/needle">↗</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="b">附录 B：主要信息来源</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>来源</th>
+<th>性质</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>github.com/fstandhartinger/jevbench</code></td>
+<td>第三方独立基准（MIT harness）</td>
+<td>本报告主数据源，v1.4.2.2 结果 JSON</td>
+</tr>
+<tr>
+<td><code>benchmarkheaven.com/jev-models</code></td>
+<td>Benchmark Heaven 榜单站</td>
+<td>交叉核对</td>
+</tr>
+<tr>
+<td><code>Hanno-Labs/DecisionBench</code></td>
+<td>第三方基准（43 任务 / 23,900 行）</td>
+<td>交叉验证</td>
+</tr>
+<tr>
+<td>ImageJevBench v0.1.3</td>
+<td>第三方图像决策基准</td>
+<td>多模态验证</td>
+</tr>
+<tr>
+<td><code>BeatAPI/awesome-jev</code></td>
+<td>228 项目精选清单（50+ star，源码评审）</td>
+<td>生态规模</td>
+</tr>
+<tr>
+<td><code>multimodalart/jev-decision-index</code> (HF)</td>
+<td>60+ 权重条目追踪</td>
+<td>补充清单</td>
+</tr>
+<tr>
+<td>TypeSafe 官方文档 / OpenRouter / Vercel / LangChain</td>
+<td>厂商与集成方</td>
+<td>Jev 本体规格</td>
+</tr>
+<tr>
+<td>Milvus / Zilliz 实测、xyspace 实测、HN 讨论、中文社区实测</td>
+<td>独立第三方实测</td>
+<td>负面与中性证据</td>
+</tr>
+<tr>
+<td>新华网 / 科技日报 / 央广网</td>
+<td>国内媒体报道</td>
+<td>APUS、Intern-Decision 等国内项目</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>声明</strong>：本报告中所有分数均标注了来源与可信度层级。凡标注"厂商自报"的数字（如 Intern-Decision 的 90.02 均分）<strong>未经第三方复现</strong>，请以谨慎态度引用。JevBench 榜单每日变动，引用时请注明版本号与评分日期。</p>
+</div></body></html>

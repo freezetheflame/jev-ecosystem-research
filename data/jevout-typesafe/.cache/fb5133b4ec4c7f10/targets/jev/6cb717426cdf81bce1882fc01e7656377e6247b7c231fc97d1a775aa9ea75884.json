@@ -1,0 +1,1 @@
+{"unit_id":"mmlu-pro-test-4735","target_id":"jev","selected":"D","probabilities":{"A":0.03,"B":0.0,"C":0.0,"D":0.97},"native_confidence":0.96,"latency_ms":1399.499700000888,"input_tokens":410,"model_revision":"jev-1.13.0","request_hash":"ee875a14023314b1316267534ab839b63d2aeac6d3973614f4b9ef9b857120f4","metadata":{"native_selected":"D","batch_size":1}}

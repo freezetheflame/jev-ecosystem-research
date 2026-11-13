@@ -1,0 +1,267 @@
+{
+  "checked_date": "2026-10-11",
+  "source_root": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t",
+  "repositories": [
+    {
+      "repo": "sutro-sh/jev-align",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\sutro-sh__jev-align",
+      "sha": "520aec345806722dc204780e3631c639c142474b",
+      "commit_date": "2026-10-03T10:47:57-07:00",
+      "snapshot_url": "https://github.com/sutro-sh/jev-align/tree/520aec345806722dc204780e3631c639c142474b",
+      "commit_date_shanghai": "2026-10-04T01:47:57+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/sutro-sh/jev-align/blob/520aec345806722dc204780e3631c639c142474b/README.md"
+        },
+        {
+          "path": "src/jev_align/jev.py",
+          "url": "https://github.com/sutro-sh/jev-align/blob/520aec345806722dc204780e3631c639c142474b/src/jev_align/jev.py"
+        },
+        {
+          "path": "src/jev_align/models.py",
+          "url": "https://github.com/sutro-sh/jev-align/blob/520aec345806722dc204780e3631c639c142474b/src/jev_align/models.py"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "blazejkustra/softlint",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\blazejkustra__softlint",
+      "sha": "b2aeb846eeeb7a88099852ded34df82d2e61dc02",
+      "commit_date": "2026-09-20T12:10:39+02:00",
+      "snapshot_url": "https://github.com/blazejkustra/softlint/tree/b2aeb846eeeb7a88099852ded34df82d2e61dc02",
+      "commit_date_shanghai": "2026-09-20T18:10:39+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/blazejkustra/softlint/blob/b2aeb846eeeb7a88099852ded34df82d2e61dc02/README.md"
+        },
+        {
+          "path": "src/jev.ts",
+          "url": "https://github.com/blazejkustra/softlint/blob/b2aeb846eeeb7a88099852ded34df82d2e61dc02/src/jev.ts"
+        },
+        {
+          "path": "src/review.ts",
+          "url": "https://github.com/blazejkustra/softlint/blob/b2aeb846eeeb7a88099852ded34df82d2e61dc02/src/review.ts"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "GhalebDweikat/winnow",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\GhalebDweikat__winnow",
+      "sha": "4547a81b88ac59a902bad7b0006137c7d4147aeb",
+      "commit_date": "2026-10-05T18:50:30-07:00",
+      "snapshot_url": "https://github.com/GhalebDweikat/winnow/tree/4547a81b88ac59a902bad7b0006137c7d4147aeb",
+      "commit_date_shanghai": "2026-10-06T09:50:30+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/GhalebDweikat/winnow/blob/4547a81b88ac59a902bad7b0006137c7d4147aeb/README.md"
+        },
+        {
+          "path": "sidecar/src/winnow/questions.py",
+          "url": "https://github.com/GhalebDweikat/winnow/blob/4547a81b88ac59a902bad7b0006137c7d4147aeb/sidecar/src/winnow/questions.py"
+        },
+        {
+          "path": "sidecar/src/winnow/hooks.py",
+          "url": "https://github.com/GhalebDweikat/winnow/blob/4547a81b88ac59a902bad7b0006137c7d4147aeb/sidecar/src/winnow/hooks.py"
+        },
+        {
+          "path": "sidecar/src/winnow/policy.py",
+          "url": "https://github.com/GhalebDweikat/winnow/blob/4547a81b88ac59a902bad7b0006137c7d4147aeb/sidecar/src/winnow/policy.py"
+        },
+        {
+          "path": "sidecar/src/winnow/judge.py",
+          "url": "https://github.com/GhalebDweikat/winnow/blob/4547a81b88ac59a902bad7b0006137c7d4147aeb/sidecar/src/winnow/judge.py"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "jerryjliu/docjev",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\jerryjliu__docjev",
+      "sha": "c7abe276a970605feb9cb8b27513365b6c10726e",
+      "commit_date": "2026-09-26T12:05:41-07:00",
+      "snapshot_url": "https://github.com/jerryjliu/docjev/tree/c7abe276a970605feb9cb8b27513365b6c10726e",
+      "commit_date_shanghai": "2026-09-27T03:05:41+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/jerryjliu/docjev/blob/c7abe276a970605feb9cb8b27513365b6c10726e/README.md"
+        },
+        {
+          "path": "src/jev_docs/engines/jev.py",
+          "url": "https://github.com/jerryjliu/docjev/blob/c7abe276a970605feb9cb8b27513365b6c10726e/src/jev_docs/engines/jev.py"
+        },
+        {
+          "path": "src/jev_docs/engines/base.py",
+          "url": "https://github.com/jerryjliu/docjev/blob/c7abe276a970605feb9cb8b27513365b6c10726e/src/jev_docs/engines/base.py"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "kylemclaren/jevpdf",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\kylemclaren__jevpdf",
+      "sha": "7f230370961c4a8e2f8b19c1729085b852124448",
+      "commit_date": "2026-09-23T13:31:54Z",
+      "snapshot_url": "https://github.com/kylemclaren/jevpdf/tree/7f230370961c4a8e2f8b19c1729085b852124448",
+      "commit_date_shanghai": "2026-09-23T21:31:54+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/kylemclaren/jevpdf/blob/7f230370961c4a8e2f8b19c1729085b852124448/README.md"
+        },
+        {
+          "path": "src/lib/jev.ts",
+          "url": "https://github.com/kylemclaren/jevpdf/blob/7f230370961c4a8e2f8b19c1729085b852124448/src/lib/jev.ts"
+        },
+        {
+          "path": "src/lib/jev-config.ts",
+          "url": "https://github.com/kylemclaren/jevpdf/blob/7f230370961c4a8e2f8b19c1729085b852124448/src/lib/jev-config.ts"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "simota/tenbin",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\simota__tenbin",
+      "sha": "1ba0aa9646a559e6086d1488dedf9bd0a1f1c96e",
+      "commit_date": "2026-09-21T10:19:06+09:00",
+      "snapshot_url": "https://github.com/simota/tenbin/tree/1ba0aa9646a559e6086d1488dedf9bd0a1f1c96e",
+      "commit_date_shanghai": "2026-09-21T09:19:06+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/simota/tenbin/blob/1ba0aa9646a559e6086d1488dedf9bd0a1f1c96e/README.md"
+        },
+        {
+          "path": "tenbin/src/lint.ts",
+          "url": "https://github.com/simota/tenbin/blob/1ba0aa9646a559e6086d1488dedf9bd0a1f1c96e/tenbin/src/lint.ts"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "typesafe-ai/n8n-nodes-typesafe-ai",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\typesafe-ai__n8n-nodes-typesafe-ai",
+      "sha": "c12537bbd9ed7159b7bbe23678ca128c7b2fb52b",
+      "commit_date": "2026-09-28T00:45:39-07:00",
+      "snapshot_url": "https://github.com/typesafe-ai/n8n-nodes-typesafe-ai/tree/c12537bbd9ed7159b7bbe23678ca128c7b2fb52b",
+      "commit_date_shanghai": "2026-09-28T15:45:39+08:00",
+      "reviewed_files": [
+        {
+          "path": "nodes/TypeSafeAi/api.ts",
+          "url": "https://github.com/typesafe-ai/n8n-nodes-typesafe-ai/blob/c12537bbd9ed7159b7bbe23678ca128c7b2fb52b/nodes/TypeSafeAi/api.ts"
+        },
+        {
+          "path": "nodes/TypeSafeAi/TypeSafeAi.node.ts",
+          "url": "https://github.com/typesafe-ai/n8n-nodes-typesafe-ai/blob/c12537bbd9ed7159b7bbe23678ca128c7b2fb52b/nodes/TypeSafeAi/TypeSafeAi.node.ts"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "browser-use/jev-ultrafast",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\browser-use__jev-ultrafast",
+      "sha": "1231850a0bf1a0c0341fe408ef1668dbbfdfac46",
+      "commit_date": "2026-09-18T09:28:35-07:00",
+      "snapshot_url": "https://github.com/browser-use/jev-ultrafast/tree/1231850a0bf1a0c0341fe408ef1668dbbfdfac46",
+      "commit_date_shanghai": "2026-09-19T00:28:35+08:00",
+      "reviewed_files": [
+        {
+          "path": "jev_ultrafast/model.py",
+          "url": "https://github.com/browser-use/jev-ultrafast/blob/1231850a0bf1a0c0341fe408ef1668dbbfdfac46/jev_ultrafast/model.py"
+        },
+        {
+          "path": "jev_ultrafast/questions.py",
+          "url": "https://github.com/browser-use/jev-ultrafast/blob/1231850a0bf1a0c0341fe408ef1668dbbfdfac46/jev_ultrafast/questions.py"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "0xNatoshi/jev-codex-router",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\0xNatoshi__jev-codex-router",
+      "sha": "8701ef788aa8cb0948f299538747fb01029d32b8",
+      "commit_date": "2026-09-22T09:07:49+02:00",
+      "snapshot_url": "https://github.com/0xNatoshi/jev-codex-router/tree/8701ef788aa8cb0948f299538747fb01029d32b8",
+      "commit_date_shanghai": "2026-09-22T15:07:49+08:00",
+      "reviewed_files": [
+        {
+          "path": "server/routing_policy.py",
+          "url": "https://github.com/0xNatoshi/jev-codex-router/blob/8701ef788aa8cb0948f299538747fb01029d32b8/server/routing_policy.py"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "typesafe-ai/skills",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\typesafe-ai__skills",
+      "sha": "65a39f393687675ce170e6094757de20370365b9",
+      "commit_date": "2026-09-12T05:42:05Z",
+      "snapshot_url": "https://github.com/typesafe-ai/skills/tree/65a39f393687675ce170e6094757de20370365b9",
+      "commit_date_shanghai": "2026-09-12T13:42:05+08:00",
+      "reviewed_files": [],
+      "review_scope": "Snapshot inventory only; not used for product conclusions."
+    },
+    {
+      "repo": "mrmps/classifier-dev",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\mrmps__classifier-dev",
+      "sha": "629df75922526a219154a6f3b5ec6de6f77a3516",
+      "commit_date": "2026-10-07T04:39:19-07:00",
+      "snapshot_url": "https://github.com/mrmps/classifier-dev/tree/629df75922526a219154a6f3b5ec6de6f77a3516",
+      "commit_date_shanghai": "2026-10-07T19:39:19+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/mrmps/classifier-dev/blob/629df75922526a219154a6f3b5ec6de6f77a3516/README.md"
+        },
+        {
+          "path": "src/jev.ts",
+          "url": "https://github.com/mrmps/classifier-dev/blob/629df75922526a219154a6f3b5ec6de6f77a3516/src/jev.ts"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    },
+    {
+      "repo": "baronunread/leanest",
+      "path": "C:\\Users\\14399\\AppData\\Local\\Temp\\jev-products-20261011-tfssbo7t\\baronunread__leanest",
+      "sha": "b04e31ca05fa4fd9da4b9fad837e4423821e9bc9",
+      "commit_date": "2026-09-28T00:49:16+02:00",
+      "snapshot_url": "https://github.com/baronunread/leanest/tree/b04e31ca05fa4fd9da4b9fad837e4423821e9bc9",
+      "commit_date_shanghai": "2026-09-28T06:49:16+08:00",
+      "reviewed_files": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/baronunread/leanest/blob/b04e31ca05fa4fd9da4b9fad837e4423821e9bc9/README.md"
+        },
+        {
+          "path": "src/context-builder.ts",
+          "url": "https://github.com/baronunread/leanest/blob/b04e31ca05fa4fd9da4b9fad837e4423821e9bc9/src/context-builder.ts"
+        },
+        {
+          "path": "src/selection-policy.ts",
+          "url": "https://github.com/baronunread/leanest/blob/b04e31ca05fa4fd9da4b9fad837e4423821e9bc9/src/selection-policy.ts"
+        },
+        {
+          "path": "packages/judge/src/providers/jev.ts",
+          "url": "https://github.com/baronunread/leanest/blob/b04e31ca05fa4fd9da4b9fad837e4423821e9bc9/packages/judge/src/providers/jev.ts"
+        }
+      ],
+      "review_scope": "Source inspection only; no install or Jev accuracy measurement."
+    }
+  ],
+  "official_references": [
+    "https://docs.typesafe.ai/api",
+    "https://docs.typesafe.ai/models",
+    "https://docs.typesafe.ai/concepts/state",
+    "https://docs.typesafe.ai/primitives/choice",
+    "https://docs.typesafe.ai/primitives/score",
+    "https://docs.typesafe.ai/primitives/noul",
+    "https://docs.typesafe.ai/confidence",
+    "https://docs.typesafe.ai/model-jaggedness/jev-1.13"
+  ]
+}

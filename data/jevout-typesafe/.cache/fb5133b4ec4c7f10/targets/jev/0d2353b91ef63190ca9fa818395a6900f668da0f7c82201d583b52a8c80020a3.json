@@ -1,0 +1,1 @@
+{"unit_id":"mmlu-pro-test-6047","target_id":"jev","selected":"B","probabilities":{"A":0.01,"B":0.99,"C":0.0,"D":0.0,"E":0.0,"F":0.0,"G":0.0},"native_confidence":0.99,"latency_ms":530.0281999989238,"input_tokens":642,"model_revision":"jev-1.13.0","request_hash":"d0adf25890f6fee20fb87fbff8b7b3391fd7ac26e4d9a997869cd725057dc7fd","metadata":{"native_selected":"B","batch_size":1}}

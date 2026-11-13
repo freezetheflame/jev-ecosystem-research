@@ -1,0 +1,112 @@
+[
+  {
+    "repository": "JiaQiSJTU/CanITrustU-Jev",
+    "commit": "cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "path": "src/eval/final_metrics.py",
+    "url": "https://api.github.com/repos/JiaQiSJTU/CanITrustU-Jev/contents/src/eval/final_metrics.py?ref=cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "retrieved_at_utc": "2026-10-12T19:19:35.434506+00:00",
+    "file": "city-jev/src/eval/final_metrics.py",
+    "bytes": 4869,
+    "sha256": "83dc20cff8a1e6a61b8d3ea5b935b223c073da61bf91b906a283fe3e4cc7c8d1"
+  },
+  {
+    "repository": "JiaQiSJTU/CanITrustU-Jev",
+    "commit": "cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "path": "src/eval/metrics.py",
+    "url": "https://api.github.com/repos/JiaQiSJTU/CanITrustU-Jev/contents/src/eval/metrics.py?ref=cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "retrieved_at_utc": "2026-10-12T19:19:35.435009+00:00",
+    "file": "city-jev/src/eval/metrics.py",
+    "bytes": 4609,
+    "sha256": "c1c0315cffc0e3bfc5075605218746b63672483b44ce0629a9d5277c2d0f8513"
+  },
+  {
+    "repository": "JiaQiSJTU/CanITrustU-Jev",
+    "commit": "cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "path": "src/model/jev.py",
+    "url": "https://api.github.com/repos/JiaQiSJTU/CanITrustU-Jev/contents/src/model/jev.py?ref=cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "retrieved_at_utc": "2026-10-12T19:19:35.435009+00:00",
+    "file": "city-jev/src/model/jev.py",
+    "bytes": 5527,
+    "sha256": "2bdccb73d98b875b3d0b487479f482670844961e22989ee412d2cf65a9bb512e"
+  },
+  {
+    "repository": "JiaQiSJTU/CanITrustU-Jev",
+    "commit": "cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "path": "docs/test-v1-results.json",
+    "url": "https://api.github.com/repos/JiaQiSJTU/CanITrustU-Jev/contents/docs/test-v1-results.json?ref=cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "retrieved_at_utc": "2026-10-12T19:19:35.435521+00:00",
+    "file": "city-jev/docs/test-v1-results.json",
+    "bytes": 98935,
+    "sha256": "20a4a9f08a3fb865b2966d67e387584dbc1961b2c063d2f60105460fd2a7a87f"
+  },
+  {
+    "repository": "yxsec/system-one-security-eval",
+    "commit": "78910f045e935e73829b4629baefc8efc7ae9879",
+    "path": "src/security_eval/paper_analysis.py",
+    "url": "https://api.github.com/repos/yxsec/system-one-security-eval/contents/src/security_eval/paper_analysis.py?ref=78910f045e935e73829b4629baefc8efc7ae9879",
+    "retrieved_at_utc": "2026-10-12T19:19:37.801356+00:00",
+    "file": "security-eval/src/security_eval/paper_analysis.py",
+    "bytes": 13213,
+    "sha256": "63c725776e9d9287261f7a85b00a4b754a1fcac013b76906cfc4a4c2e77eba95"
+  },
+  {
+    "repository": "yxsec/system-one-security-eval",
+    "commit": "78910f045e935e73829b4629baefc8efc7ae9879",
+    "path": "src/security_eval/metrics.py",
+    "url": "https://api.github.com/repos/yxsec/system-one-security-eval/contents/src/security_eval/metrics.py?ref=78910f045e935e73829b4629baefc8efc7ae9879",
+    "retrieved_at_utc": "2026-10-12T19:19:37.870142+00:00",
+    "file": "security-eval/src/security_eval/metrics.py",
+    "bytes": 12022,
+    "sha256": "ef3aa26f440154e8ced854b0d40d06b0164d010f2b08d929189b7d060c490e0f"
+  },
+  {
+    "repository": "yxsec/system-one-security-eval",
+    "commit": "78910f045e935e73829b4629baefc8efc7ae9879",
+    "path": "results/threshold_policies.json",
+    "url": "https://api.github.com/repos/yxsec/system-one-security-eval/contents/results/threshold_policies.json?ref=78910f045e935e73829b4629baefc8efc7ae9879",
+    "retrieved_at_utc": "2026-10-12T19:19:37.910616+00:00",
+    "file": "security-eval/results/threshold_policies.json",
+    "bytes": 97318,
+    "sha256": "a92a1701c0fa4a2950437ed2d7af437d92f770eb5c25f73a3d850fd8c0f35e45"
+  },
+  {
+    "repository": "yxsec/system-one-security-eval",
+    "commit": "78910f045e935e73829b4629baefc8efc7ae9879",
+    "path": "results/confidence_diagnostics.json",
+    "url": "https://api.github.com/repos/yxsec/system-one-security-eval/contents/results/confidence_diagnostics.json?ref=78910f045e935e73829b4629baefc8efc7ae9879",
+    "retrieved_at_utc": "2026-10-12T19:19:38.434097+00:00",
+    "file": "security-eval/results/confidence_diagnostics.json",
+    "bytes": 1028837,
+    "sha256": "9a8769c171d8390294271e7d9877bb17e1618ceb99dd5e95e90bf39a5f9f0a39"
+  },
+  {
+    "repository": "jujumilk3/jev-calibration-audit",
+    "commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "path": "FINDINGS.md",
+    "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/contents/FINDINGS.md?ref=daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "retrieved_at_utc": "2026-10-12T19:19:40.332112+00:00",
+    "file": "calibration-audit/FINDINGS.md",
+    "bytes": 9986,
+    "sha256": "ca50f33c4a5fa854047dd9857197c92e3f5daed1cc0ed8ffa6263a1464076449"
+  },
+  {
+    "repository": "jujumilk3/jev-calibration-audit",
+    "commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "path": "src/jev_audit/experiments/coherence.py",
+    "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/contents/src/jev_audit/experiments/coherence.py?ref=daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "retrieved_at_utc": "2026-10-12T19:19:40.470944+00:00",
+    "file": "calibration-audit/src/jev_audit/experiments/coherence.py",
+    "bytes": 4152,
+    "sha256": "55335bf11f04fd3b28b0adff87797a44580627a3e6d503587164d5c0b1add77a"
+  },
+  {
+    "repository": "jujumilk3/jev-calibration-audit",
+    "commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "path": "src/jev_audit/experiments/abstention.py",
+    "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/contents/src/jev_audit/experiments/abstention.py?ref=daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "retrieved_at_utc": "2026-10-12T19:19:40.881664+00:00",
+    "file": "calibration-audit/src/jev_audit/experiments/abstention.py",
+    "bytes": 4720,
+    "sha256": "14330ba0dd5abad81702774d40a7c7c0a508d031ca5646a220a509bc92bbea56"
+  }
+]

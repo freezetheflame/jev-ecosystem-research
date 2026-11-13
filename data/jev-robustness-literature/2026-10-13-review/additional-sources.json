@@ -1,0 +1,86 @@
+[
+  {
+    "id": "jevout-v2",
+    "url": "https://arxiv.org/html/2609.30243v2",
+    "retrieved_at_utc": "2026-10-12T19:22:43.901716+00:00",
+    "status": 200,
+    "resolved_url": "https://arxiv.org/html/2609.30243v2",
+    "file": "jevout-v2.html",
+    "text_file": "jevout-v2.txt",
+    "bytes": 769168,
+    "sha256": "7771b8d18ca57a247b46e05dbcfd7663252f8dfd103c31ced008b44c2062d9c9",
+    "title": "JevOut: Natural Context Can Flip Decision Models"
+  },
+  {
+    "id": "security-decisions-v3",
+    "url": "https://arxiv.org/html/2609.33401v3",
+    "retrieved_at_utc": "2026-10-12T19:22:43.901716+00:00",
+    "status": 200,
+    "resolved_url": "https://arxiv.org/html/2609.33401v3",
+    "file": "security-decisions-v3.html",
+    "text_file": "security-decisions-v3.txt",
+    "bytes": 486017,
+    "sha256": "2ffe326c343c953a50894d7416fbc519a33f7376faaf797876d14d2fa666c2e2",
+    "title": "Evaluating System One Models for Agent Security Decisions: Reliability, Calibration, and Selective Automation"
+  },
+  {
+    "id": "option-rubric-v3",
+    "url": "https://arxiv.org/html/2609.26758v3",
+    "retrieved_at_utc": "2026-10-12T19:22:43.901716+00:00",
+    "status": 200,
+    "resolved_url": "https://arxiv.org/html/2609.26758v3",
+    "file": "option-rubric-v3.html",
+    "text_file": "option-rubric-v3.txt",
+    "bytes": 166396,
+    "sha256": "a69256765624279906aac88c76d5600f012ba3be0e96f0bcf6cf924f8dcbc446",
+    "title": "Type-Safe Is Not Error-Free: Typed Decision ModelsFollow the Option Name, Not the Definition Bound to It"
+  },
+  {
+    "id": "option-channel",
+    "url": "https://arxiv.org/html/2610.12292v1",
+    "retrieved_at_utc": "2026-10-12T19:22:43.903220+00:00",
+    "status": 200,
+    "resolved_url": "https://arxiv.org/html/2610.12292v1",
+    "file": "option-channel.html",
+    "text_file": "option-channel.txt",
+    "bytes": 299641,
+    "sha256": "e853fd8866d6ef09c02a5495c8dac81ec50c23aa8ae0130c2a280f2ef5dfddd4",
+    "title": "One Word Opens the Gate: The Option-Channel Attack on Typed Decision Models as Agent Guardrails"
+  },
+  {
+    "id": "authorization-boundary",
+    "url": "https://zenodo.org/records/22952571",
+    "retrieved_at_utc": "2026-10-12T19:22:47.287748+00:00",
+    "status": 200,
+    "resolved_url": "https://zenodo.org/records/22952571",
+    "file": "authorization-boundary.html",
+    "text_file": "authorization-boundary.txt",
+    "bytes": 95336,
+    "sha256": "0ed3fb9c28ee14099d4e3abcfce6ce58983e01bad38f755498b49235f8ac578a",
+    "title": "Jev at the Agent Authorization Boundary: Evaluating TypeSafe's Decision Model on Allow, Hold, and Deny | Zenodo"
+  },
+  {
+    "id": "source-position",
+    "url": "https://arxiv.org/abs/2609.35286",
+    "retrieved_at_utc": "2026-10-12T19:22:47.289373+00:00",
+    "status": 200,
+    "resolved_url": "https://arxiv.org/abs/2609.35286",
+    "file": "source-position.html",
+    "text_file": "source-position.txt",
+    "bytes": 42458,
+    "sha256": "c8746fc41df7d3321ad00f241921f0adfacfa74ecfdd052246dc6671093a44e9",
+    "title": "[2609.35286] The Argument and the Letterhead: Source-Position Coherence in AI Evaluation"
+  },
+  {
+    "id": "trace-security",
+    "url": "https://arxiv.org/abs/2609.34862",
+    "retrieved_at_utc": "2026-10-12T19:22:47.292672+00:00",
+    "status": 200,
+    "resolved_url": "https://arxiv.org/abs/2609.34862",
+    "file": "trace-security.html",
+    "text_file": "trace-security.txt",
+    "bytes": 40352,
+    "sha256": "10bed1c7527a11a4a517c5135f2af9c413970eb82a2ef2aeb7f4dc049463e118",
+    "title": "[2609.34862] JEV as a Judge for Agent Trace Security: An Empirical Comparison with Generative LLM Judges"
+  }
+]

@@ -1,0 +1,65 @@
+[
+  {
+    "name": "jevout",
+    "url": "https://arxiv.org/abs/2609.30243",
+    "retrieved_at_utc": "2026-10-12T08:50:26.578436+00:00",
+    "resolved_url": "https://arxiv.org/abs/2609.30243",
+    "file": "jevout.html",
+    "bytes": 42629,
+    "sha256": "e89cd47f0ec9f1b51c8a33639ce5dd61557998e39e78397a21c95f9330bfcd5d"
+  },
+  {
+    "name": "jevadvbench",
+    "url": "https://arxiv.org/abs/2609.31142",
+    "retrieved_at_utc": "2026-10-12T08:50:26.579441+00:00",
+    "resolved_url": "https://arxiv.org/abs/2609.31142",
+    "file": "jevadvbench.html",
+    "bytes": 44178,
+    "sha256": "940600ca11033491eb72b0b3b5ba2967f0d06f20fbb01c912de25a11c79a6fa5"
+  },
+  {
+    "name": "fast-models",
+    "url": "https://arxiv.org/abs/2610.02267",
+    "retrieved_at_utc": "2026-10-12T08:50:26.579441+00:00",
+    "resolved_url": "https://arxiv.org/abs/2610.02267",
+    "file": "fast-models.html",
+    "bytes": 42973,
+    "sha256": "660a3be924951b11c1423ca816b5282424ed7b618609c0a8785c4702425c8b04"
+  },
+  {
+    "name": "extra-paper",
+    "url": "https://arxiv.org/abs/2609.29283",
+    "retrieved_at_utc": "2026-10-12T08:50:26.580445+00:00",
+    "resolved_url": "https://arxiv.org/abs/2609.29283",
+    "file": "extra-paper.html",
+    "bytes": 41908,
+    "sha256": "0f68eae618e0ecd4d8eaa79e2b00c5fc9e7436467c44c340da97f100b051c679"
+  },
+  {
+    "name": "awesome",
+    "url": "https://api.github.com/repos/Yifan-Lan/awesome-jev-robustness/readme",
+    "retrieved_at_utc": "2026-10-12T08:50:26.843981+00:00",
+    "resolved_url": "https://api.github.com/repos/Yifan-Lan/awesome-jev-robustness/readme",
+    "file": "awesome.md",
+    "bytes": 54104,
+    "sha256": "e9c257c130768c4392c3ada0998b0494dab24bbb64b1b9667597b05a44275a95"
+  },
+  {
+    "name": "canitrust",
+    "url": "https://api.github.com/repos/JiaQiSJTU/CanITrustU-Jev/readme",
+    "retrieved_at_utc": "2026-10-12T08:50:29.145703+00:00",
+    "resolved_url": "https://api.github.com/repos/JiaQiSJTU/CanITrustU-Jev/readme",
+    "file": "canitrust.md",
+    "bytes": 34269,
+    "sha256": "1efd91840bbeae8e74d9bf20c08a582745fadf54242953173641cb054878cc82"
+  },
+  {
+    "name": "jevbench",
+    "url": "https://api.github.com/repos/fstandhartinger/jevbench/readme",
+    "retrieved_at_utc": "2026-10-12T08:50:29.321072+00:00",
+    "resolved_url": "https://api.github.com/repos/fstandhartinger/jevbench/readme",
+    "file": "jevbench.md",
+    "bytes": 38359,
+    "sha256": "2165b3f9d537c9d03e5d7ab8e5736cc8d0661417fbdf53cb89a8e5f3bace30c3"
+  }
+]

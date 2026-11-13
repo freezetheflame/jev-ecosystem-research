@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob: https://commandline.microsoft.com/wp-content/uploads/; font-src data: https://commandline.microsoft.com; media-src data: blob: https://commandline.microsoft.com/wp-content/uploads/;">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latency</title>
+<style>
+@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Book.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:500;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Medium.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Bold.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Italic.otf") format("opentype");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCode.woff2") format("woff2");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCodeItalic.woff2") format("woff2");}
+:root {
+  --bg: #fff;
+  --ink: #000;
+  --muted: #555;
+  --faint: #c9c9c9;        /* secondary series */
+  --good: #E3F671;         /* primary model (site accent lime) */
+  --bad: #FFA037;          /* primary model behind (site accent orange) */
+  --rule: #000;
+  --rule-soft: #e6e6e6;
+  --hover: #f3f3f3;
+  --badge-bg: #000;
+  --badge-fg: #fff;
+  --tip-bg: #000;
+  --tip-fg: #fff;
+  --sans: "PP Neue Montreal", sans-serif;
+  --mono: "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+html[data-theme="dark"] {
+  --bg: #111;
+  --ink: #fff;
+  --muted: #999;
+  --faint: #444;
+  --rule: #fff;
+  --rule-soft: #2a2a2a;
+  --hover: #1f1f1f;
+  --badge-bg: #fff;
+  --badge-fg: #111;
+  --tip-bg: #fff;
+  --tip-fg: #111;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { position: relative; padding: 2px 0 6px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ================= Header ================= */
+.head { margin-bottom: 28px; text-align: center; }
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 18px 0 8px;
+  font-size: clamp(24px, 4.2vw, 32px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+}
+.sub { margin: 0 auto; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 62ch; }
+.sub .dir { color: var(--ink); font-weight: 500; }
+
+/* ================= Legend / toggles ================= */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: 18px;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.legend button, .toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px;
+  font-size: 13px;
+  border: 1px solid var(--rule-soft);
+  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.2s ease;
+}
+.legend button:hover, .toggle button:hover { border-color: var(--ink); }
+.legend button[aria-pressed="true"] { border-color: var(--ink); font-weight: 500; }
+.legend .sw { width: 10px; height: 10px; flex: 0 0 10px; }
+.legend .sw.pri { background: var(--good); }
+.legend .sw.ref { background: var(--ink); }
+.legend .sw.oth { background: var(--faint); }
+.legend.iso button:not([aria-pressed="true"]) { opacity: 0.45; }
+.legend button[aria-pressed="true"]::after { content: "· click to clear"; font-weight: 400; color: var(--muted); }
+.toggle { display: flex; align-items: center; gap: 4px; }
+.toggle .k { margin-right: 8px; }
+.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ================= Notes / source ================= */
+.note { margin: 16px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.note .num { color: var(--ink); }
+.source { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-size: 13px; line-height: 1.55; color: var(--muted); }
+.source p { margin: 0 0 4px; }
+
+/* ================= Tooltip ================= */
+.tip {
+  position: absolute;
+  z-index: 2;
+  max-width: 300px;
+  padding: 10px 12px;
+  background: var(--tip-bg);
+  color: var(--tip-fg);
+  font-size: 13px;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.tip.show { opacity: 1; }
+.tip .t { font-weight: 500; margin-bottom: 6px; }
+.tip .r { display: flex; justify-content: space-between; gap: 16px; }
+.tip .r + .r { margin-top: 2px; }
+.tip .r.hi { font-weight: 700; }
+.tip .r.hi > span:first-child::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; vertical-align: 1px; background: var(--good); }
+.tip .r.hi.b > span:first-child::before { background: var(--bad); }
+.tip .s { margin-top: 8px; padding-top: 6px; border-top: 1px solid color-mix(in srgb, var(--tip-fg) 25%, transparent); font-size: 12px; opacity: 0.85; }
+
+/* ================= Motion (shared) ================= */
+@media (prefers-reduced-motion: no-preference) {
+  .head { opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .head.in { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+@media (max-width: 560px) {
+  .head { margin-bottom: 22px; }
+  .sub { font-size: 15px; }
+  .legend button[aria-pressed="true"]::after { content: "· tap to clear"; }
+}
+
+/* ================= Horizontal bars ================= */
+.hbar { --name-w: 220px; --gutter: 72px; --gap: 16px; }
+.rows { position: relative; }
+.gridlines, .axis {
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr);
+  gap: 0 var(--gap);
+}
+.gridlines { position: absolute; inset: 0; pointer-events: none; }
+.gcell, .ticks { grid-column: 2; position: relative; margin-right: var(--gutter); }
+.gl { position: absolute; top: 0; bottom: 0; left: var(--p); width: 1px; background: var(--rule-soft); }
+.gl:first-child { background: var(--rule); z-index: 1; } /* baseline sits above the fills so it reads as one line */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr);
+  gap: 0 var(--gap);
+  align-items: center;
+  padding: 6px 0;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.row:hover, .row:focus-within, .row.hot { background: var(--hover); }
+.row:hover .name, .row.hot .name { color: var(--ink); }
+.name { text-align: right; font-size: 14.5px; line-height: 1.3; color: var(--muted); overflow-wrap: anywhere; }
+.row.pri .name, .row.ref .name { color: var(--ink); }
+.row.pri .name { font-weight: 700; }
+.row.ref .name { font-weight: 500; }
+.name .subl { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em; color: var(--muted); }
+.area { position: relative; padding-right: var(--gutter); }
+.track { position: relative; height: 22px; }
+.fill { position: absolute; left: 0; top: 0; bottom: 0; width: var(--w); background: var(--faint); transition: width 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); }
+.row.pri .fill { background: var(--good); }
+.row.ref .fill { background: var(--ink); }
+.row.pri .fill.p95 {
+  left: var(--w0);
+  width: calc(var(--w) - var(--w0));
+  background: repeating-linear-gradient(135deg, var(--good) 0 3px, transparent 3px 6px);
+}
+.val {
+  position: absolute;
+  left: calc(var(--w) + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--muted);
+  transition: left 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.row.pri .val, .row.ref .val { color: var(--ink); font-weight: 700; }
+.val .sep { margin: 0 6px; color: var(--muted); font-weight: 400; }
+.ticks { height: 20px; margin-top: 6px; }
+.ticks span { position: absolute; left: var(--p); transform: translateX(-50%); font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); white-space: nowrap; }
+.ticks span:first-child { transform: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal .fill { transform: scaleX(0); transform-origin: left center; transition: transform 0.55s cubic-bezier(0.215, 0.61, 0.355, 1), width 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); transition-delay: calc(var(--i, 0) * 45ms); }
+  .reveal.in .fill { transform: none; }
+  .reveal .val { opacity: 0; transition: opacity 0.4s ease, left 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); transition-delay: calc(var(--i, 0) * 45ms + 250ms); }
+  .reveal.in .val { opacity: 1; }
+  .reveal .row { opacity: 0; transform: translateX(-6px); transition: opacity 0.35s ease, transform 0.35s ease, background 0.12s ease; transition-delay: calc(var(--i, 0) * 45ms); }
+  .reveal.in .row { opacity: 1; transform: none; }
+  .reveal.in.settled .fill, .reveal.in.settled .val, .reveal.in.settled .row { transition-delay: 0s; }
+  .reveal.in.settled .row { transition: background 0.12s ease; }
+}
+
+@media (max-width: 900px) { .hbar { --name-w: 170px; } }
+@media (max-width: 700px) { .hbar { --name-w: 140px; --gap: 12px; } .name { font-size: 13.5px; } .val { font-size: 12px; } }
+@media (max-width: 480px) {
+  .hbar { --name-w: 104px; --gutter: 56px; --gap: 10px; }
+  .val .pre { display: none; }
+  .name { font-size: 12.5px; }
+  .name .subl { font-size: 10px; }
+  .val { font-size: 11px; }
+  .val .sep { margin: 0 4px; }
+  .track { height: 18px; }
+  .ticks span { font-size: 10px; }
+  .ticks span.hide-sm { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+  <header class="head">
+    <span class="badge">Latency</span>
+    <h1>Latency</h1>
+    <p class="sub"><span class="dir">Lower is better.</span> Time to a decision per request, median across the JevBench suite.</p>
+  </header>
+
+  <div class="controls">
+    <div class="k">Adjusted median latency per request</div>
+    <div class="toggle" id="scale" role="group" aria-label="Axis scale">
+      <span class="k">Scale</span>
+      <button type="button" data-scale="linear" aria-pressed="true">Linear</button>
+      <button type="button" data-scale="log" aria-pressed="false">Log</button>
+    </div>
+  </div>
+  <div class="hbar reveal" id="chart">
+    <div class="rows" id="rows">
+      <div class="gridlines" aria-hidden="true"><div></div><div class="gcell" id="gcell"></div></div>
+    </div>
+    <div class="axis" aria-hidden="true"><div></div><div class="ticks" id="ticks"></div></div>
+  </div>
+  <p class="note">Striped segment: Microsoft-Decision-1 p95 at <span class="num">125 ms</span>. Switch to the log scale to compare the sub-second models.</p>
+  <div class="source">
+    <p>Source: JevBench v1.6.1 adjusted median (p50) latency, checked Oct 7, 2026.</p>
+    <p>* Microsoft-Decision-1 measured through Foundry in the same region.</p>
+  </div>
+
+  <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+</div>
+<script>
+(function () {
+  var motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  var root = document.getElementById('root');
+  var tip = document.getElementById('tip');
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+  function setVar(n, k, v) { n.style.setProperty(k, v); }
+  function fmtN(n, d) { return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+  // ---- Tooltip (hover, keyboard focus and tap) ---------------------------
+  var hot = null;
+  function renderTip(spec) {
+    tip.innerHTML = '';
+    if (spec.title) tip.appendChild(el('div', 't', spec.title));
+    (spec.rows || []).forEach(function (r) {
+      var row = el('div', 'r' + (r[2] ? ' ' + r[2] : ''));
+      row.appendChild(el('span', null, r[0]));
+      row.appendChild(el('span', 'num', r[1]));
+      tip.appendChild(row);
+    });
+    if (spec.note) tip.appendChild(el('div', 's', spec.note));
+  }
+  function placeTip(node, prefer) {
+    var rr = root.getBoundingClientRect();
+    var nr = node.getBoundingClientRect();
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var left = nr.left - rr.left + (prefer === 'above' ? nr.width / 2 - tw / 2 : 0);
+    left = Math.max(0, Math.min(left, rr.width - tw));
+    var below = nr.bottom - rr.top + 6;
+    var above = nr.top - rr.top - th - (prefer === 'above' ? 26 : 6);
+    var top;
+    if (prefer === 'above') top = above >= 0 ? above : Math.min(below, rr.height - th);
+    else top = (below + th <= rr.height) ? below : Math.max(0, above);
+    // Stay inside the widget so the auto-sized frame never clips the tip.
+    tip.style.left = left + 'px';
+    tip.style.top = Math.max(0, top) + 'px';
+  }
+  function showTip(node, build, prefer) {
+    if (hot === node) return;
+    hideTip();
+    hot = node;
+    node.classList.add('hot');
+    renderTip(build(node));
+    tip.classList.add('show');
+    tip.setAttribute('aria-hidden', 'false');
+    placeTip(node, prefer);
+  }
+  function hideTip() {
+    if (hot) hot.classList.remove('hot');
+    hot = null;
+    tip.classList.remove('show');
+    tip.setAttribute('aria-hidden', 'true');
+  }
+  function bindTips(selector, build, prefer) {
+    function find(t) {
+      var n = t;
+      while (n && n !== root) {
+        if (n.matches && n.matches(selector)) return n;
+        n = n.parentNode;
+      }
+      return null;
+    }
+    root.addEventListener('mouseover', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('mouseout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('focusin', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('focusout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideTip(); });
+  }
+
+  // ---- Count-up (visibility-triggered via reveal) -------------------------
+  var EASE = function (t) { return 1 - Math.pow(1 - t, 3); };
+  function countUp(node, to, fmt, ms, delay) {
+    if (!motion) { node.textContent = fmt(to); return; }
+    var start = null;
+    node.textContent = fmt(0);
+    function frame(now) {
+      if (start === null) start = now + (delay || 0);
+      var t = Math.min(1, Math.max(0, (now - start) / ms));
+      node.textContent = fmt(to * EASE(t));
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---- Reveal (IntersectionObserver only; no timers start anything) ------
+  // `settled` removes stagger delays once the entrance has played so hover,
+  // toggles and filters respond immediately afterwards.
+  function reveal(group, count, cb) {
+    group.classList.add('in');
+    if (cb) cb();
+    if (!motion) { group.classList.add('settled'); return; }
+    var wait = Math.min(count, 30) * 45 + 700;
+    var t0 = performance.now();
+    (function tick(now) { if (now - t0 >= wait) group.classList.add('settled'); else requestAnimationFrame(tick); })(t0);
+  }
+  function observe(items) { // items: [[node, fn]]
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          items.forEach(function (it) { if (it[0] === e.target) it[1](); });
+        });
+      }, { threshold: 0.05 });
+      items.forEach(function (it) { io.observe(it[0]); });
+    } else {
+      items.forEach(function (it) { it[1](); });
+    }
+  }
+  var head = document.querySelector('.head');
+
+  var DATA = {
+    primary: 'Microsoft-Decision-1',
+    rows: [
+      // name, p50 ms, kind, p95 ms
+      ['Microsoft-Decision-1', 85, 'pri', 125],
+      ['H2O-Lightning-4B v1.1', 210],
+      ['Jev 1.13.0', 240],
+      ['GPT-6 Luna Decisions', 300],
+      ['Quyet-1.0-Large', 380],
+      ['Surogate Rune 26B-A4B', 380],
+      ['deck-31B', 400],
+      ['GPT-6 Sol', 3010, 'ref']
+    ],
+    scales: {
+      linear: { max: 3100, ticks: [[0, '0'], [1000, '1 s'], [2000, '2 s'], [3000, '3 s']] },
+      log: { min: 20, max: 4000, ticks: [[20, '20 ms'], [50, '50 ms'], [100, '100 ms'], [200, '200 ms', 1], [500, '500 ms', 1], [1000, '1 s'], [2000, '2 s', 1], [3000, '3 s']] }
+    }
+  };
+
+  function ms(v) { return v >= 1000 ? fmtN(v / 1000, 2) + ' s' : Math.round(v) + ' ms'; }
+  var scale = 'linear';
+  function pct(v) {
+    var s = DATA.scales[scale];
+    if (scale === 'linear') return (v / s.max) * 100;
+    return (Math.log(Math.max(v, s.min) / s.min) / Math.log(s.max / s.min)) * 100;
+  }
+
+  var rows = document.getElementById('rows');
+  var gcell = document.getElementById('gcell');
+  var ticks = document.getElementById('ticks');
+  var counters = [];
+
+  DATA.rows.forEach(function (r, i) {
+    var row = el('div', 'row' + (r[2] ? ' ' + r[2] : ''));
+    row.tabIndex = 0;
+    setVar(row, '--i', String(i));
+    row.dataset.i = String(i);
+    var name = el('div', 'name', r[0]);
+    var area = el('div', 'area');
+    var track = el('div', 'track');
+    var fill = el('span', 'fill');
+    track.appendChild(fill);
+    var val = el('span', 'val num');
+    if (r[3]) {
+      var p95 = el('span', 'fill p95');
+      track.appendChild(p95);
+      var a = el('span'), an = el('span', null, ms(r[1]));
+      var b = el('span'), bn = el('span', null, ms(r[3]));
+      a.appendChild(el('span', 'pre', 'p50 ')); a.appendChild(an);
+      b.appendChild(el('span', 'pre', 'p95 ')); b.appendChild(bn); b.appendChild(el('span', null, '*'));
+      val.appendChild(a); val.appendChild(el('span', 'sep', '·')); val.appendChild(b);
+      counters.push([an, r[1]], [bn, r[3]]);
+    } else {
+      counters.push([val, r[1]]);
+    }
+    track.appendChild(val);
+    area.appendChild(track);
+    row.appendChild(name);
+    row.appendChild(area);
+    row.setAttribute('aria-label', r[0] + ': p50 ' + ms(r[1]) + (r[3] ? ', p95 ' + ms(r[3]) : ''));
+    rows.appendChild(row);
+  });
+
+  function layout() {
+    var s = DATA.scales[scale];
+    Array.prototype.forEach.call(rows.querySelectorAll('.row'), function (row) {
+      var r = DATA.rows[+row.dataset.i];
+      var w = pct(r[1]) + '%';
+      setVar(row.querySelector('.fill'), '--w', w);
+      setVar(row.querySelector('.val'), '--w', r[3] ? pct(r[3]) + '%' : w);
+      var p95 = row.querySelector('.p95');
+      if (p95) { setVar(p95, '--w0', w); setVar(p95, '--w', pct(r[3]) + '%'); }
+    });
+    gcell.innerHTML = ''; ticks.innerHTML = '';
+    s.ticks.forEach(function (t) {
+      var p = pct(t[0]) + '%';
+      var g = el('span', 'gl'); setVar(g, '--p', p); gcell.appendChild(g);
+      var l = el('span', t[2] ? 'hide-sm' : null, t[1]); setVar(l, '--p', p); ticks.appendChild(l);
+    });
+  }
+  layout();
+
+  // Scale toggle
+  var toggle = document.getElementById('scale');
+  toggle.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b || b.dataset.scale === scale) return;
+    scale = b.dataset.scale;
+    Array.prototype.forEach.call(toggle.querySelectorAll('button'), function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    layout();
+    hideTip();
+  });
+
+  // Tooltip
+  bindTips('.row', function (row) {
+    var r = DATA.rows[+row.dataset.i];
+    var base = DATA.rows[0][1];
+    var spec = { title: r[0], rows: [['p50 latency', ms(r[1]), r[2] === 'pri' ? 'hi' : '']] };
+    if (r[3]) {
+      spec.rows.push(['p95 latency', ms(r[3])]);
+      spec.note = 'Half of requests return within ' + ms(r[1]) + ' and 95% within ' + ms(r[3]) + '.';
+    } else {
+      spec.rows.push(['vs ' + DATA.primary, fmtN(r[1] / base, r[1] / base >= 10 ? 0 : 1) + '× slower']);
+      spec.note = r[2] === 'ref' ? 'Frontier reference model.' : 'Adjusted median latency on JevBench.';
+    }
+    return spec;
+  });
+
+  // Motion
+  var chart = document.getElementById('chart');
+  observe([
+    [head, function () { head.classList.add('in'); }],
+    [chart, function () {
+      reveal(chart, DATA.rows.length, function () {
+        counters.forEach(function (c, i) { countUp(c[0], c[1], ms, 800, 0); });
+      });
+    }]
+  ]);
+
+})();
+</script>
+</body>
+</html>

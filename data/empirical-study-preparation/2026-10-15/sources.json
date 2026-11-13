@@ -1,0 +1,13 @@
+{
+  "checked_on": "2026-10-15",
+  "scope": "Primary README, official documentation and paper abstract verification; no upstream installation or full source audit",
+  "sources": [
+    {"name": "AgentDojo official repository", "url": "https://github.com/ethz-spylab/agentdojo", "status": "read"},
+    {"name": "AgentDojo tasks and environments", "url": "https://agentdojo.spylab.ai/concepts/task_suite_and_tasks/", "status": "read"},
+    {"name": "AgentDojo pipelines and defenses", "url": "https://agentdojo.spylab.ai/concepts/agent_pipeline/", "status": "read"},
+    {"name": "InjecAgent official repository", "url": "https://github.com/uiuc-kang-lab/InjecAgent", "status": "read"},
+    {"name": "ASB official repository", "url": "https://github.com/agiresearch/ASB", "status": "read"},
+    {"name": "AgentHarm paper", "url": "https://arxiv.org/abs/2410.09024v3", "status": "abstract_and_metadata_read_via_unversioned_page_resolving_to_v3"},
+    {"name": "AgentHarm historical Inspect path", "url": "https://github.com/UKGovernmentBEIS/inspect_evals/tree/main/src/inspect_evals/agentharm", "status": "fetch_failed_not_verified"}
+  ]
+}

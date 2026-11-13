@@ -1,0 +1,196 @@
+{
+  "record_kind": "offline_readiness_not_experiment",
+  "created_at": "2026-11-04T16:45:27.401870+00:00",
+  "model_calls": 0,
+  "api_calls": 0,
+  "datasets": {
+    "agentharm": {
+      "status": "offline_ready",
+      "items": 416,
+      "max_calls_per_repeat": 416,
+      "splits": {
+        "validation": 64,
+        "test_public": 352
+      },
+      "gold": {
+        "1": 208,
+        "0": 208
+      },
+      "ids_sha256": "4f83453e504a8b1bf32db738961ecbf615f0fc6a677d38a702d11abf155c3d61",
+      "distinct_families": 52,
+      "revision": "e23b3fe60a0da9037314b88e5ee3a0c054970dad",
+      "source_file_count": 4,
+      "model_issues": {
+        "jev": [],
+        "gpt6luna": [],
+        "claudehaiku": [],
+        "gliguard": [],
+        "laya": [],
+        "qwen3guard": [],
+        "d3mini": [],
+        "shieldstral": [],
+        "qwen35": [],
+        "secjev": [],
+        "jevguard": [],
+        "kev": []
+      }
+    },
+    "injecagent": {
+      "status": "offline_ready",
+      "items": 2108,
+      "max_calls_per_repeat": 2108,
+      "splits": {
+        "base": 1054,
+        "enhanced": 1054
+      },
+      "gold": {
+        "1": 2108
+      },
+      "ids_sha256": "711f97a5340f1d16ead941fed8ff3ccf50acf0a866850351a22ae312adf41b59",
+      "distinct_families": 2108,
+      "revision": "f19c9f2c79a41046eb13c03c51a24c567a8ffa07",
+      "source_file_count": 4,
+      "model_issues": {
+        "jev": [],
+        "gpt6luna": [],
+        "claudehaiku": [],
+        "gliguard": [],
+        "laya": [],
+        "qwen3guard": [],
+        "d3mini": [],
+        "shieldstral": [],
+        "qwen35": [],
+        "secjev": [],
+        "jevguard": [],
+        "kev": []
+      }
+    },
+    "tsbench": {
+      "status": "offline_ready",
+      "items": 7182,
+      "max_calls_per_repeat": 7182,
+      "splits": {
+        "agentharm-traj": 731,
+        "agentdojo-traj": 1220,
+        "asb-traj": 5231
+      },
+      "gold": {
+        "0": 3770,
+        "None": 1781,
+        "1": 1631
+      },
+      "ids_sha256": "132e87a6180f558dbc8a978c552a15b04868665e55f36b037534b167d5632cda",
+      "distinct_families": 3376,
+      "revision": "46358fa424a927a895c6c8322f99032c4eb5155e",
+      "source_file_count": 9,
+      "model_issues": {
+        "jev": [],
+        "gpt6luna": [],
+        "claudehaiku": [],
+        "gliguard": [],
+        "laya": [],
+        "qwen3guard": [],
+        "d3mini": [],
+        "shieldstral": [],
+        "qwen35": [],
+        "secjev": [],
+        "jevguard": [],
+        "kev": []
+      }
+    },
+    "stepshield": {
+      "status": "offline_ready",
+      "items": 8151,
+      "max_calls_per_repeat": 83194,
+      "splits": {
+        "test": 7935,
+        "test_holdout": 216
+      },
+      "gold": {
+        "0": 7404,
+        "1": 747
+      },
+      "ids_sha256": "f72bb3e8997d68a22b4de0b02538cd0851e23e7c3aaa6a3954b0c8e6109b3247",
+      "distinct_families": 8143,
+      "revision": "031aa88219f78cda987c2b9d034112e360afda7e",
+      "source_file_count": 8159,
+      "model_issues": {
+        "jev": [],
+        "gpt6luna": [],
+        "claudehaiku": [],
+        "gliguard": [],
+        "laya": [],
+        "qwen3guard": [],
+        "d3mini": [],
+        "shieldstral": [],
+        "qwen35": [],
+        "secjev": [],
+        "jevguard": [],
+        "kev": []
+      }
+    },
+    "wildguardtest": {
+      "status": "offline_ready",
+      "items": 1725,
+      "max_calls_per_repeat": 1725,
+      "splits": {
+        "test": 1725
+      },
+      "gold": {
+        "0": 945,
+        "1": 754,
+        "None": 26
+      },
+      "ids_sha256": "9fc14c0378c51112fc00f862176827e7f53c6b9c936254d1899013159bc26c52",
+      "distinct_families": 1725,
+      "revision": "d29c47f41c8b51348b5c8e8c81c039b3132b66d1",
+      "source_file_count": 2,
+      "model_issues": {
+        "jev": [],
+        "gpt6luna": [],
+        "claudehaiku": [],
+        "gliguard": [],
+        "laya": [],
+        "qwen3guard": [],
+        "d3mini": [],
+        "shieldstral": [],
+        "qwen35": [],
+        "secjev": [],
+        "jevguard": [],
+        "kev": []
+      }
+    }
+  },
+  "source_hashes": {
+    "security_bench/__init__.py": "9ae1dcd2a9edeeef7340909045d7982fd5c3bb1e02e49ac42c0bd628e01c2ae5",
+    "security_bench/__main__.py": "ec63861099035c5e9749738c851464f6a353a195319fd6f5e3602b36c98a8e5e",
+    "security_bench/adapters.py": "dce34cffeb56178b982987f24194823476b397fa9e33a9e4a13b5e831dba17ec",
+    "security_bench/agentharm.py": "42f3f64c1ccc8b107ef96df9bdf0786f2206b7749342cae2f6430f7c77c757dd",
+    "security_bench/common.py": "653db7e9271842f3520b0a5a8bdb1804daa475f3d70a300643f873f09c1e9c84",
+    "security_bench/config.py": "bce586750ddfed51e6e16515accef75b0d30095f3bdf32f3d9db0edfc8f08072",
+    "security_bench/datasets.py": "26fdf9eb07951a8ad717eaa73e101d2d8a6e8a9069bdaaa0855c13580b2406df",
+    "security_bench/dojo.py": "e480e0332c0f46c9507a6a1ba1c8bd1f0e3d32982a01ce2a5e10e01b14c2884c",
+    "security_bench/full_datasets.py": "b31357ecf37461732e72bdc4678b6af10a534c8caae5087af65714315c7bca2e",
+    "security_bench/full_suite.py": "cee2423804eeadc8535ec7e7e2f0fb849cd456397e476f6ab145f66e18e82812",
+    "security_bench/model_preview.py": "90f286a5195018504468e5b8cba89066421bf789f23bafe8612d3687a069f38e",
+    "security_bench/models.py": "de73549b4ffaf837daae6120b714bbd70e1f29263379939e6c212fcc5ad6f3a7",
+    "security_bench/report.py": "c69862cf99ead498e0ad8ca9a9f1400c4a7b9a9eb25b47b424ecbddba85d33f4",
+    "security_bench/runner.py": "3ee1fc730c6b64ab90861345742f4db73917a55ea1e51c2dcbf0d1d81098083a",
+    "security_bench/tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "security_bench/tests/test_ab_datasets.py": "be8b5dcd6ad844aafbc8ac52b937265b95b05ab798884eed42c1f3364550e737",
+    "security_bench/tests/test_agentharm_a1.py": "fb09f0628ce231f6160beb95298e91d8e9e6ce3835349567ce2779a844bdf204",
+    "security_bench/tests/test_consolidation.py": "e04afc3a5787a5cc813cc3b9066b61ef18cbddaac36fcf2fef1598329551e0c6",
+    "security_bench/tests/test_full_suite.py": "0434c35d85d2cad1deb2fd82376a9914b7ea38be00e21a90c345eb01110f0618",
+    "security_bench/tests/test_jevguard.py": "01bbbaa8572da736f03ca1ebcc8fa85c726438d220f74c7a9a444d151aec266d",
+    "security_bench/tests/test_model_adapters.py": "82bb6bc83d6c03d5e5e302da4230d73e4308189bd901a12582b2dd4d77dfa998",
+    "security_bench/tests/test_msb.py": "f4d1e49ce58897854952660bc12f831f93ffcb2beba81781b275bff542c94589",
+    "security_bench/tests/test_remaining_server.py": "c3260efdb103c34981e0b7d73a465c01bdcd2f153bf1c71702a14b4bcc881d4b",
+    "security_bench/tests/test_report_import.py": "11dfb451ffbe22d5cd38e7adab06e8ebf9877b332c200c45b588db2ca47dbb9f",
+    "security_bench/tests/test_safety.py": "d80bfd2b5cf0d80cec281ebe75035a88df0381d1163aac84104b14cf22007dd8",
+    "security_bench/tests/test_workflow.py": "d5ffe2d1fe12a4cfb01d06f613e632891ade7404d7a7b690039c4eb484b96f98"
+  },
+  "preserved_monitor_sha256": "f1f3d220f87681e79d65d9baf91e7b1e30733f80312c60b4129a42be8fc00c67",
+  "limitations": [
+    "No live integration or full run performed."
+  ]
+}

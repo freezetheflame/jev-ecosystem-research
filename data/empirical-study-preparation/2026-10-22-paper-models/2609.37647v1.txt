@@ -1,0 +1,3208 @@
+
+
+
+Evaluating and Benchmarking the System One Model Jev
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ Report GitHub Issue
+ ×
+ 
+
+ 
+ Title:
+ 
+
+ 
+Content selection saved. Describe the issue below:
+
+ Description:
+ 
+ 
+
+ 
+ Submit without GitHub
+ Submit in GitHub
+ 
+ 
+
+ 
+ arXiv is now an independent nonprofit!
+ Learn more
+ ×
+ 
+
+
+ 
+ 
+ Back to arXiv
+ 
+ 
+ 
+ 
+ Why HTML?
+ 
+ 
+ 
+ 
+ Report Issue
+ 
+ 
+ 
+ 
+ 
+ 
+ Back to Abstract
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+Abstract
+
+1 Introduction
+
+2 Related Work
+
+
+2.1 Zero-shot classification with pretrained models
+
+2.2 Calibration and selective prediction
+
+2.3 LLMs as judges
+
+2.4 Contamination
+
+
+3 Methodology
+
+
+3.1 Jev and its question primitives
+
+3.2 Benchmark suite
+
+3.3 Request construction
+
+3.4 Metrics
+
+3.5 Execution
+
+3.6 Open-weight reference models
+
+3.7 Publication of code & responses
+
+
+4 Experiments
+
+
+4.1 Overall results
+
+
+4.1.1 Routing
+
+4.1.2 Inference and grounding
+
+4.1.3 Moderation and legal text
+
+4.1.4 Weak spots
+
+
+4.2 Comparison with open-weight LLMs
+
+4.3 Calibration and selective prediction
+
+4.4 Rubric scoring
+
+4.5 Multilinguality
+
+4.6 Documented weak spots and an unexplained MMLU result
+
+4.7 Cost and throughput
+
+
+5 Limitations
+
+6 Conclusion
+
+References
+
+A Calibration and selective prediction per dataset
+
+
+
+
+ 
+ License: arXiv.org perpetual non-exclusive license
+ 
+ 
+arXiv:2609.37647v1 [cs.CL] 29 Sep 2026
+
+
+
+Evaluating and Benchmarking the System One Model Jev
+
+
+Tobias Deußer
+††thanks: tdeusser@uni-bonn.de, ORCID-ID: 0000-0003-4685-0847
+Affiliation: University of Bonn, Bonn, Germany
+
+Affiliation: Lamarr-Institute for Machine Learning and Artificial Intelligence, Bonn, Germany
+
+  
+Lorenz Sparrenberg
+
+Affiliation: University of Bonn, Bonn, Germany
+
+Affiliation: Lamarr-Institute for Machine Learning and Artificial Intelligence, Bonn, Germany
+
+  
+Rafet Sifa
+
+Affiliation: University of Bonn, Bonn, Germany
+
+Affiliation: Lamarr-Institute for Machine Learning and Artificial Intelligence, Bonn, Germany
+
+Affiliation: Fraunhofer IAIS, Sankt Augustin, Germany
+
+
+Abstract
+ 
+
+Jev is a commercial “System One” model from TypeSafe AI that does not generate text: given a state and typed questions, it returns a choice from fixed options, a position on a rubric, or the probability that a statement is true, with probabilities the vendor describes as calibrated. Such models target small decisions in information access pipelines, such as routing queries, checking grounding, moderating content, or rating against a rubric. We evaluate Jev (jev-1.13.0) zero-shot on 37 datasets spanning classification, routing, natural language inference, reading comprehension, commonsense reasoning, moderation, legal clause analysis and rubric scoring, with one frozen template per dataset and full evaluation splits: 346,009 requests for under US$10. For reference, we score Qwen3.8-27B and Gemma-4-E4B on identical requests via their exact next-token probabilities over the options. Jev reaches 95–99% accuracy on IMDB, SST-2, HellaSwag and ARC and 86.7% on Belebele across 122 languages. It beats Qwen on 27 of 37 datasets, with none of Qwen’s nine leads outside the bootstrap intervals, and Gemma on all 37. All three models degrade on low-resource languages, fine-grained or noisy labels, and rubric-based quality judgments. Jev’s choice probabilities are well calibrated and support selective prediction. Binary probabilities rank well but are poorly placed relative to a fixed 0.5 threshold; thresholds tuned on training data raise micro-F1{}_{\text{1}} on UNFAIR-ToS from 0.50 to 0.75. Jev answers MMLU’s calculation-heavy questions more accurately than other MMLU questions (94% vs. 91%), whereas both open models, and all three on C-Eval, find them harder. Rotating the options leaves Jev’s accuracy unchanged and withholding the question drops it to near chance, ruling out shallow memorization but not memorized question-answer pairs. We release the code, harness and all raw responses.
+ 
+
+
+  
+  
+ 
+
+
+
+
+
+
+
+ 
+
+
+
+Keywords Jev ⋅\cdot
+System One Model ⋅\cdot
+Benchmark ⋅\cdot
+Calibration ⋅\cdot
+Selective Prediction ⋅\cdot
+Evaluation Resource ⋅\cdot
+Natural Language Processing
+
+
+
+1 Introduction
+
+
+
+Large language models (LLMs) are increasingly used not to write text but to make small, well-scoped decisions inside software and information access systems, such as routing a support request or a query to the right handler [1], flagging a harmful message [2], checking whether a claim is supported by a retrieved document [3], finding contradictions in written text [4], or rating a response against a rubric [5]. Using a generative/autoregressive model for such decisions is quite indirect. The decision has to be phrased as a prompt, the answer has to be parsed out of generated text, the model’s probability for the answer is usually unavailable or unreliable, and every generated token is paid for (see Section 3.6 for such an implementation).
+
+
+
+TypeSafe AI’s Jev [6] takes a different route. Borrowing the distinction between fast, intuitive “System 1” and slow, deliberate “System 2” thinking [7], it is marketed as a System One model: it never generates text but answers typed questions about a given state with structured outputs, namely a choice from a set of options, a score on an ordered rubric, or the probability that a statement is true. All questions about one state are answered in parallel in a single request and the returned probabilities are meant to be calibrated. TypeSafe AI documents example use cases and a list of known failure modes in their documentation11
+ 1
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ docs.typesafe.ai/model-jaggedness/jev-1.13, accessed 2026-09-29. but, to our knowledge and at the time of writing, no systematic evaluation on public benchmarks exists.
+
+
+
+This paper provides such an evaluation together with the resources needed to reuse it. Our contributions are:
+
+
+• 
+
+
+A benchmark suite of 37 public datasets mapped onto Jev’s three question primitives, covering seven task families and over 200 language varieties, with one frozen template per dataset.
+
+
+• 
+
+
+An evaluation harness and all 346,009 raw responses, stored in a content-addressed cache so that every table and figure can be recomputed offline, and so that other models can be evaluated on identical requests; the harness includes a backend that scores open-weight LLMs this way (Section 3.7).
+
+
+• 
+
+
+A zero-shot evaluation on the full evaluation splits (346,009 requests), reporting task performance with bootstrap confidence intervals, calibration, selective prediction and cost.
+
+
+• 
+
+
+A comparison with two open-weight LLMs, Qwen3.8-27B and Gemma-4-E4B, scored on identical requests through their exact option probabilities, which puts Jev’s accuracy and calibration in context and serves as a control for its MMLU result.
+
+
+• 
+
+
+An analysis of where Jev fails, compared against the vendor’s own list of weak spots, including a steep gradient across languages and an unexplained result on MMLU mathematics, which we probe for signs of memorization.
+
+
+
+
+
+
+2 Related Work
+
+
+
+2.1 Zero-shot classification with pretrained models
+
+
+
+Framing classification as natural language inference [8] and prompting generative LLMs [9] made it possible to solve many classification and multiple-choice tasks without task-specific training, a setting known as “zero-shot”. Multi-task benchmark suites such as GLUE [10], MMLU [11], BIG-bench [12] and HELM [13] measure this ability across many tasks at once, and evaluation harnesses [14] standardize how multiple-choice questions are posed and scored. Jev is evaluated in the same zero-shot regime, but its interface replaces prompting and answer parsing with typed questions.
+
+
+
+
+2.2 Calibration and selective prediction
+
+
+
+Modern neural networks are often miscalibrated [15], which also holds for many LLMs: while pretrained language models can be reasonably well calibrated [16], instruction tuning and RLHF tend to degrade calibration [17, 18].
+For such a calibration, the expected calibration error (ECE) [19] and the Brier score [20] are standard summaries of calibration. Calibrated confidence enables selective classification, where a model abstains on uncertain inputs to trade coverage for accuracy [21]. Jev exposes probabilities and a confidence score for every answer, which makes both properties directly measurable.
+
+
+
+
+2.3 LLMs as judges
+
+
+
+LLMs are increasingly used to label and rate content, from relevance judgments for retrieval evaluation [22, 23] to summary quality on SummEval [24, 25] and response helpfulness [26]. Jev’s Score primitive is designed for this kind of rubric-based judgment.
+
+
+
+
+2.4 Contamination
+
+
+
+Public benchmarks may have leaked into the training data of the models evaluated on them, which inflates reported performance [27]. Because Jev’s training data are not public, we cannot rule out contamination, and we therefore look for indirect evidence of it (Section 4.6).
+
+
+
+
+
+3 Methodology
+
+
+
+3.1 Jev and its question primitives
+
+
+
+A Jev request consists of a state (a string or a JSON object or array) and a map of named questions [6]. Each question is one of three primitives:
+
+
+• 
+
+
+Choice selects one option from up to 255 options, each given as a key with an optional description. It returns the selected option, a probability for every option, and a confidence value derived from that distribution.
+
+
+• 
+
+
+Score places the state on an ordered rubric of 2 to 10 described levels. It returns the probability of each level, the probability-weighted level (the score) and a confidence value.
+
+
+• 
+
+
+Noul asks a yes/no question and returns the probability that the answer is yes.
+
+
+
+All questions in a request share the state but are answered independently. Instructions and state fields can be linked by referring to a field name in backticks. We pinned the model version jev-1.13.0 for all requests. At the time of writing, Jev is priced at US$0.042 per million input tokens (output tokens are free) and accepts up to 32k tokens for the state plus the longest question.
+
+
+
+
+3.2 Benchmark suite
+
+
+
+Table 1 lists the 37 datasets we evaluate Jev on. We started from a list of commonly used classification and multiple-choice datasets and extended it so that (i) all three primitives are exercised, including multi-question requests, (ii) the use cases Jev is marketed for (routing, guardrails, grounding checks, rubric scoring) are covered, and (iii) the datasets are small enough to be evaluated in full. All datasets were loaded from the Hugging Face Hub with the datasets library [28]. We made the following adjustments:
+
+
+• 
+
+
+Where test labels are not public (SST-2, HellaSwag, WinoGrande, CommonsenseQA, α\alphaNLI, BoolQ), we evaluate on the validation split. SMS Spam, the OpenAI moderation set and PubMedQA’s 1,000 expert-labeled questions are evaluated in full.
+
+
+• 
+
+
+From BIG-bench [12] we keep the multiple-choice tasks, remove tasks tagged with mathematics, arithmetic, algebra, code, numerical responses, non-language inputs, tokenization or games in BIG-bench’s keyword index, and remove three date- and number-heavy tasks. This follows TypeSafe AI’s own advice to keep arithmetic in code [6]. The result is 93 tasks, capped at 500 examples each (13,228 examples).
+
+
+• 
+
+
+One SIB-200 configuration entry (nqo_Nkoo.zip, a broken duplicate of the N’Ko configuration) cannot be loaded from Hugging Face and is skipped.
+
+
+
+
+Table 1: Benchmark suite: 37 datasets in seven categories, the split we evaluate, the number of evaluated examples nn, the number of languages for multilingual datasets, and the Jev primitive used (number of options or levels in parentheses; ×k\times k: kk questions per request).
+
+
+
+Dataset
+Hugging Face source
+Split
+nn
+Lang.
+Primitive
+
+
+Text classification
+
+
+AG News [29]
+fancyzhx/ag_news
+test
+7,600
+
+Choice (4)
+
+
+IMDB [30]
+stanfordnlp/imdb
+test
+25,000
+
+Choice (2)
+
+
+Rotten Tomatoes [31]
+cornell-movie-review-data/rotten_tomatoes
+test
+1,066
+
+Choice (2)
+
+
+SST-2 [32]
+stanfordnlp/sst2
+val.
+872
+
+Choice (2)
+
+
+Emotion [33]
+dair-ai/emotion
+test
+2,000
+
+Choice (6)
+
+
+Financial PhraseBank [34, 35]
+atrost/financial_phrasebank
+test
+970
+
+Choice (3)
+
+
+SMS Spam [36]
+ucirvine/sms_spam
+all
+5,574
+
+Noul
+
+
+Language ID [37]
+papluca/language-identification
+test
+10,000
+
+Choice (20)
+
+
+GoEmotions [38]
+google-research-datasets/go_emotions
+test
+5,427
+
+Noul ×\times28
+
+
+Intent and topic routing
+
+
+Banking77 [39]
+mteb/banking77
+test
+3,076
+
+Choice (77)
+
+
+CLINC150 [40]
+clinc/clinc_oos
+test
+5,500
+
+Choice (151)
+
+
+SIB-200 [41]
+Davlan/sib200
+test
+41,820
+205
+Choice (7)
+
+
+NLI, paraphrase and grounding
+
+
+ANLI [42]
+facebook/anli
+test R1–R3
+3,200
+
+Choice (3)
+
+
+AfriXNLI [43]
+masakhane/afrixnli
+test
+10,800
+18
+Choice (3)
+
+
+PAWS [44]
+google-research-datasets/paws
+test
+8,000
+
+Noul
+
+
+LLM-AggreFact [3]
+lytang/LLM-AggreFact
+test
+29,320
+
+Noul
+
+
+Reading comprehension and knowledge
+
+
+BoolQ [45]
+google/boolq
+val.
+3,270
+
+Noul
+
+
+Belebele [46]
+facebook/belebele
+test
+109,800
+122
+Choice (4)
+
+
+PubMedQA [47]
+qiaojin/PubMedQA
+all
+1,000
+
+Choice (3)
+
+
+MMLU [11]
+tasksource/mmlu
+test
+14,042
+
+Choice (4)
+
+
+C-Eval [48]
+ceval/ceval-exam
+test
+12,342
+
+Choice (4)
+
+
+Commonsense and reasoning
+
+
+BIG-bench (MC) [12]
+tasksource/bigbench
+val.
+13,228
+
+Choice (2–118)
+
+
+HellaSwag [49]
+Rowan/hellaswag
+val.
+10,042
+
+Choice (4)
+
+
+WinoGrande [50]
+allenai/winogrande
+val.
+1,267
+
+Choice (2)
+
+
+ARC (E+C) [51]
+allenai/ai2_arc
+test
+3,548
+
+Choice (3–5)
+
+
+CommonsenseQA [52]
+tau/commonsense_qa
+val.
+1,221
+
+Choice (5)
+
+
+α\alphaNLI (ART) [53]
+allenai/art
+val.
+1,532
+
+Choice (2)
+
+
+Safety, moderation and legal
+
+
+ToxiGen [54]
+toxigen/toxigen-data
+test
+940
+
+Noul + Score
+
+
+OpenAI Moderation [55]
+mmathys/openai-moderation-api-evaluation
+all
+1,680
+
+Noul ×\times8
+
+
+ToxicChat [56]
+lmsys/toxic-chat
+test
+5,083
+
+Noul ×\times2
+
+
+Prompt Injections [57]
+deepset/prompt-injections
+test
+116
+
+Noul
+
+
+AGB-DE [58]
+d4br4/agb-de
+test
+755
+
+Noul
+
+
+UNFAIR-ToS [59]
+coastalcph/lex_glue
+test
+1,607
+
+Noul ×\times8
+
+
+Rubric scoring
+
+
+STS-B [60]
+sentence-transformers/stsb
+test
+1,379
+
+Score (6)
+
+
+SST-5 [32]
+SetFit/sst5
+test
+2,210
+
+Score (5)
+
+
+SummEval [24]
+mteb/summeval
+test
+1,600
+
+Score (5) ×\times4
+
+
+HelpSteer2 [26]
+nvidia/HelpSteer2
+val.
+1,038
+
+Score (5) ×\times5
+
+
+
+
+
+3.3 Request construction
+
+
+
+Every example in each dataset becomes exactly one request (identical examples yield identical requests, which are sent only once; see Table 7). The example’s fields form a JSON state with descriptive names (e.g. premise and hypothesis), and the instructions refer to these fields by name. We map tasks onto primitives as follows:
+
+
+• 
+
+
+Classification uses a Choice whose options are the dataset’s labels, with one-sentence descriptions where a label name alone is ambiguous (e.g. for AG News [29] topics or NLI relations). CLINC150 additionally has an explicit out-of-scope option.
+
+
+• 
+
+
+Multiple-choice questions use a Choice whose options are the answer candidates, keyed A, B, C, … (or AA, AB, … beyond 26 options). We deliberately avoid numeric keys: in an early version, the key “36” coincided with the answer to “which element has atomic number 36”.
+
+
+• 
+
+
+Binary detection (spam, toxicity, prompt injection, void clauses, grounding) uses a Noul.
+
+
+• 
+
+
+Multi-label tasks use one Noul per label in a single request: 28 for GoEmotions [38] and 8 each for the OpenAI moderation [55] categories and UNFAIR-ToS [59] clause types. Moderation categories come with the definitions of [55]; for the UNFAIR-ToS clause types [59] we wrote one-sentence descriptions.
+
+
+• 
+
+
+Ordinal tasks use a Score with described levels, following the SemEval STS annotation guidelines for STS-B [60], and dimension and attribute definitions adapted from G-Eval for SummEval [25] and from HelpSteer2 [26]. ToxiGen is posed as both a Noul (toxic or not) and a five-level Score in the same request.
+
+
+
+We wrote one template per dataset, tested it on 20 examples from a training or validation split, and froze it before running the evaluation split. We did not do any prompt tuning on evaluation data and used no in-context examples. Figure 1 shows an example request.
+
+{"model": "jev-1.13.0",
+ "state": {"text": "having a disability means you can get everything for free"},
+ "questions": {
+ "toxic": {"type": "noul",
+ "instructions": "Is ‘text‘ toxic, offensive or hateful toward a group of people?"},
+ "toxicity": {"type": "score",
+ "instructions": "How offensive is ‘text‘ toward the group of people it mentions?",
+ "criteria": ["Benign: not offensive to anyone.", "Slightly offensive or insensitive.",
+ "Moderately offensive.", "Very offensive.",
+ "Extremely offensive: hateful or dehumanizing."]}}}
+
+Figure 1: A ToxiGen request: one state and two questions (a Noul and a five-level Score), answered in parallel.
+
+
+
+
+3.4 Metrics
+
+
+
+For each dataset we report the metric customary for it as the primary metric: accuracy for most tasks; positive-class F1{}_{\text{1}} for imbalanced binary detection; macro-F1{}_{\text{1}} for GoEmotions [38]; micro-F1{}_{\text{1}} for UNFAIR-ToS, following LexGLUE [59]; mean AUPRC over categories for the OpenAI moderation set [55]; the mean of per-source balanced accuracies for LLM-AggreFact [3]; and Spearman correlation for Score tasks, computed per source document and then averaged for SummEval (“summary-level”, as in G-Eval [25]). Choice predictions are the highest-probability option; Noul answers are thresholded at 0.5 unless stated otherwise, and we additionally report threshold-free AUROC and AUPRC. For four datasets we also report per-question thresholds chosen to maximize F1{}_{\text{1}} on 1,000 examples from a training or validation split (grid step 0.01) and applied unchanged to the evaluation split (Section 4.3).
+
+
+
+Calibration is measured with the ECE over 15 equal-width bins [19], using the top-option probability for Choices and P⁡(yes)P(\text{yes}) for Nouls, and with the Brier score [20]. For selective prediction we rank examples by Jev’s reported confidence and report accuracy on the most confident 80% and 50% of examples, as well as the area under the risk–coverage curve (AURC) [21]. All primary metrics come with 95% percentile bootstrap confidence intervals over examples (500 resamples) [61].
+
+
+
+
+3.5 Execution
+
+
+
+Requests were sent with an asynchronous client at up to 1,100 requests per minute with 32 concurrent connections from a single machine. The full evaluation took 5 h 15 min. Of 346,010 requests, one (a BIG-bench item) exceeded the context limit and was rejected. All others were answered.
+
+
+
+
+3.6 Open-weight reference models
+
+
+
+To put Jev’s numbers in context, we score two instruction-tuned open-weight LLMs on exactly the same requests: Qwen3.8-27B [62] (27.8B parameters) and Gemma-4-E4B [63] (8.0B parameters, about 4B effective). Each question of a request is rendered as one chat prompt containing the state as JSON, the instruction, and the options, rubric levels or yes/no criteria, followed by an instruction to reply with the option code only. The questions of a request share the state but are answered independently, as in Jev. Every answer option receives a code that is a single token in the model’s vocabulary: A, B, … (two-letter codes such as AA, AB beyond 26 options), Yes/No for Nouls and digits for Score levels; codes that a tokenizer splits into several tokens are skipped.
+
+
+
+One forward pass then yields the model’s exact next-token distribution, which we restrict to the codes and renormalize, obtaining a probability for every option, just as Jev returns one. From these we derive the chosen option, the probability-weighted score of Score questions and, for comparability, a confidence value computed with the formula of Jev’s documentation, (K​pmax−1)/(K−1)(K\,p_{\max}-1)/(K-1) for KK options. Thinking is disabled, no text is generated, and the prompts were frozen after a pilot on 20 training/validation examples per dataset. On the evaluation splits, the models place a median of 0.997 (Qwen) and 1.000 (Gemma) of their next-token probability on the valid codes, and at least 0.93 for 99% of questions, so the renormalization discards little.
+
+
+
+We used Hugging Face transformers [64] in bf16 on a GPU cluster, with Gemma on NVIDIA A40 GPUs and Qwen on NVIDIA A100 80 GB GPUs. Prompts longer than the batch budget are processed in chunks that carry the model’s cache, which gives the same result as a single pass. Unlike Jev, the open models also answered the one over-long BIG-bench item.
+
+
+
+
+3.7 Publication of code & responses
+
+
+
+Our repository, available at github.com/AppliedMachineLearning-Lab/jev-benchmarking, contains:
+
+
+
+
+1. 
+
+
+The benchmark suite definition: dataset sources, splits, preprocessing and the frozen question template of every dataset.
+
+
+2. 
+
+
+The evaluation harness, an asynchronous client with rate limiting and a content-addressed cache keyed by the exact request, so that interrupted runs resume without paying twice.
+
+
+3. 
+
+
+The analysis scripts that regenerate every table and figure in this paper from the cache.
+
+
+
+
+
+We furthermore publish all responses of the three models on Zenodo, available at the DOI 10.5281/zenodo.23039006. This makes three kinds of follow-up available to other researchers: recomputing or extending the analysis (for example other calibration metrics, per-language breakdowns, or thresholds tuned on training data); comparing other models against Jev on identical requests and templates, for which the harness provides a backend for open-weight LLMs (Section 3.6); and tracking Jev across versions, since the pinned jev-1.13.0 responses serve as a fixed reference.
+
+
+
+
+
+4 Experiments
+
+
+
+4.1 Overall results
+
+
+Table 2: Main results on the evaluation splits. Score: primary metric (see text); 95% bootstrap confidence interval; ECE of the first Choice or Noul question (– for Score-only tasks).
+
+
+
+Dataset
+nn
+Metric
+Score↑\uparrow
+95% CI
+ECE↓\downarrow
+
+
+Text classification
+
+
+AG News
+7,600
+Acc.
+0.885
+[0.878, 0.891]
+0.077
+
+
+IMDB
+25,000
+Acc.
+0.965
+[0.963, 0.967]
+0.019
+
+
+Rotten Tomatoes
+1,066
+Acc.
+0.933
+[0.917, 0.947]
+0.038
+
+
+SST-2
+872
+Acc.
+0.964
+[0.951, 0.975]
+0.015
+
+
+Emotion
+2,000
+Acc.
+0.585
+[0.563, 0.605]
+0.279
+
+
+Financial PhraseBank
+970
+Acc.
+0.730
+[0.699, 0.756]
+0.138
+
+
+SMS Spam
+5,574
+F1{}_{\text{1}}
+0.938
+[0.924, 0.950]
+0.033
+
+
+Language ID
+10,000
+Acc.
+0.996
+[0.995, 0.997]
+0.003
+
+
+GoEmotions
+5,427
+Macro-F1{}_{\text{1}}
+0.243
+[0.236, 0.249]
+0.176
+
+
+Intent and topic routing
+
+
+Banking77
+3,076
+Acc.
+0.797
+[0.782, 0.812]
+0.087
+
+
+CLINC150
+5,500
+Acc.
+0.895
+[0.885, 0.902]
+0.025
+
+
+SIB-200
+41,820
+Acc.
+0.815
+[0.812, 0.819]
+0.045
+
+
+NLI, paraphrase and grounding
+
+
+ANLI
+3,200
+Acc.
+0.739
+[0.725, 0.754]
+0.102
+
+
+AfriXNLI
+10,800
+Acc.
+0.640
+[0.631, 0.650]
+0.165
+
+
+PAWS
+8,000
+Acc.
+0.850
+[0.842, 0.857]
+0.040
+
+
+LLM-AggreFact
+29,320
+Bal. Acc.
+0.786
+[0.776, 0.796]
+0.128
+
+
+Reading comprehension and knowledge
+
+
+BoolQ
+3,270
+Acc.
+0.913
+[0.904, 0.922]
+0.043
+
+
+Belebele
+109,800
+Acc.
+0.867
+[0.865, 0.869]
+0.015
+
+
+PubMedQA
+1,000
+Acc.
+0.787
+[0.762, 0.812]
+0.129
+
+
+MMLU
+14,042
+Acc.
+0.918
+[0.913, 0.923]
+0.025
+
+
+C-Eval
+12,342
+Acc.
+0.839
+[0.832, 0.846]
+0.014
+
+
+Commonsense and reasoning
+
+
+BIG-bench (MC)
+13,227
+Acc.
+0.814
+[0.808, 0.821]
+0.026
+
+
+HellaSwag
+10,042
+Acc.
+0.955
+[0.951, 0.959]
+0.019
+
+
+WinoGrande
+1,267
+Acc.
+0.914
+[0.899, 0.930]
+0.025
+
+
+ARC (E+C)
+3,548
+Acc.
+0.988
+[0.984, 0.991]
+0.005
+
+
+CommonsenseQA
+1,221
+Acc.
+0.882
+[0.864, 0.900]
+0.031
+
+
+α\alphaNLI (ART)
+1,532
+Acc.
+0.839
+[0.819, 0.858]
+0.065
+
+
+Safety, moderation and legal
+
+
+ToxiGen
+940
+Acc. (toxic)
+0.878
+[0.857, 0.898]
+0.046
+
+
+OpenAI Moderation
+1,680
+Mean AUPRC
+0.717
+[0.675, 0.759]
+0.036
+
+
+ToxicChat
+5,083
+F1{}_{\text{1}} (toxic)
+0.786
+[0.753, 0.821]
+0.016
+
+
+Prompt Injections
+116
+Acc.
+0.741
+[0.664, 0.828]
+0.236
+
+
+AGB-DE
+755
+F1{}_{\text{1}}
+0.204
+[0.122, 0.282]
+0.264
+
+
+UNFAIR-ToS
+1,607
+Micro-F1{}_{\text{1}}
+0.499
+[0.449, 0.544]
+0.088
+
+
+Rubric scoring
+
+
+STS-B
+1,379
+Spearman ρ\rho
+0.890
+[0.879, 0.901]
+–
+
+
+SST-5
+2,210
+Acc.
+0.579
+[0.560, 0.599]
+–
+
+
+SummEval
+1,600
+Mean ρ\rho (summary-level)
+0.554
+[0.523, 0.571]
+–
+
+
+HelpSteer2
+1,038
+Mean ρ\rho
+0.412
+[0.380, 0.444]
+–
+
+
+
+
+Table 2 summarizes our overall results. As seen there, Jev is strongest where a decision rests on the overall gist of a short text in a widely spoken language. Binary sentiment (IMDB 96.5%, SST-2 96.4%, Rotten Tomatoes 93.3%), language identification (99.6%), commonsense multiple choice (HellaSwag 95.5%, WinoGrande 91.4%, CommonsenseQA 88.2%), science questions (ARC-Easy 99.3%, ARC-Challenge 97.7%) and passage-based yes/no questions (BoolQ 91.3%) are all solved at a high level, without examples and with a single generic template per dataset.
+
+
+
+4.1.1 Routing
+
+
+
+On intent routing, Jev reaches 89.5% on CLINC150 with 151 options in a single Choice and 79.7% on Banking77, whose 77 intents are known to be fine-grained and partly overlapping. On CLINC150, in-scope accuracy is 92.1%, and the explicit out-of-scope option recovers 77.6% of out-of-scope requests at a precision of 94.1%.
+
+
+
+
+4.1.2 Inference and grounding
+
+
+
+On ANLI, accuracy falls from 81.4% (round 1) to 74.0% (round 2) and 67.7% (round 3), mirroring the increasing adversarial difficulty of the rounds. PAWS paraphrase detection reaches 85.0%. On LLM-AggreFact, the grounding check most directly relevant to retrieval-augmented generation, the mean balanced accuracy across its eleven sources is 78.6%, ranging from 59.8% (ExpertQA) to 90.6% (Reveal).
+
+
+
+
+4.1.3 Moderation and legal text
+
+
+
+Jev ranks harmful content well: AUROC is 0.949 on ToxiGen, 0.989 (toxicity) and 0.994 (jailbreaking) on ToxicChat, and 0.972 on average across the eight OpenAI moderation categories. The per-category AUPRC ranges from 0.93 (sexual) and 0.91 (self-harm) down to 0.53 (harassment). The fixed 0.5 threshold, however, often turns this good ranking into mediocre decisions (Section 4.3). Prompt-injection detection is the clearest case: precision is perfect but recall is only 50%, although the AUROC is 0.982. The hardest dataset in the suite is AGB-DE, where Jev has to decide whether a clause from German consumer terms and conditions is void under German law. With 4.9% positives, Jev reaches an F1{}_{\text{1}} of 0.204 and an AUROC of 0.784. This is a legal judgment that requires domain knowledge rather than a snap decision.
+
+
+
+
+4.1.4 Weak spots
+
+
+
+The lowest accuracies occur on Emotion (58.5%), whose labels are derived from hashtags and are noisy, on SST-5’s five-way sentiment (57.9%, where adjacent classes are notoriously hard to separate), on Financial PhraseBank (73.0%) and on low-resource NLI (AfriXNLI 64.0%; Section 4.5). Within BIG-bench, accuracy ranges from 100% on several tasks (e.g. cause-and-effect) to 32.2% on real_or_fake_text (locating where a document switches from human- to machine-written text) and 35.0% on minute_mysteries_qa (solving short mystery stories), both of which need long inputs to be read closely or reasoned over in several steps, a regime TypeSafe AI explicitly flags as difficult [6].
+
+
+
+
+
+4.2 Comparison with open-weight LLMs
+
+
+Table 3: Jev and the two open-weight reference models on identical requests: primary metric (best per dataset in bold) and ECE of the first Choice or Noul question (– for Score-only tasks).
+
+
+
+
+
+Score↑\uparrow
+ECE↓\downarrow
+
+
+Dataset
+Metric
+Jev
+Qwen3.8-27B
+Gemma-4-E4B
+Jev
+Qwen3.8-27B
+Gemma-4-E4B
+
+
+Text classification
+
+
+AG News
+Acc.
+0.885
+0.867
+0.862
+0.077
+0.081
+0.122
+
+
+IMDB
+Acc.
+0.965
+0.965
+0.956
+0.019
+0.018
+0.039
+
+
+Rotten Tomatoes
+Acc.
+0.933
+0.932
+0.901
+0.038
+0.039
+0.092
+
+
+SST-2
+Acc.
+0.964
+0.954
+0.952
+0.015
+0.021
+0.042
+
+
+Emotion
+Acc.
+0.585
+0.571
+0.569
+0.279
+0.249
+0.401
+
+
+Financial PhraseBank
+Acc.
+0.730
+0.677
+0.652
+0.138
+0.150
+0.326
+
+
+SMS Spam
+F1{}_{\text{1}}
+0.938
+0.940
+0.902
+0.033
+0.006
+0.021
+
+
+Language ID
+Acc.
+0.996
+0.998
+0.987
+0.003
+0.003
+0.012
+
+
+GoEmotions
+Macro-F1{}_{\text{1}}
+0.243
+0.255
+0.211
+0.176
+0.175
+0.168
+
+
+Intent and topic routing
+
+
+Banking77
+Acc.
+0.797
+0.774
+0.670
+0.087
+0.094
+0.267
+
+
+CLINC150
+Acc.
+0.895
+0.888
+0.683
+0.025
+0.037
+0.243
+
+
+SIB-200
+Acc.
+0.815
+0.800
+0.761
+0.045
+0.065
+0.177
+
+
+NLI, paraphrase and grounding
+
+
+ANLI
+Acc.
+0.739
+0.740
+0.539
+0.102
+0.092
+0.417
+
+
+AfriXNLI
+Acc.
+0.640
+0.636
+0.515
+0.165
+0.142
+0.390
+
+
+PAWS
+Acc.
+0.850
+0.836
+0.741
+0.040
+0.056
+0.196
+
+
+LLM-AggreFact
+Bal. Acc.
+0.786
+0.769
+0.756
+0.128
+0.202
+0.156
+
+
+Reading comprehension and knowledge
+
+
+BoolQ
+Acc.
+0.913
+0.876
+0.822
+0.043
+0.090
+0.162
+
+
+Belebele
+Acc.
+0.867
+0.778
+0.684
+0.015
+0.081
+0.245
+
+
+PubMedQA
+Acc.
+0.787
+0.732
+0.672
+0.129
+0.124
+0.288
+
+
+MMLU
+Acc.
+0.918
+0.817
+0.674
+0.025
+0.045
+0.241
+
+
+C-Eval
+Acc.
+0.839
+0.794
+0.537
+0.014
+0.032
+0.286
+
+
+Commonsense and reasoning
+
+
+BIG-bench (MC)
+Acc.
+0.814
+0.750
+0.648
+0.026
+0.065
+0.262
+
+
+HellaSwag
+Acc.
+0.955
+0.949
+0.829
+0.019
+0.019
+0.128
+
+
+WinoGrande
+Acc.
+0.914
+0.763
+0.616
+0.025
+0.043
+0.290
+
+
+ARC (E+C)
+Acc.
+0.988
+0.980
+0.932
+0.005
+0.007
+0.048
+
+
+CommonsenseQA
+Acc.
+0.882
+0.856
+0.749
+0.031
+0.038
+0.194
+
+
+α\alphaNLI (ART)
+Acc.
+0.839
+0.849
+0.778
+0.065
+0.042
+0.173
+
+
+Safety, moderation and legal
+
+
+ToxiGen
+Acc. (toxic)
+0.878
+0.832
+0.806
+0.046
+0.084
+0.155
+
+
+OpenAI Moderation
+Mean AUPRC
+0.717
+0.708
+0.576
+0.036
+0.021
+0.065
+
+
+ToxicChat
+F1{}_{\text{1}} (toxic)
+0.786
+0.779
+0.703
+0.016
+0.015
+0.030
+
+
+Prompt Injections
+Acc.
+0.741
+0.767
+0.664
+0.236
+0.248
+0.322
+
+
+AGB-DE
+F1{}_{\text{1}}
+0.204
+0.000
+0.066
+0.264
+0.070
+0.067
+
+
+UNFAIR-ToS
+Micro-F1{}_{\text{1}}
+0.499
+0.582
+0.302
+0.088
+0.024
+0.057
+
+
+Rubric scoring
+
+
+STS-B
+Spearman ρ\rho
+0.890
+0.896
+0.814
+–
+–
+–
+
+
+SST-5
+Acc.
+0.579
+0.575
+0.528
+–
+–
+–
+
+
+SummEval
+Mean ρ\rho (summary-level)
+0.554
+0.540
+0.461
+–
+–
+–
+
+
+HelpSteer2
+Mean ρ\rho
+0.412
+0.443
+0.385
+–
+–
+–
+
+
+
+
+Table 3 compares Jev with the two open-weight models on the primary metric of every dataset. Jev scores higher than Qwen3.8-27B on 27 datasets and lower on 9, with one tie; 11 of Jev’s leads have non-overlapping 95% bootstrap intervals, none of Qwen’s does. Jev’s largest margins over Qwen are on WinoGrande (+15.1 points), MMLU (+10.1), Belebele (+8.9) and BIG-bench (+6.4), and on AGB-DE (+20.4 points of F1{}_{\text{1}}), where Qwen never predicts a void clause at the 0.5 threshold (Table 4). Qwen’s leads are small, at most 1.2 points on six datasets, except on UNFAIR-ToS (+8.3), HelpSteer2 (+3.1) and the 116-example prompt-injection set (+2.6).
+
+
+
+Gemma-4-E4B is below Jev on all 37 datasets, 31 of them with non-overlapping intervals; the gap is smallest on sentiment and language identification (1–2 points) and largest on ANLI, CLINC150, MMLU, WinoGrande and C-Eval (20–30 points). Because Jev’s size, architecture and training data are not public, the comparison places Jev relative to two points on the open-model scale; it does not attribute the differences to any particular property of Jev.
+
+
+
+
+4.3 Calibration and selective prediction
+
+
+Figure 2: Pooled reliability diagrams for Jev and the two open-weight models (15 bins; marker area proportional to the number of answers). Left: top-option probability vs. accuracy for all Choice questions. Middle and right: P⁡(yes)P(\text{yes}) vs. the observed frequency of yes, for single Noul questions and for multi-label requests with one Noul per label.
+
+
+
+On the topic of calibration, Figure 2 shows that Jev’s three kinds of probability behave differently, and how they compare with the probabilities of the open-weight models. Our observations here are:
+
+
+
+Choice probabilities are well calibrated. Pooled over 22 Choice datasets and 279,925 answers, the ECE is 0.028. Because three large datasets (Belebele, SIB-200 and IMDB) contribute 63% of the pooled answers, we also summarize per dataset: the median per-dataset ECE is likewise 0.028, while the unweighted mean is 0.061. The ECE is at most 0.03 for 11 of the 22 datasets and at most 0.05 for 14 (Table 8 in the appendix). Where there is miscalibration, it is almost always overconfidence: the mean top-option probability exceeds accuracy on 20 of the 22 datasets. Miscalibration is concentrated on the datasets where accuracy is low (Spearman ρ=−0.83\rho=-0.83 between accuracy and ECE), with Emotion (ECE 0.279) and AfriXNLI (0.165) as the extremes. Qwen’s pooled Choice probabilities are less well calibrated (ECE 0.063), mainly because of the large multilingual datasets, and Gemma’s are strongly overconfident (0.208; mean top-option probability 0.936 at 72.8% accuracy). Averaged over the 33 datasets with a Choice or Noul question (Table 3), Jev (0.074) and Qwen (0.075) are on par, and both are far better calibrated than Gemma (0.184).
+
+
+
+Single Noul probabilities are slightly under-confident. Over eight binary datasets, the mean predicted P⁡(yes)P(\text{yes}) is 0.465 against an observed yes-rate of 0.518, and the reliability curve lies above the diagonal (ECE 0.052). Positives therefore frequently receive probabilities below 0.5, which explains the recall deficits reported above despite high AUROC. The open models are further from calibrated here (ECE 0.113 for Qwen, whose mean P⁡(yes)P(\text{yes}) of 0.405 is even more under-confident, and 0.123 for Gemma).
+
+
+
+Multi-label Noul probabilities over-predict yes. When many labels are queried at once, most of them rare, the mean P⁡(yes)P(\text{yes}) is 0.209 against an observed rate of 0.041 (ECE 0.168). Because each Noul is answered in isolation, Jev has no notion that only one or two of 28 emotions usually apply. Ranking remains good: the mean per-label AUROC is 0.873 on GoEmotions and 0.994 on UNFAIR-ToS. Threshold-based metrics, however, suffer (macro-F1{}_{\text{1}} 0.243 and micro-F1{}_{\text{1}} 0.499, respectively). All three models over-predict yes in this setting; Qwen is the best calibrated of the three (ECE 0.119, against 0.168 for Jev and 0.161 for Gemma).
+
+
+Table 4: F1{}_{\text{1}} with the fixed 0.5 threshold vs. per-question thresholds tuned on 1,000 training/validation examples and applied unchanged to the evaluation split, for each model (thresholds tuned on that model’s own answers).
+
+
+
+
+
+Jev
+Qwen3.8-27B
+Gemma-4-E4B
+
+
+Dataset
+Metric
+0.5
+tuned
+0.5
+tuned
+0.5
+tuned
+
+
+GoEmotions
+Macro-F1{}_{\text{1}}
+0.243
+0.353
+0.255
+0.323
+0.211
+0.267
+
+
+
+Micro-F1{}_{\text{1}}
+0.239
+0.387
+0.236
+0.317
+0.207
+0.268
+
+
+UNFAIR-ToS
+Micro-F1{}_{\text{1}}
+0.499
+0.748
+0.582
+0.757
+0.302
+0.510
+
+
+
+Macro-F1{}_{\text{1}}
+0.577
+0.739
+0.682
+0.768
+0.492
+0.614
+
+
+AGB-DE
+F1{}_{\text{1}}
+0.204
+0.204
+0.000
+0.179
+0.066
+0.142
+
+
+ToxicChat
+F1{}_{\text{1}} (toxicity)
+0.786
+0.793
+0.779
+0.793
+0.703
+0.735
+
+
+
+F1{}_{\text{1}} (jailbreaking)
+0.717
+0.833
+0.743
+0.726
+0.542
+0.680
+
+
+
+
+Tuned thresholds recover much of the gap. The vendor describes thresholds as application-specific [6]. Table 4 shows what choosing them on training data achieves. For multi-label requests the gains are large: micro-F1{}_{\text{1}} rises from 0.499 to 0.748 on UNFAIR-ToS and macro-F1{}_{\text{1}} from 0.243 to 0.353 on GoEmotions. The tuned thresholds are mostly high (median 0.86 over the 28 GoEmotions labels), consistent with the over-prediction in Figure 2. For ToxicChat, the jailbreak threshold rises to 0.85 and F1{}_{\text{1}} improves from 0.717 to 0.833, while toxicity barely changes. AGB-DE does not improve at all: 0.5 is already the best threshold on the training sample, so its low F1{}_{\text{1}} reflects weak separation of void and valid clauses (AUROC 0.784), not a misplaced threshold. Tuning helps the open models in the same way: Qwen’s micro-F1{}_{\text{1}} on UNFAIR-ToS rises from 0.582 to 0.757 and Gemma’s from 0.302 to 0.510. Tuned thresholds do not always transfer from 1,000 training examples, however: Qwen’s jailbreak F1{}_{\text{1}} drops slightly (0.743 to 0.726). On AGB-DE, Qwen predicts no void clause at 0.5 (F1{}_{\text{1}} 0.000) and reaches 0.179 with a tuned threshold.
+
+
+Figure 3: Selective prediction: accuracy on the most confident fraction of examples (ranked by Jev’s confidence) as a function of coverage, for eight Choice datasets.
+
+
+
+Confidence is useful for routing decisions. Figure 3 shows that accuracy rises steadily as the least confident answers are withheld. At 50% coverage, accuracy increases from 79.7% to 96.3% on Banking77, from 81.5% to 98.2% on SIB-200, from 73.9% to 86.9% on ANLI and from 58.5% to 73.3% on Emotion. For applications, this supports the confidence-gated pattern the vendor advocates: act automatically on confident answers and route the rest to a human or a larger model.
+
+
+Figure 4: Selective prediction for Jev and the two open-weight models on four datasets; each model’s answers are ranked by its own confidence.
+
+
+
+The open models’ confidence is informative as well (Figure 4). At 50% coverage, Qwen reaches 94.5% on Banking77, 88.0% on ANLI, 97.6% on MMLU and 97.7% on Belebele, close to Jev’s 96.3%, 86.9%, 98.1% and 98.7%. Gemma’s confidence separates correct from incorrect answers less well; on ANLI, its most confident half reaches only 63.2%.
+
+
+
+
+4.4 Rubric scoring
+
+
+Table 5: Score questions: Spearman ρ\rho between each model’s probability-weighted score and the gold ratings (summary-level for SummEval; best in bold), and Jev’s mean absolute error in rubric levels.
+
+
+
+
+
+Spearman ρ↑\rho\uparrow
+
+
+
+Dataset
+Dimension
+Jev
+Qwen3.8-27B
+Gemma-4-E4B
+MAE↓\downarrow (Jev)
+
+
+STS-B
+–
+0.890
+0.896
+0.814
+0.56
+
+
+SST-5
+–
+0.851
+0.857
+0.779
+0.50
+
+
+ToxiGen
+Toxicity
+0.841
+0.836
+0.780
+0.57
+
+
+SummEval
+Coherence
+0.639
+0.651
+0.515
+0.61
+
+
+
+Consistency
+0.555
+0.546
+0.487
+0.46
+
+
+
+Fluency
+0.495
+0.412
+0.352
+1.77
+
+
+
+Relevance
+0.526
+0.552
+0.491
+0.60
+
+
+HelpSteer2
+Helpfulness
+0.399
+0.431
+0.355
+1.18
+
+
+
+Correctness
+0.369
+0.372
+0.365
+1.18
+
+
+
+Coherence
+0.275
+0.311
+0.270
+0.49
+
+
+
+Complexity
+0.460
+0.483
+0.394
+0.67
+
+
+
+Verbosity
+0.558
+0.617
+0.541
+0.53
+
+
+
+
+Table 5 reports the Score results. When the rubric describes a property of the text itself, the probability-weighted score correlates strongly with human ratings: ρ=0.890\rho=0.890 for STS-B similarity, 0.851 for SST-5 sentiment and 0.841 for ToxiGen’s offensiveness ratings. Treated as an ordinal scale, SST-5 is thus solved considerably better than its 57.9% five-way accuracy suggests. Judging generated text is harder. On SummEval, the summary-level Spearman correlation averages 0.554 across the four dimensions, best for coherence (0.639) and worst for fluency (0.495, where Jev also rates systematically lower than the experts; MAE 1.77 levels). On HelpSteer2, correlations range from 0.275 (coherence) to 0.558 (verbosity), and helpfulness and correctness, the attributes that require verifying the content of a response, correlate least with human ratings (0.399 and 0.369). Rubric scoring is the one area where Qwen is on par with or slightly ahead of Jev: its correlation is higher on 9 of the 12 dimensions, mostly by small margins, while Jev leads on ToxiGen and on SummEval consistency and fluency. Gemma trails both on every dimension.
+
+
+
+
+4.5 Multilinguality
+
+
+Figure 5: Per-language accuracy on Belebele and SIB-200 for the 117 language varieties in both datasets (both built on FLORES-200 sentences). The dashed line is the diagonal.
+
+
+
+TypeSafe AI states that English is Jev’s primary language [6]. On Belebele, accuracy is 97.2% for English, and the median over 122 language varieties is 91.1%: 71 varieties reach at least 90%, while 10 fall below 70%, down to 37.4% for Nigerian Fulfulde. SIB-200 shows the same pattern, from 91–92% for the best languages to near chance (19.6%, with seven classes) for Santali in Ol Chiki script. On AfriXNLI, English (90.5%) and French (82.7%) are far ahead of the 16 African languages (33.8–70.3%). Figure 5 shows that performance per language is consistent across tasks (Spearman ρ=0.69\rho=0.69 between Belebele and SIB-200 accuracy). The degradation therefore reflects the language rather than the task. Among the languages in Figure 5, the weakest are low-resource languages written in Latin script, so the script alone does not explain the gap; the very lowest SIB-200 results, however, occur for languages in scripts such as Ol Chiki, N’Ko and Tifinagh.
+
+
+
+
+4.6 Documented weak spots and an unexplained MMLU result
+
+
+Figure 6: Per-subject accuracy on C-Eval and MMLU, split into subjects that mostly require calculation (mathematics, physics, chemistry, statistics, accounting, formal logic) and all others.
+
+
+
+TypeSafe AI lists arithmetic and numeric precision among Jev’s weaknesses [6], and Jev produces no intermediate reasoning. We therefore expected calculation-heavy exam subjects to be among its weakest. On C-Eval this holds: calculation-heavy subjects have a lower median and a much wider spread (Figure 6), with accuracies of 59.6% in high-school mathematics, 69.9% in advanced mathematics and 72.9% in probability and statistics. On MMLU, however, calculation-heavy subjects are, if anything, easier than the rest: 96.0% in abstract algebra, 96.0% in college mathematics, 94.8% in high-school mathematics and 99.0% in college physics. For a model that answers in a single step without generating a derivation, such accuracy on multi-step calculation questions is hard to reconcile with the vendor’s own description, and it raises the question of whether MMLU questions were seen during training [27].
+
+
+
+Two other explanations deserve mention. C-Eval is in Chinese and Jev’s primary language is English, but a uniform language penalty would lower both groups of subjects, not reverse their order. And the two benchmarks’ calculation-heavy subjects might differ in difficulty or format. The open-weight models provide a control for this: for both, MMLU’s calculation-heavy subjects are clearly harder than its other subjects (Qwen 74.7% vs. 83.0%, Gemma 54.6% vs. 69.8%; Table 6), as are C-Eval’s for all three models. Jev is the only model for which the calculation-heavy MMLU subjects are easier (94.3% vs. 91.3%).
+
+
+Table 6: Calculation-heavy vs. other subjects of MMLU and C-Eval for each model: accuracy with the original requests, and on the calculation-heavy subjects with the answer options rotated so that every option changes its letter, and with the question withheld (only the subject and the options are shown). Chance is 0.25.
+
+
+
+Benchmark
+Subjects / condition
+nn
+Jev
+Qwen3.8-27B
+Gemma-4-E4B
+
+
+MMLU
+calc.-heavy, original
+2,207
+0.943
+0.747
+0.546
+
+
+
+other, original
+11,835
+0.913
+0.830
+0.698
+
+
+
+calc.-heavy, options rotated
+2,207
+0.943
+0.744
+0.551
+
+
+
+calc.-heavy, question withheld
+2,207
+0.315
+0.351
+0.304
+
+
+C-Eval
+calc.-heavy, original
+3,389
+0.814
+0.744
+0.462
+
+
+
+other, original
+8,953
+0.849
+0.812
+0.566
+
+
+
+calc.-heavy, question withheld
+3,389
+0.373
+0.399
+0.307
+
+
+
+
+To probe this, we re-ran the calculation-heavy subjects under two modified conditions (Table 6). First, we rotated the answer options so that every option moves to a different letter. If Jev had memorized answer positions, accuracy would drop, but it stays at 94.3%. Second, we withheld the question and showed only the subject and the four options, a known test of whether answers can be inferred from the options alone [65]. On MMLU, accuracy then falls to 31.5%, close to chance and below the 37.3% reached on the C-Eval control. The open models behave the same way under both probes: rotating the options leaves their accuracy unchanged (Qwen 74.4%, Gemma 55.1%), and withholding the question drops it to 30.4–35.1% on MMLU and 30.7–39.9% on C-Eval. So neither memorized answer positions nor memorized option sets explain Jev’s MMLU results.
+These probes cannot, however, distinguish memorization of question-answer pairs from a genuine ability to solve these questions in a single step. Perturbing the questions themselves, for example by changing the numbers in calculation problems, would be the decisive test and is left to future work. Taken together, the open models show that the calculation-heavy MMLU subjects are not intrinsically easy, and the probes rule out shallow memorization, which makes an effect specific to Jev and MMLU, such as training exposure to MMLU questions, the most plausible explanation; it cannot be confirmed without access to Jev’s training data. Until then, we treat the MMLU result, and by extension results on other long-established English benchmarks, with caution.
+
+
+
+
+4.7 Cost and throughput
+
+
+Table 7: Requests, input tokens, cost and mean client-side latency per request (at 32 concurrent requests) for the evaluation run, by category. Requests counts unique requests sent during the evaluation run. Identical items (1,911 duplicates across 17 datasets) are sent once and scored for every occurrence; 4 items had already been answered in the development pilot and 1 over-long BIG-bench item was rejected.
+
+
+
+Category
+Requests
+Input tok. (M)
+Tok./req.
+Cost (USD)
+Latency (s)
+
+
+Text classification
+57,223
+32.0
+559
+1.34
+0.36
+
+
+Intent and topic routing
+50,208
+28.5
+567
+1.19
+0.35
+
+
+NLI, paraphrase and grounding
+51,094
+39.9
+780
+1.67
+0.36
+
+
+Reading comprehension and knowledge
+140,425
+91.8
+654
+3.86
+0.37
+
+
+Commonsense and reasoning
+30,837
+15.7
+509
+0.66
+0.37
+
+
+Safety, moderation and legal
+10,048
+5.6
+557
+0.23
+0.36
+
+
+Rubric scoring
+6,174
+4.5
+727
+0.19
+0.36
+
+
+Total
+346,009
+217.9
+630
+9.15
+0.36
+
+
+
+
+The main evaluation consumed 217.9 million input tokens (630 per request on average, including all questions and option descriptions) and cost US$9.15 (Table 7). The mean latency per request was 0.36 s, and throughput was limited by the rate limit rather than by the service. Multi-question requests cost little extra: a GoEmotions request with 28 Noul questions used 765 input tokens on average, compared with 559 for a single-question text-classification request. Including the development pilot (US$0.01) and the additional analyses in Tables 4 and 6 (US$0.23), the entire study cost US$9.40. For comparison, scoring the evaluation splits with the open-weight models took 6.4 A40 GPU-hours for Gemma-4-E4B (126M prompt tokens) and 17.4 A100 GPU-hours for Qwen3.8-27B (135M prompt tokens) on a GPU cluster. These figures depend on hardware and implementation and are not directly comparable with API prices.
+
+
+
+
+
+5 Limitations
+
+
+
+We evaluate one prompt template per dataset without tuning. Other phrasings could change results, in either direction, and some of our weaker results (e.g. AGB-DE, HelpSteer2) may partly reflect our wording. Our reference points are two open-weight models scored with the same prompts, which were written for Jev rather than tuned for these models, and scored in a single forward pass without thinking. Allowing these reasoning LLMs to reason before answering would likely raise their accuracy at a higher cost. Generative proprietary models, which would typically answer in text rather than through option probabilities, are not included, and comparisons with published results remain complicated by differing prompts, splits and in-context examples.
+
+
+
+Binary decisions use a fixed 0.5 threshold except in Table 4, where thresholds are tuned on only 1,000 training examples per dataset. Our memorization probes cover only two shallow forms of memorization; they cannot detect memorized question-answer pairs. Several datasets are evaluated on validation rather than test splits because test labels are not public.
+
+
+
+We ran each request once and did not measure run-to-run variance. Latency was measured client-side and includes network time. The suite contains no relevance-judgment task, although Jev’s Score primitive is a natural fit for graded relevance labels. Finally, the results refer to jev-1.13.0; TypeSafe AI’s aliases (jev-latest) will likely move to newer versions.
+
+
+
+
+6 Conclusion
+
+
+
+Jev delivers what its System One positioning promises on a wide range of short, well-scoped decisions: high zero-shot accuracy on sentiment, topic, intent and commonsense tasks, well-calibrated choice probabilities, confidence scores that support selective prediction, and very low cost. Against two open-weight LLMs scored on identical requests, Jev is ahead of Qwen3.8-27B on most datasets and of Gemma-4-E4B on all, and its calibration matches Qwen’s when averaged per dataset.
+
+
+
+Our evaluation of 37 datasets and 346,009 requests also shows its limits. Performance drops sharply for low-resource languages, fine-grained or noisy label sets, legal judgments and rubric-based assessment of generated text. Binary probabilities need application-specific thresholds, especially when many labels are queried at once, and thresholds tuned on a small training sample recover much of the resulting gap. The unexpectedly strong results on MMLU mathematics, which neither open model shows, are not explained by memorized answer positions or option artifacts. We release22
+ 2
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ github.com/AppliedMachineLearning-Lab/jev-benchmarking the suite, the harness and all raw responses so that every number can be recomputed and other typed decision models, as well as generative LLMs, can be compared on identical requests.
+
+
+
+
+Acknowledgments
+
+
+
+This research has been partially funded by the Federal Ministry of Education and Research of Germany and the state of North-Rhine Westphalia as part of the Lamarr-Institute for Machine Learning and Artificial Intelligence.
+
+
+
+Computations of the responses of Qwen3.8-27B and Gemma-4-E4B were carried out on Marvin33
+ 3
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ hpc.uni-bonn.de/en/systems/marvin, an HPC cluster at the University of Bonn.
+
+
+
+For this paper, Anthropic Claude Opus 5.5 [66] was employed to assist in refining and improving the text throughout all sections of this paper. This model was also used to help write the code for this paper, which is available at github.com/AppliedMachineLearning-Lab/jev-benchmarking. The authors retain full responsibility for the accuracy, integrity, and originality of the work.
+
+
+
+
+References
+
+
+
+[1]
+F. Liu, X. He, T. Zhang, J. Chen, Y. Li, L. Yi, H. Zhang, G. Wu, and R. Shi (2025)
+
+Tickit: leveraging large language models for automated ticket escalation.
+
+In Proc. FSE,
+
+Cited by: §1.
+
+
+[2]
+H. Inan, K. Upasani, J. Chi, R. Rungta, K. Iyer, Y. Mao, M. Tontchev, Q. Hu, B. Fuller, D. Testuggine, and M. Khabsa (2023)
+
+Llama guard: llm-based input-output safeguard for human-ai conversations.
+
+External Links: 2312.06674,
+Link
+
+Cited by: §1.
+
+
+[3]
+L. Tang, P. Laban, and G. Durrett (2024)
+
+MiniCheck: efficient fact-checking of LLMs on grounding documents.
+
+In Proc. EMNLP,
+
+Cited by: §1,
+§3.4,
+Table 1.
+
+
+[4]
+T. Deußer, D. Leonhard, L. Hillebrand, A. Berger, M. Khaled, S. Heiden, T. Dilmaghani, B. Kliem, R. Loitz, C. Bauckhage, et al. (2023)
+
+Uncovering inconsistencies and contradictions in financial reports using large language models.
+
+In Proc. BigData,
+
+Cited by: §1.
+
+
+[5]
+S. Kim, J. Shin, J. Jang, S. Longpre, H. Lee, S. Yun, R. Shin, S. Kim, J. Thorne, M. Seo, et al. (2024)
+
+Prometheus: inducing fine-grained evaluation capability in language models.
+
+In Proc. ICLR,
+
+Vol. 2024.
+
+Cited by: §1.
+
+
+[6]
+TypeSafe (2026)
+
+Jev: TypeSafe’s system one model – documentation.
+
+Note: https://docs.typesafe.ai/introductionAccessed: 2026-09-29.
+
+Cited by: §1,
+2nd item,
+§3.1,
+§4.1.4,
+§4.3,
+§4.5,
+§4.6.
+
+
+[7]
+D. Kahneman (2011)
+
+Thinking, fast and slow.
+
+ Farrar, Straus and Giroux.
+
+Cited by: §1.
+
+
+[8]
+W. Yin, J. Hay, and D. Roth (2019)
+
+Benchmarking zero-shot text classification: datasets, evaluation and entailment approach.
+
+In Proc. EMNLP-IJCNLP,
+
+Cited by: §2.1.
+
+
+[9]
+T. Brown, B. Mann, N. Ryder, M. Subbiah, J. D. Kaplan, P. Dhariwal, A. Neelakantan, P. Shyam, G. Sastry, A. Askell, et al. (2020)
+
+Language models are few-shot learners.
+
+Proc. NeurIPS.
+
+Cited by: §2.1.
+
+
+[10]
+A. Wang, A. Singh, J. Michael, F. Hill, O. Levy, and S. R. Bowman (2018)
+
+GLUE: a multi-task benchmark and analysis platform for natural language understanding.
+
+In Proc. EMNLP Workshop BlackboxNLP,
+
+Cited by: §2.1.
+
+
+[11]
+D. Hendrycks, C. Burns, S. Basart, A. Zou, M. Mazeika, D. Song, and J. Steinhardt (2021)
+
+Measuring massive multitask language understanding.
+
+External Links: 2009.03300,
+Link
+
+Cited by: §2.1,
+Table 1.
+
+
+[12]
+A. Srivastava, A. Rastogi, A. Rao, A. A. M. Shoeb, A. Abid, A. Fisch, A. R. Brown, A. Santoro, A. Gupta, A. Garriga-Alonso, A. Kluska, A. Lewkowycz, A. Agarwal, A. Power, A. Ray, A. Warstadt, A. W. Kocurek, A. Safaya, A. Tazarv, A. Xiang, A. Parrish, A. Nie, A. Hussain, A. Askell, A. Dsouza, A. Slone, A. Rahane, A. S. Iyer, A. J. Andreassen, A. Madotto, A. Santilli, A. Stuhlmüller, A. M. Dai, A. La, A. K. Lampinen, A. Zou, A. Jiang, A. Chen, A. Vuong, A. Gupta, A. Gottardi, A. Norelli, A. Venkatesh, A. Gholamidavoodi, A. Tabassum, A. Menezes, A. Kirubarajan, A. Mullokandov, A. Sabharwal, A. Herrick, A. Efrat, A. Erdem, A. Karakaş, B. R. Roberts, B. S. Loe, B. Zoph, B. Bojanowski, B. Özyurt, B. Hedayatnia, B. Neyshabur, B. Inden, B. Stein, B. Ekmekci, B. Y. Lin, B. Howald, B. Orinion, C. Diao, C. Dour, C. Stinson, C. Argueta, C. Ferri, C. Singh, C. Rathkopf, C. Meng, C. Baral, C. Wu, C. Callison-Burch, C. Waites, C. Voigt, C. D. Manning, C. Potts, C. Ramirez, C. E. Rivera, C. Siro, C. Raffel, C. Ashcraft, C. Garbacea, D. Sileo, D. Garrette, D. Hendrycks, D. Kilman, D. Roth, C. D. Freeman, D. Khashabi, D. Levy, D. M. González, D. Perszyk, D. Hernandez, D. Chen, D. Ippolito, D. Gilboa, D. Dohan, D. Drakard, D. Jurgens, D. Datta, D. Ganguli, D. Emelin, D. Kleyko, D. Yuret, D. Chen, D. Tam, D. Hupkes, D. Misra, D. Buzan, D. C. Mollo, D. Yang, D. Lee, D. Schrader, E. Shutova, E. D. Cubuk, E. Segal, E. Hagerman, E. Barnes, E. Donoway, E. Pavlick, E. Rodolà, E. Lam, E. Chu, E. Tang, E. Erdem, E. Chang, E. A. Chi, E. Dyer, E. Jerzak, E. Kim, E. E. Manyasi, E. Zheltonozhskii, F. Xia, F. Siar, F. Martínez-Plumed, F. Happé, F. Chollet, F. Rong, G. Mishra, G. I. Winata, G. de Melo, G. Kruszewski, G. Parascandolo, G. Mariani, G. X. Wang, G. Jaimovitch-Lopez, G. Betz, G. Gur-Ari, H. Galijasevic, H. Kim, H. Rashkin, H. Hajishirzi, H. Mehta, H. Bogar, H. F. A. Shevlin, H. Schuetze, H. Yakura, H. Zhang, H. M. Wong, I. Ng, I. Noble, J. Jumelet, J. Geissinger, J. Kernion, J. Hilton, J. Lee, J. F. Fisac, J. B. Simon, J. Koppel, J. Zheng, J. Zou, J. Kocon, J. Thompson, J. Wingfield, J. Kaplan, J. Radom, J. Sohl-Dickstein, J. Phang, J. Wei, J. Yosinski, J. Novikova, J. Bosscher, J. Marsh, J. Kim, J. Taal, J. Engel, J. Alabi, J. Xu, J. Song, J. Tang, J. Waweru, J. Burden, J. Miller, J. U. Balis, J. Batchelder, J. Berant, J. Frohberg, J. Rozen, J. Hernandez-Orallo, J. Boudeman, J. Guerr, J. Jones, J. B. Tenenbaum, J. S. Rule, J. Chua, K. Kanclerz, K. Livescu, K. Krauth, K. Gopalakrishnan, K. Ignatyeva, K. Markert, K. Dhole, K. Gimpel, K. Omondi, K. W. Mathewson, K. Chiafullo, K. Shkaruta, K. Shridhar, K. McDonell, K. Richardson, L. Reynolds, L. Gao, L. Zhang, L. Dugan, L. Qin, L. Contreras-Ochando, L. Morency, L. Moschella, L. Lam, L. Noble, L. Schmidt, L. He, L. Oliveros-Colón, L. Metz, L. K. Senel, M. Bosma, M. Sap, M. T. Hoeve, M. Farooqi, M. Faruqui, M. Mazeika, M. Baturan, M. Marelli, M. Maru, M. J. Ramirez-Quintana, M. Tolkiehn, M. Giulianelli, M. Lewis, M. Potthast, M. L. Leavitt, M. Hagen, M. Schubert, M. O. Baitemirova, M. Arnaud, M. McElrath, M. A. Yee, M. Cohen, M. Gu, M. Ivanitskiy, M. Starritt, M. Strube, M. Swędrowski, M. Bevilacqua, M. Yasunaga, M. Kale, M. Cain, M. Xu, M. Suzgun, M. Walker, M. Tiwari, M. Bansal, M. Aminnaseri, M. Geva, M. Gheini, M. V. T, N. Peng, N. A. Chi, N. Lee, N. G. Krakover, N. Cameron, N. Roberts, N. Doiron, N. Martinez, N. Nangia, N. Deckers, N. Muennighoff, N. S. Keskar, N. S. Iyer, N. Constant, N. Fiedel, N. Wen, O. Zhang, O. Agha, O. Elbaghdadi, O. Levy, O. Evans, P. A. M. Casares, P. Doshi, P. Fung, P. P. Liang, P. Vicol, P. Alipoormolabashi, P. Liao, P. Liang, P. W. Chang, P. Eckersley, P. M. Htut, P. Hwang, P. Miłkowski, P. Patil, P. Pezeshkpour, P. Oli, Q. Mei, Q. Lyu, Q. Chen, R. Banjade, R. E. Rudolph, R. Gabriel, R. Habacker, R. Risco, R. Millière, R. Garg, R. Barnes, R. A. Saurous, R. Arakawa, R. Raymaekers, R. Frank, R. Sikand, R. Novak, R. Sitelew, R. L. Bras, R. Liu, R. Jacobs, R. Zhang, R. Salakhutdinov, R. A. Chi, S. R. Lee, R. Stovall, R. Teehan, R. Yang, S. Singh, S. M. Mohammad, S. Anand, S. Dillavou, S. Shleifer, S. Wiseman, S. Gruetter, S. R. Bowman, S. S. Schoenholz, S. Han, S. Kwatra, S. A. Rous, S. Ghazarian, S. Ghosh, S. Casey, S. Bischoff, S. Gehrmann, S. Schuster, S. Sadeghi, S. Hamdan, S. Zhou, S. Srivastava, S. Shi, S. Singh, S. Asaadi, S. S. Gu, S. Pachchigar, S. Toshniwal, S. Upadhyay, S. S. Debnath, S. Shakeri, S. Thormeyer, S. Melzi, S. Reddy, S. P. Makini, S. Lee, S. Torene, S. Hatwar, S. Dehaene, S. Divic, S. Ermon, S. Biderman, S. Lin, S. Prasad, S. Piantadosi, S. Shieber, S. Misherghi, S. Kiritchenko, S. Mishra, T. Linzen, T. Schuster, T. Li, T. Yu, T. Ali, T. Hashimoto, T. Wu, T. Desbordes, T. Rothschild, T. Phan, T. Wang, T. Nkinyili, T. Schick, T. Kornev, T. Tunduny, T. Gerstenberg, T. Chang, T. Neeraj, T. Khot, T. Shultz, U. Shaham, V. Misra, V. Demberg, V. Nyamai, V. Raunak, V. V. Ramasesh, vinay uday prabhu, V. Padmakumar, V. Srikumar, W. Fedus, W. Saunders, W. Zhang, W. Vossen, X. Ren, X. Tong, X. Zhao, X. Wu, X. Shen, Y. Yaghoobzadeh, Y. Lakretz, Y. Song, Y. Bahri, Y. Choi, Y. Yang, S. Hao, Y. Chen, Y. Belinkov, Y. Hou, Y. Hou, Y. Bai, Z. Seid, Z. Zhao, Z. Wang, Z. J. Wang, Z. Wang, and Z. Wu (2023)
+
+Beyond the imitation game: quantifying and extrapolating the capabilities of language models.
+
+TMLR.
+
+Cited by: §2.1,
+2nd item,
+Table 1.
+
+
+[13]
+P. Liang, R. Bommasani, T. Lee, D. Tsipras, D. Soylu, M. Yasunaga, Y. Zhang, D. Narayanan, Y. Wu, A. Kumar, B. Newman, B. Yuan, B. Yan, C. Zhang, C. Cosgrove, C. D. Manning, C. Re, D. Acosta-Navas, D. A. Hudson, E. Zelikman, E. Durmus, F. Ladhak, F. Rong, H. Ren, H. Yao, J. WANG, K. Santhanam, L. Orr, L. Zheng, M. Yuksekgonul, M. Suzgun, N. Kim, N. Guha, N. S. Chatterji, O. Khattab, P. Henderson, Q. Huang, R. A. Chi, S. M. Xie, S. Santurkar, S. Ganguli, T. Hashimoto, T. Icard, T. Zhang, V. Chaudhary, W. Wang, X. Li, Y. Mai, Y. Zhang, and Y. Koreeda (2023)
+
+Holistic evaluation of language models.
+
+TMLR.
+
+External Links: ISSN 2835-8856
+
+Cited by: §2.1.
+
+
+[14]
+S. Biderman, H. Schoelkopf, L. Sutawika, L. Gao, J. Tow, B. Abbasi, A. F. Aji, P. S. Ammanamanchi, S. Black, J. Clive, A. DiPofi, J. Etxaniz, B. Fattori, J. Z. Forde, C. Foster, J. Hsu, M. Jaiswal, W. Y. Lee, H. Li, C. Lovering, N. Muennighoff, E. Pavlick, J. Phang, A. Skowron, S. Tan, X. Tang, K. A. Wang, G. I. Winata, F. Yvon, and A. Zou (2026)
+
+Lessons from the trenches on reproducible evaluation of language models.
+
+External Links: 2405.14782,
+Link
+
+Cited by: §2.1.
+
+
+[15]
+C. Guo, G. Pleiss, Y. Sun, and K. Q. Weinberger (2017)
+
+On calibration of modern neural networks.
+
+In Proc. ICML,
+
+Cited by: §2.2.
+
+
+[16]
+S. Kadavath, T. Conerly, A. Askell, T. Henighan, D. Drain, E. Perez, N. Schiefer, Z. Hatfield-Dodds, N. DasSarma, E. Tran-Johnson, S. Johnston, S. El-Showk, A. Jones, N. Elhage, T. Hume, A. Chen, Y. Bai, S. Bowman, S. Fort, D. Ganguli, D. Hernandez, J. Jacobson, J. Kernion, S. Kravec, L. Lovitt, K. Ndousse, C. Olsson, S. Ringer, D. Amodei, T. Brown, J. Clark, N. Joseph, B. Mann, S. McCandlish, C. Olah, and J. Kaplan (2022)
+
+Language models (mostly) know what they know.
+
+External Links: 2207.05221,
+Link
+
+Cited by: §2.2.
+
+
+[17]
+OpenAI, J. Achiam, S. Adler, S. Agarwal, L. Ahmad, I. Akkaya, F. L. Aleman, D. Almeida, J. Altenschmidt, S. Altman, S. Anadkat, R. Avila, I. Babuschkin, S. Balaji, V. Balcom, P. Baltescu, H. Bao, M. Bavarian, J. Belgum, I. Bello, J. Berdine, G. Bernadett-Shapiro, C. Berner, L. Bogdonoff, O. Boiko, M. Boyd, A. Brakman, G. Brockman, T. Brooks, M. Brundage, K. Button, T. Cai, R. Campbell, A. Cann, B. Carey, C. Carlson, R. Carmichael, B. Chan, C. Chang, F. Chantzis, D. Chen, S. Chen, R. Chen, J. Chen, M. Chen, B. Chess, C. Cho, C. Chu, H. W. Chung, D. Cummings, J. Currier, Y. Dai, C. Decareaux, T. Degry, N. Deutsch, D. Deville, A. Dhar, D. Dohan, S. Dowling, S. Dunning, A. Ecoffet, A. Eleti, T. Eloundou, D. Farhi, L. Fedus, N. Felix, S. P. Fishman, J. Forte, I. Fulford, L. Gao, E. Georges, C. Gibson, V. Goel, T. Gogineni, G. Goh, R. Gontijo-Lopes, J. Gordon, M. Grafstein, S. Gray, R. Greene, J. Gross, S. S. Gu, Y. Guo, C. Hallacy, J. Han, J. Harris, Y. He, M. Heaton, J. Heidecke, C. Hesse, A. Hickey, W. Hickey, P. Hoeschele, B. Houghton, K. Hsu, S. Hu, X. Hu, J. Huizinga, S. Jain, S. Jain, J. Jang, A. Jiang, R. Jiang, H. Jin, D. Jin, S. Jomoto, B. Jonn, H. Jun, T. Kaftan, Ł. Kaiser, A. Kamali, I. Kanitscheider, N. S. Keskar, T. Khan, L. Kilpatrick, J. W. Kim, C. Kim, Y. Kim, J. H. Kirchner, J. Kiros, M. Knight, D. Kokotajlo, Ł. Kondraciuk, A. Kondrich, A. Konstantinidis, K. Kosic, G. Krueger, V. Kuo, M. Lampe, I. Lan, T. Lee, J. Leike, J. Leung, D. Levy, C. M. Li, R. Lim, M. Lin, S. Lin, M. Litwin, T. Lopez, R. Lowe, P. Lue, A. Makanju, K. Malfacini, S. Manning, T. Markov, Y. Markovski, B. Martin, K. Mayer, A. Mayne, B. McGrew, S. M. McKinney, C. McLeavey, P. McMillan, J. McNeil, D. Medina, A. Mehta, J. Menick, L. Metz, A. Mishchenko, P. Mishkin, V. Monaco, E. Morikawa, D. Mossing, T. Mu, M. Murati, O. Murk, D. Mély, A. Nair, R. Nakano, R. Nayak, A. Neelakantan, R. Ngo, H. Noh, L. Ouyang, C. O’Keefe, J. Pachocki, A. Paino, J. Palermo, A. Pantuliano, G. Parascandolo, J. Parish, E. Parparita, A. Passos, M. Pavlov, A. Peng, A. Perelman, F. de Avila Belbute Peres, M. Petrov, H. P. de Oliveira Pinto, Michael, Pokorny, M. Pokrass, V. H. Pong, T. Powell, A. Power, B. Power, E. Proehl, R. Puri, A. Radford, J. Rae, A. Ramesh, C. Raymond, F. Real, K. Rimbach, C. Ross, B. Rotsted, H. Roussez, N. Ryder, M. Saltarelli, T. Sanders, S. Santurkar, G. Sastry, H. Schmidt, D. Schnurr, J. Schulman, D. Selsam, K. Sheppard, T. Sherbakov, J. Shieh, S. Shoker, P. Shyam, S. Sidor, E. Sigler, M. Simens, J. Sitkin, K. Slama, I. Sohl, B. Sokolowsky, Y. Song, N. Staudacher, F. P. Such, N. Summers, I. Sutskever, J. Tang, N. Tezak, M. B. Thompson, P. Tillet, A. Tootoonchian, E. Tseng, P. Tuggle, N. Turley, J. Tworek, J. F. C. Uribe, A. Vallone, A. Vijayvergiya, C. Voss, C. Wainwright, J. J. Wang, A. Wang, B. Wang, J. Ward, J. Wei, C. Weinmann, A. Welihinda, P. Welinder, J. Weng, L. Weng, M. Wiethoff, D. Willner, C. Winter, S. Wolrich, H. Wong, L. Workman, S. Wu, J. Wu, M. Wu, K. Xiao, T. Xu, S. Yoo, K. Yu, Q. Yuan, W. Zaremba, R. Zellers, C. Zhang, M. Zhang, S. Zhao, T. Zheng, J. Zhuang, W. Zhuk, and B. Zoph (2024)
+
+GPT-4 technical report.
+
+External Links: 2303.08774,
+Link
+
+Cited by: §2.2.
+
+
+[18]
+K. Tian, E. Mitchell, A. Zhou, A. Sharma, R. Rafailov, H. Yao, C. Finn, and C. Manning (2023)
+
+Just ask for calibration: strategies for eliciting calibrated confidence scores from language models fine-tuned with human feedback.
+
+In Proc. EMNLP,
+
+Cited by: §2.2.
+
+
+[19]
+M. P. Naeini, G. Cooper, and M. Hauskrecht (2015)
+
+Obtaining well calibrated probabilities using bayesian binning.
+
+In Proc. AAAI,
+
+Cited by: §2.2,
+§3.4.
+
+
+[20]
+G. Brier (1950)
+
+Verification of forecasts expressed in terms of probability.
+
+Monthly weather review.
+
+Cited by: §2.2,
+§3.4.
+
+
+[21]
+Y. Geifman and R. El-Yaniv (2017)
+
+Selective classification for deep neural networks.
+
+Advances in neural information processing systems 30.
+
+Cited by: §2.2,
+§3.4.
+
+
+[22]
+G. Faggioli, L. Dietz, C. L. Clarke, G. Demartini, M. Hagen, C. Hauff, N. Kando, E. Kanoulas, M. Potthast, B. Stein, et al. (2023)
+
+Perspectives on large language models for relevance judgment.
+
+In Proc. ICTIR,
+
+Cited by: §2.3.
+
+
+[23]
+P. Thomas, S. Spielman, N. Craswell, and B. Mitra (2024)
+
+Large language models can accurately predict searcher preferences.
+
+In Proc. SIGIR,
+
+pp. 1930–1940.
+
+Cited by: §2.3.
+
+
+[24]
+A. R. Fabbri, W. Kryściński, B. McCann, C. Xiong, R. Socher, and D. Radev (2021)
+
+SummEval: re-evaluating summarization evaluation.
+
+TACL.
+
+Cited by: §2.3,
+Table 1.
+
+
+[25]
+Y. Liu, D. Iter, Y. Xu, S. Wang, R. Xu, and C. Zhu (2023)
+
+G-eval: NLG evaluation using gpt-4 with better human alignment.
+
+In Proc. EMNLP,
+
+Cited by: §2.3,
+5th item,
+§3.4.
+
+
+[26]
+Z. Wang, Y. Dong, O. Delalleau, J. Zeng, G. Shen, D. Egert, J. J. Zhang, M. N. Sreedhar, and O. Kuchaiev (2024)
+
+Helpsteer 2: open-source dataset for training top-performing reward models.
+
+Proc. NeurIPS.
+
+Cited by: §2.3,
+5th item,
+Table 1.
+
+
+[27]
+O. Sainz, J. Campos, I. García-Ferrero, J. Etxaniz, O. L. de Lacalle, and E. Agirre (2023)
+
+NLP evaluation in trouble: on the need to measure LLM data contamination for each benchmark.
+
+In Findings of the ACL: EMNLP 2023,
+
+Cited by: §2.4,
+§4.6.
+
+
+[28]
+Q. Lhoest, A. Villanova del Moral, Y. Jernite, A. Thakur, P. von Platen, S. Patil, J. Chaumond, M. Drame, J. Plu, L. Tunstall, J. Davison, M. Šaško, G. Chhablani, B. Malik, S. Brandeis, T. Le Scao, V. Sanh, C. Xu, N. Patry, A. McMillan-Major, P. Schmid, S. Gugger, C. Delangue, T. Matussière, L. Debut, S. Bekman, P. Cistac, T. Goehringer, V. Mustar, F. Lagunas, A. Rush, and T. Wolf (2021)
+
+Datasets: a community library for natural language processing.
+
+In Proc. EMNLP,
+
+Cited by: §3.2.
+
+
+[29]
+X. Zhang, J. Zhao, and Y. LeCun (2015)
+
+Character-level convolutional networks for text classification.
+
+Proc. NeurIPS.
+
+Cited by: 1st item,
+Table 1.
+
+
+[30]
+A. L. Maas, R. E. Daly, P. T. Pham, D. Huang, A. Y. Ng, and C. Potts (2011)
+
+Learning word vectors for sentiment analysis.
+
+In Proc. ACL-HLT,
+
+Cited by: Table 1.
+
+
+[31]
+B. Pang and L. Lee (2005)
+
+Seeing stars: exploiting class relationships for sentiment categorization with respect to rating scales.
+
+In Proc. ACL,
+
+Cited by: Table 1.
+
+
+[32]
+R. Socher, A. Perelygin, J. Wu, J. Chuang, C. D. Manning, A. Ng, and C. Potts (2013)
+
+Recursive deep models for semantic compositionality over a sentiment treebank.
+
+In Proc. EMNLP,
+
+Cited by: Table 1,
+Table 1.
+
+
+[33]
+E. Saravia, H. T. Liu, Y. Huang, J. Wu, and Y. Chen (2018)
+
+CARER: contextualized affect representations for emotion recognition.
+
+In Proc. EMNLP,
+
+Cited by: Table 1.
+
+
+[34]
+P. Malo, A. Sinha, P. Korhonen, J. Wallenius, and P. Takala (2014)
+
+Good debt or bad debt: detecting semantic orientations in economic texts.
+
+J. of the Association for Information Science and Technology.
+
+Cited by: Table 1.
+
+
+[35]
+D. Araci (2019)
+
+FinBERT: financial sentiment analysis with pre-trained language models.
+
+External Links: 1908.10063,
+Link
+
+Cited by: Table 1.
+
+
+[36]
+T. A. Almeida, J. M. G. Hidalgo, and A. Yamakami (2011)
+
+Contributions to the study of sms spam filtering: new collection and results.
+
+In Proc. DocEng,
+
+Cited by: Table 1.
+
+
+[37]
+L. Papariello (2021)
+
+Language-identification.
+
+Note: https://huggingface.co/datasets/papluca/language-identificationHugging Face dataset. Accessed: 2026-09-27.
+
+Cited by: Table 1.
+
+
+[38]
+D. Demszky, D. Movshovitz-Attias, J. Ko, A. Cowen, G. Nemade, and S. Ravi (2020)
+
+GoEmotions: a dataset of fine-grained emotions.
+
+In Proc. ACL,
+
+Cited by: 4th item,
+§3.4,
+Table 1.
+
+
+[39]
+I. Casanueva, T. Temčinas, D. Gerz, M. Henderson, and I. Vulić (2020)
+
+Efficient intent detection with dual sentence encoders.
+
+In Proc. Workshop on Natural Language Processing for Conversational AI,
+
+Cited by: Table 1.
+
+
+[40]
+S. Larson, A. Mahendran, J. J. Peper, C. Clarke, A. Lee, P. Hill, J. K. Kummerfeld, K. Leach, M. A. Laurenzano, L. Tang, and J. Mars (2019)
+
+An evaluation dataset for intent classification and out-of-scope prediction.
+
+In Proc. EMNLP-IJCNLP,
+
+Cited by: Table 1.
+
+
+[41]
+D. I. Adelani, H. Liu, X. Shen, N. Vassilyev, J. O. Alabi, Y. Mao, H. Gao, and E. A. Lee (2024)
+
+SIB-200: a simple, inclusive, and big evaluation dataset for topic classification in 200+ languages and dialects.
+
+In Proc. ACL,
+
+Cited by: Table 1.
+
+
+[42]
+Y. Nie, A. Williams, E. Dinan, M. Bansal, J. Weston, and D. Kiela (2020)
+
+Adversarial NLI: a new benchmark for natural language understanding.
+
+In Proc. ACL,
+
+Cited by: Table 1.
+
+
+[43]
+D. I. Adelani, J. Ojo, I. A. Azime, J. Y. Zhuang, J. O. Alabi, X. He, M. Ochieng, S. Hooker, A. Bukula, E. A. Lee, C. I. Chukwuneke, H. Buzaaba, B. K. Sibanda, G. K. Kalipe, J. Mukiibi, S. Kabongo Kabenamualu, F. Yuehgoh, M. Setaka, L. Ndolela, N. Odu, R. Mabuya, S. Osei, S. H. Muhammad, S. Samb, T. K. Guge, T. V. Sherman, and P. Stenetorp (2025)
+
+IrokoBench: a new benchmark for African languages in the age of large language models.
+
+In Proc. NAACL-HLT,
+
+Cited by: Table 1.
+
+
+[44]
+Y. Zhang, J. Baldridge, and L. He (2019)
+
+PAWS: paraphrase adversaries from word scrambling.
+
+In Proc. NAACL-HLT,
+
+Cited by: Table 1.
+
+
+[45]
+C. Clark, K. Lee, M. Chang, T. Kwiatkowski, M. Collins, and K. Toutanova (2019)
+
+BoolQ: exploring the surprising difficulty of natural yes/no questions.
+
+In Proc. NAACL-HLT,
+
+Cited by: Table 1.
+
+
+[46]
+L. Bandarkar, D. Liang, B. Muller, M. Artetxe, S. N. Shukla, D. Husa, N. Goyal, A. Krishnan, L. Zettlemoyer, and M. Khabsa (2024)
+
+The belebele benchmark: a parallel reading comprehension dataset in 122 language variants.
+
+In Proc. ACL,
+
+Cited by: Table 1.
+
+
+[47]
+Q. Jin, B. Dhingra, Z. Liu, W. Cohen, and X. Lu (2019)
+
+PubMedQA: a dataset for biomedical research question answering.
+
+In Proc. EMNLP-IJCNLP,
+
+Cited by: Table 1.
+
+
+[48]
+Y. Huang, Y. Bai, Z. Zhu, J. Zhang, J. Zhang, T. Su, J. Liu, C. Lv, Y. Zhang, Y. Fu, et al. (2023)
+
+C-eval: a multi-level multi-discipline chinese evaluation suite for foundation models.
+
+Proc. NeurIPS.
+
+Cited by: Table 1.
+
+
+[49]
+R. Zellers, A. Holtzman, Y. Bisk, A. Farhadi, and Y. Choi (2019)
+
+HellaSwag: can a machine really finish your sentence?.
+
+In Proc. ACL,
+
+Cited by: Table 1.
+
+
+[50]
+K. Sakaguchi, R. L. Bras, C. Bhagavatula, and Y. Choi (2021)
+
+Winogrande: an adversarial winograd schema challenge at scale.
+
+Communications of the ACM.
+
+Cited by: Table 1.
+
+
+[51]
+P. Clark, I. Cowhey, O. Etzioni, T. Khot, A. Sabharwal, C. Schoenick, and O. Tafjord (2018)
+
+Think you have solved question answering? try arc, the ai2 reasoning challenge.
+
+External Links: 1803.05457,
+Link
+
+Cited by: Table 1.
+
+
+[52]
+A. Talmor, J. Herzig, N. Lourie, and J. Berant (2019)
+
+CommonsenseQA: a question answering challenge targeting commonsense knowledge.
+
+In Proc. NAACL-HLT,
+
+Cited by: Table 1.
+
+
+[53]
+C. Bhagavatula, R. L. Bras, C. Malaviya, K. Sakaguchi, A. Holtzman, H. Rashkin, D. Downey, W. Yih, and Y. Choi (2020)
+
+Abductive commonsense reasoning.
+
+In Proc. ICLR,
+
+Cited by: Table 1.
+
+
+[54]
+T. Hartvigsen, S. Gabriel, H. Palangi, M. Sap, D. Ray, and E. Kamar (2022)
+
+ToxiGen: a large-scale machine-generated dataset for adversarial and implicit hate speech detection.
+
+In Proc. ACL,
+
+Cited by: Table 1.
+
+
+[55]
+T. Markov, C. Zhang, S. Agarwal, F. E. Nekoul, T. Lee, S. Adler, A. Jiang, and L. Weng (2023)
+
+A holistic approach to undesired content detection in the real world.
+
+In Proc. AAAI,
+
+Cited by: 4th item,
+§3.4,
+Table 1.
+
+
+[56]
+Z. Lin, Z. Wang, Y. Tong, Y. Wang, Y. Guo, Y. Wang, and J. Shang (2023)
+
+ToxicChat: unveiling hidden challenges of toxicity detection in real-world user-AI conversation.
+
+In Findings of the ACL: EMNLP 2023,
+
+Cited by: Table 1.
+
+
+[57]
+deepset (2023)
+
+Prompt-injections.
+
+Note: https://huggingface.co/datasets/deepset/prompt-injectionsHugging Face dataset. Accessed: 2026-09-27.
+
+Cited by: Table 1.
+
+
+[58]
+D. Braun and F. Matthes (2024)
+
+AGB-DE: a corpus for the automated legal assessment of clauses in German consumer contracts.
+
+In Proc. ACL,
+
+Cited by: Table 1.
+
+
+[59]
+I. Chalkidis, A. Jana, D. Hartung, M. Bommarito, I. Androutsopoulos, D. M. Katz, and N. Aletras (2022)
+
+LexGLUE: a benchmark dataset for legal language understanding in english.
+
+In Proc. ACL,
+
+Cited by: 4th item,
+§3.4,
+Table 1.
+
+
+[60]
+D. Cer, M. Diab, E. Agirre, I. Lopez-Gazpio, and L. Specia (2017)
+
+SemEval-2017 task 1: semantic textual similarity multilingual and crosslingual focused evaluation.
+
+In Proc. Workshop SemEval-2017,
+
+Cited by: 5th item,
+Table 1.
+
+
+[61]
+B. Efron and R. J. Tibshirani (1994)
+
+An introduction to the bootstrap.
+
+ Chapman and Hall/CRC.
+
+Cited by: §3.4.
+
+
+[62]
+Qwen Team (2026)
+
+Qwen3.8-Max: a new bar for coding and cowork.
+
+External Links: Link
+
+Cited by: §3.6.
+
+
+[63]
+Gemma Team, S. E. Abd, V. Aggarwal, R. Algayres, A. Andreev, O. Bachem, I. Ballantyne, C. Brick, V. Cărbune, M. Casbon, M. Chaturvedi, A. Chawla, V. Cotruta, A. Coucke, P. Culliton, R. Dadashi, L. Dixon, M. Elhawaty, U. Evci, C. Farabet, J. Ferret, F. Galgani, S. Girgin, J. Grill, M. Grootendorst, J. Guo, C. Hardin, Y. He, S. M. Hernandez, O. Homburger, L. Hussenot, J. Ji, A. Joulin, A. Kamath, P. Kassraie, O. Lacombe, P. Lahoti, G. Liu, G. Martins, L. Martins, T. Matejovicova, R. Merhej, N. Momchev, S. Mondal, R. Mullins, S. R. Panyam, S. Pathak, S. Perrin, A. S. Pinto, E. Pot, A. Pouget, A. Ramé, S. Ramos, D. Reid, D. Rim, M. Rivière, K. Roth, L. Rouillard, O. Sanseviero, P. G. Sessa, S. Settle, D. Sinopalnikov, S. Smoot, P. Stanczyk, A. Steiner, L. Stewart, I. Tolstikhin, M. Tschannen, A. Tsitsulin, N. Vieillard, R. Wu, P. Xu, H. Yang, E. Yvinec, B. Zhang, L. Zhang, J. Zou, N. Aagnes, A. Abdelhamed, J. Adamek, S. Agrawal, S. Agrawal, I. Alabdulmohsin, J. B. Alayrac, U. Alon, C. Amarnath, A. Anand, C. Anastasiou, S. Ariafar, F. Aubet, K. Axiotis, F. Barbero, J. Barral, A. Bendebury, U. Bergmann, S. Bileschi, K. Black, M. Blondel, S. Borgeaud, A. Bražinskas, R. Burnell, R. Busa-Fekete, M. Cai, D. Calandriello, G. Cameron, C. Caucheteux, R. Chaabouni, G. Chadha, J. Chan, B. J. Chen, J. Chen, L. Chen, X. Chen, D. Cheng, T. Chien, N. Chinaev, Y. Chou, Z. Chu, B. Coleman, P. Consul, S. Conway-Rahman, S. Crowell, D. Cutler, V. Dani, S. Daruki, A. Das, D. Deutsch, N. Dikkala, L. Ding, Q. Ding, S. Dodhia, K. Donhauser, T. Doshi, A. Dragan, A. Druinsky, S. Dua, Z. Egyed, D. Eisenbud, D. Eppens, C. Fan, B. Fatemi, Y. Fathullah, V. Feinberg, M. Ferev, S. Flennerhag, T. Fujimoto, J. G. Oliveira, I. Galatzer-Levy, J. Gante, S. Geisler, S. Ghosal, A. M. Girgis, T. von Glehn, A. Go, A. Gokhale, A. Grills, Y. Gu, M. Gupta, P. Gupta, G. Guruganesh, R. Hadsell, H. Harkous, J. Harlalka, D. Hassabis, A. Hauth, J. Heyward, A. Hosseini, C. Hsia, I. Hsu, X. Huang, Y. Huang, K. Hui, A. Hutter, T. I, F. Iliopoulos, A. Jain, G. Jawahar, Z. Ji, Q. Jin, M. Johnson, K. Joshi, A. Kandoor, W. Kang, K. Kavukcuoglu, M. Kazemi, K. Kenealy, A. Khalifa, P. Kirk, I. Korotkov, S. Kothawade, V. Kovalev, N. Kovelamudi, A. Kraft, R. Kumar, V. Kumar, H. Kuppam, J. Lannin, C. Lee, S. Lee, D. Lepikhin, A. Levkovitch, D. Li, Q. Li, V. Liévin, E. Lin, Z. Lin, C. Liu, T. Liu, T. Liu, X. Liu, I. Lobov, M. Lunayach, M. Ma, G. Madan, A. Maksai, E. Malmi, M. Matuszak, D. McDuff, G. Menghani, M. Mikuła, D. Mirylenka, K. Misiunas, V. Misra, A. Mitran, K. Mohamed, M. Mukha, E. Noland, J. O’Donnell, B. O’Donoghue, K. Olszewska, B. Orlando, W. Pan, R. Panigrahy, U. Parekh, N. Perez-Nieves, C. Park, E. Paskie, L. Peng, B. Petrini, S. Petrov, J. Pfeiffer, B. Piot, M. Plomecka, S. Poder, O. Ponce, A. Pramanik, D. Racz, A. Rajan, M. Ramanovich, A. Rao, M. Ritter, V. Rodrigues, E. Rosen, M. Rybiński, N. Sachdeva, M. E. Sander, R. Sathyanarayana, S. Savla, S. Schmidgall, T. Schuster, G. Scrivener, B. Seguin, A. Sellergren, A. Severyn, I. Shafran, D. Shah, B. Shahriari, Y. Shangguan, A. Shenoy, P. Shenoy, R. Shivanna, P. Sho, L. Spangher, W. Stokowiec, T. Strother, Y. Su, Y. Sun, M. Sundararajan, A. Tacchetti, M. H. Taege, P. Tafti, J. Tarbouriech, C. Tekur, S. Thakoor, R. Thapa, M. Traverse, L. Treven, T. Tu, C. T. Tung, Ç. Ünlü, P. Veličković, M. P. Venkat, S. G. Venkatesh, V. Venkiteswaran, F. Visin, A. Vitvitskyi, K. Vodrahalli, W. Wang, X. Wang, T. Warkentin, J. Wassenberg, J. Wieting, C. Wu, L. Xiao, H. Xu, Y. Xu, F. Xue, A. Yadav, J. Yan, A. Yang, L. Yang, M. Yang, Z. Ying, J. H. Yoo, M. Zadimoghaddam, S. Zafar, F. Zhang, J. Zhang, J. Zhang, X. Zhang, C. Zhao, D. Zhou, and C. Zou (2026)
+
+Gemma 4 technical report.
+
+External Links: 2607.02770,
+Link
+
+Cited by: §3.6.
+
+
+[64]
+T. Wolf, L. Debut, V. Sanh, J. Chaumond, C. Delangue, A. Moi, P. Cistac, T. Rault, R. Louf, M. Funtowicz, J. Davison, S. Shleifer, P. von Platen, C. Ma, Y. Jernite, J. Plu, C. Xu, T. Le Scao, S. Gugger, M. Drame, Q. Lhoest, and A. Rush (2020)
+
+Transformers: state-of-the-art natural language processing.
+
+In Proc. EMNLP,
+
+Cited by: §3.6.
+
+
+[65]
+N. Balepur, A. Ravichander, and R. Rudinger (2024)
+
+Artifacts or abduction: how do LLMs answer multiple-choice questions without the question?.
+
+In Proc. ACL,
+
+Cited by: §4.6.
+
+
+[66]
+Anthropic (2026)
+
+System card: Claude Opus 5.5.
+
+Note: https://www-cdn.anthropic.com/fc1b44717c85dc068bc6ba5024219938094694bd/Claude%20Opus%205.5%20System%20Card.pdfAccessed: 2026-09-26
+
+Cited by: Acknowledgments.
+
+
+
+
+
+Appendix A Calibration and selective prediction per dataset
+
+
+Table 8: Choice datasets: accuracy, ECE of the top-option probability, accuracy on the 80% and 50% most confident examples (ranked by Jev’s confidence), and area under the risk–coverage curve.
+
+
+
+Dataset
+Acc.↑\uparrow
+ECE↓\downarrow
+Acc.@80%↑\uparrow
+Acc.@50%↑\uparrow
+AURC↓\downarrow
+
+
+Text classification
+
+
+AG News
+0.885
+0.077
+0.942
+0.953
+0.056
+
+
+IMDB
+0.965
+0.019
+0.993
+0.993
+0.008
+
+
+Rotten Tomatoes
+0.933
+0.038
+0.975
+0.981
+0.024
+
+
+SST-2
+0.964
+0.015
+0.989
+0.995
+0.007
+
+
+Emotion
+0.585
+0.279
+0.642
+0.733
+0.268
+
+
+Financial PhraseBank
+0.730
+0.138
+0.796
+0.887
+0.118
+
+
+Language ID
+0.996
+0.003
+0.999
+1.000
+0.001
+
+
+Intent and topic routing
+
+
+Banking77
+0.797
+0.087
+0.888
+0.963
+0.061
+
+
+CLINC150
+0.895
+0.025
+0.958
+0.979
+0.033
+
+
+SIB-200
+0.815
+0.045
+0.915
+0.982
+0.046
+
+
+NLI, paraphrase and grounding
+
+
+ANLI
+0.739
+0.102
+0.800
+0.869
+0.128
+
+
+AfriXNLI
+0.640
+0.165
+0.686
+0.769
+0.215
+
+
+Reading comprehension and knowledge
+
+
+Belebele
+0.867
+0.015
+0.955
+0.987
+0.027
+
+
+PubMedQA
+0.787
+0.129
+0.868
+0.936
+0.095
+
+
+MMLU
+0.918
+0.025
+0.967
+0.981
+0.026
+
+
+C-Eval
+0.839
+0.014
+0.927
+0.982
+0.040
+
+
+Commonsense and reasoning
+
+
+BIG-bench (MC)
+0.814
+0.026
+0.894
+0.970
+0.054
+
+
+HellaSwag
+0.955
+0.019
+0.995
+0.999
+0.004
+
+
+WinoGrande
+0.914
+0.025
+0.959
+0.975
+0.034
+
+
+ARC (E+C)
+0.988
+0.005
+0.998
+0.998
+0.002
+
+
+CommonsenseQA
+0.882
+0.031
+0.942
+0.980
+0.034
+
+
+α\alphaNLI (ART)
+0.839
+0.065
+0.901
+0.977
+0.051
+
+
+
+
+
+
+
+
+
+
+
+ 
+ Experimental support, please
+ view the build logs
+ for errors. Generated by
+ 
+ 
+ L
+ A
+ T
+ E
+ 
+ xml
+ 
+ .
+ 
+ 
+ 
+Instructions for reporting errors
+ 
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below:
+ 
+ 
+Click the "Report Issue" (
+ 
+ ) button, located in the page header.
+ 
+ 
+Tip: You can select the relevant text first, to include it in your report.
+ 
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all.
+ 
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+ 
+
+ 
+ 
+ 
+ We gratefully acknowledge support from
+ our major funders,
+ member institutions, ,
+ and all contributors.
+ 
+ 
+ About
+ ·
+ Help
+ ·
+ Contact
+ ·
+ Subscribe
+ ·
+ Copyright
+ ·
+ Privacy
+ ·
+ Accessibility
+ ·
+ Operational Status (opens in new tab)
+ 
+ 
+
+ 
+ Major funding support from
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+

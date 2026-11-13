@@ -1,0 +1,236 @@
+{
+  "strategies": {
+    "targeted_one_shot": {
+      "attempts": 6,
+      "rejections": {
+        "semantic_checker": 5,
+        "deterministic_filter": 1
+      },
+      "invalid_proposals": 0,
+      "checker_fail_fields": {
+        "label_preserved": 5,
+        "locally_coherent": 5,
+        "direct_decision_cue": 0,
+        "new_decisive_evidence": 0
+      },
+      "checker_reasons": {
+        "invalid structured checker response": 5
+      },
+      "http_calls": 11,
+      "finish_reasons": {
+        "stop": 11
+      },
+      "usage": {
+        "prompt_tokens": 8091,
+        "completion_tokens": 559,
+        "total_tokens": 8650
+      },
+      "evaluated": [
+        {
+          "id": "mmlu-pro-test-78",
+          "clean_p": 0.0,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-71",
+          "clean_p": 0.08,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-77",
+          "clean_p": 0.0,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-80",
+          "clean_p": 0.0,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-74",
+          "clean_p": 0.03,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-96",
+          "clean_p": 0.01,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        }
+      ]
+    },
+    "neutral_one_shot": {
+      "attempts": 6,
+      "rejections": {
+        "semantic_checker": 6
+      },
+      "invalid_proposals": 0,
+      "checker_fail_fields": {
+        "label_preserved": 6,
+        "locally_coherent": 6,
+        "direct_decision_cue": 0,
+        "new_decisive_evidence": 0
+      },
+      "checker_reasons": {
+        "invalid structured checker response": 6
+      },
+      "http_calls": 12,
+      "finish_reasons": {
+        "stop": 12
+      },
+      "usage": {
+        "prompt_tokens": 7910,
+        "completion_tokens": 515,
+        "total_tokens": 8425
+      },
+      "evaluated": [
+        {
+          "id": "mmlu-pro-test-78",
+          "clean_p": 0.0,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-71",
+          "clean_p": 0.08,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-77",
+          "clean_p": 0.0,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-80",
+          "clean_p": 0.0,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-74",
+          "clean_p": 0.03,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-96",
+          "clean_p": 0.01,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        }
+      ]
+    },
+    "adaptive": {
+      "attempts": 90,
+      "rejections": {
+        "semantic_checker": 77,
+        "deterministic_filter": 4,
+        "accepted": 9
+      },
+      "invalid_proposals": 0,
+      "checker_fail_fields": {
+        "label_preserved": 77,
+        "locally_coherent": 77,
+        "direct_decision_cue": 0,
+        "new_decisive_evidence": 0
+      },
+      "checker_reasons": {
+        "invalid structured checker response": 77,
+        "The added sentence about sampling does not affect the definition of survey research methods.": 1,
+        "The added sentence reinforces the full-service nature without changing the correct answer.": 1,
+        "The added sentence merely elaborates on the full-service nature, reinforcing the same correct answer without changing the key set.": 1,
+        "The new sentence adds detail about data collection but does not change the full-service definition or correct answer.": 1,
+        "The added sentence describes full-service operations, reinforcing the original gold without changing the correct key set.": 1,
+        "The new sentence provides background on gharar and maisir but does not alter the correct answer G.": 1,
+        "The new sentence adds no amounts, so total assets remain $47,325; gold unchanged.": 1,
+        "The new insurance fact is irrelevant to the listed balance sheet items and does not change the total assets calculation.": 1,
+        "The new sentence adds background about loan acquisition but does not alter asset totals or the correct answer.": 1
+      },
+      "http_calls": 176,
+      "finish_reasons": {
+        "stop": 176
+      },
+      "usage": {
+        "prompt_tokens": 126684,
+        "completion_tokens": 8486,
+        "total_tokens": 135170
+      },
+      "evaluated": [
+        {
+          "id": "mmlu-pro-test-78",
+          "clean_p": 0.0,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-71",
+          "clean_p": 0.08,
+          "best_p": null,
+          "selected": null,
+          "sentences": []
+        },
+        {
+          "id": "mmlu-pro-test-77",
+          "clean_p": 0.0,
+          "best_p": 0.02,
+          "selected": "J",
+          "sentences": [
+            "In many large-scale surveys, researchers rely on convenience samples of volunteers because they are inexpensive to recruit, even though such samples are not selected using random procedures."
+          ]
+        },
+        {
+          "id": "mmlu-pro-test-80",
+          "clean_p": 0.0,
+          "best_p": 0.0,
+          "selected": "E",
+          "sentences": [
+            "These projects typically require the firm to manage multiple stages, from initial questionnaire design through final presentation of findings."
+          ]
+        },
+        {
+          "id": "mmlu-pro-test-74",
+          "clean_p": 0.03,
+          "best_p": 0.04,
+          "selected": "G",
+          "sentences": [
+            "In Islamic finance, contracts must avoid gharar (uncertainty) and maisir (speculation), which is why transactions are typically structured around known, fixed terms and real assets rather than derivatives or insurance-like arrangements."
+          ]
+        },
+        {
+          "id": "mmlu-pro-test-96",
+          "clean_p": 0.01,
+          "best_p": 0.02,
+          "selected": "H",
+          "sentences": [
+            "The store's most recent annual insurance premium of $2,400 was paid in full on January 1, and the policy covers the entire calendar year."
+          ]
+        }
+      ]
+    }
+  },
+  "total_usage": {
+    "prompt_tokens": 142685,
+    "completion_tokens": 9560,
+    "total_tokens": 152245
+  }
+}

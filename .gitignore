@@ -51,3 +51,11 @@ rq1/tsbench/
 rq1/wildguard/
 rq1/_ingest/
 rq1/*.zip
+
+# Large local trees (kept on disk, not in git)
+artifacts/
+local-apps/
+data/JevOut/
+data/JevOut-main.zip
+data/mu/
+data/decision-index-source/

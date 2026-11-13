@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob: https://commandline.microsoft.com/wp-content/uploads/; font-src data: https://commandline.microsoft.com; media-src data: blob: https://commandline.microsoft.com/wp-content/uploads/;">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speed per classification</title>
+<style>
+@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Book.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:500;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Medium.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Bold.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Italic.otf") format("opentype");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCode.woff2") format("woff2");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCodeItalic.woff2") format("woff2");}
+:root {
+  --bg: #fff;
+  --ink: #000;
+  --muted: #555;
+  --faint: #c9c9c9;        /* secondary series */
+  --good: #E3F671;         /* primary model (site accent lime) */
+  --bad: #FFA037;          /* primary model behind (site accent orange) */
+  --rule: #000;
+  --rule-soft: #e6e6e6;
+  --hover: #f3f3f3;
+  --badge-bg: #000;
+  --badge-fg: #fff;
+  --tip-bg: #000;
+  --tip-fg: #fff;
+  --sans: "PP Neue Montreal", sans-serif;
+  --mono: "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+html[data-theme="dark"] {
+  --bg: #111;
+  --ink: #fff;
+  --muted: #999;
+  --faint: #444;
+  --rule: #fff;
+  --rule-soft: #2a2a2a;
+  --hover: #1f1f1f;
+  --badge-bg: #fff;
+  --badge-fg: #111;
+  --tip-bg: #fff;
+  --tip-fg: #111;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { position: relative; padding: 2px 0 6px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ================= Header ================= */
+.head { margin-bottom: 28px; text-align: center; }
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 18px 0 8px;
+  font-size: clamp(24px, 4.2vw, 32px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+}
+.sub { margin: 0 auto; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 62ch; }
+.sub .dir { color: var(--ink); font-weight: 500; }
+
+/* ================= Legend / toggles ================= */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: 18px;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.legend button, .toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px;
+  font-size: 13px;
+  border: 1px solid var(--rule-soft);
+  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.2s ease;
+}
+.legend button:hover, .toggle button:hover { border-color: var(--ink); }
+.legend button[aria-pressed="true"] { border-color: var(--ink); font-weight: 500; }
+.legend .sw { width: 10px; height: 10px; flex: 0 0 10px; }
+.legend .sw.pri { background: var(--good); }
+.legend .sw.ref { background: var(--ink); }
+.legend .sw.oth { background: var(--faint); }
+.legend.iso button:not([aria-pressed="true"]) { opacity: 0.45; }
+.legend button[aria-pressed="true"]::after { content: "· click to clear"; font-weight: 400; color: var(--muted); }
+.toggle { display: flex; align-items: center; gap: 4px; }
+.toggle .k { margin-right: 8px; }
+.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ================= Notes / source ================= */
+.note { margin: 16px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.note .num { color: var(--ink); }
+.source { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-size: 13px; line-height: 1.55; color: var(--muted); }
+.source p { margin: 0 0 4px; }
+
+/* ================= Tooltip ================= */
+.tip {
+  position: absolute;
+  z-index: 2;
+  max-width: 300px;
+  padding: 10px 12px;
+  background: var(--tip-bg);
+  color: var(--tip-fg);
+  font-size: 13px;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.tip.show { opacity: 1; }
+.tip .t { font-weight: 500; margin-bottom: 6px; }
+.tip .r { display: flex; justify-content: space-between; gap: 16px; }
+.tip .r + .r { margin-top: 2px; }
+.tip .r.hi { font-weight: 700; }
+.tip .r.hi > span:first-child::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; vertical-align: 1px; background: var(--good); }
+.tip .r.hi.b > span:first-child::before { background: var(--bad); }
+.tip .s { margin-top: 8px; padding-top: 6px; border-top: 1px solid color-mix(in srgb, var(--tip-fg) 25%, transparent); font-size: 12px; opacity: 0.85; }
+
+/* ================= Motion (shared) ================= */
+@media (prefers-reduced-motion: no-preference) {
+  .head { opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .head.in { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+@media (max-width: 560px) {
+  .head { margin-bottom: 22px; }
+  .sub { font-size: 15px; }
+  .legend button[aria-pressed="true"]::after { content: "· tap to clear"; }
+}
+
+/* ================= Vertical grouped bars ================= */
+.panels { display: grid; gap: 28px 32px; }
+.panel { min-width: 0; }
+.ptitle { margin: 0 0 14px; font-size: 16px; font-weight: 500; letter-spacing: -0.01em; }
+.ptitle .pm { font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.04em; color: var(--muted); margin-left: 8px; }
+.plot, .xlabels { --yw: 44px; }
+.plot { --h: 280px; display: grid; grid-template-columns: var(--yw) minmax(0, 1fr); }
+.area { position: relative; height: var(--h); grid-column: 2; }
+.ylines { position: absolute; inset: 0; pointer-events: none; }
+.yl { position: absolute; left: 0; right: 0; bottom: var(--p); height: 1px; background: var(--rule-soft); }
+.yl.base { background: var(--rule); z-index: 1; }
+.yl i { position: absolute; right: calc(100% + 8px); top: 50%; transform: translateY(-50%); font-style: normal; font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); white-space: nowrap; }
+.groups { position: absolute; inset: 0; display: flex; }
+.bars { display: contents; }
+.group { position: relative; flex: 1 1 0; min-width: 0; display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding: 0 5%; }
+.anno { position: absolute; top: 0; left: 0; right: 0; text-align: center; font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.02em; line-height: 1.3; white-space: nowrap; }
+.anno small { display: block; font-size: 10px; font-weight: 400; letter-spacing: 0.04em; color: var(--muted); text-transform: uppercase; }
+.bar {
+  position: relative;
+  flex: 0 1 var(--bw, 44px);
+  min-width: 10px;
+  height: var(--v);
+  background: var(--faint);
+  transition: opacity 0.2s ease;
+}
+.bar.pri { background: var(--good); }
+.bar.ref { background: var(--ink); }
+.bar:hover, .bar.hot { filter: brightness(0.92); }
+html[data-theme="dark"] .bar:hover, html[data-theme="dark"] .bar.hot { filter: brightness(1.25); }
+.bar .lab {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--muted);
+}
+.bar.pri .lab, .bar.ref .lab { color: var(--ink); font-weight: 700; }
+.plot.iso .bar:not(.on) { opacity: 0.18; }
+.plot.iso .bar:not(.on) .lab { opacity: 0.6; }
+.xlabels { display: grid; grid-template-columns: var(--yw) minmax(0, 1fr); margin-top: 8px; }
+.xrow { grid-column: 2; display: flex; }
+.xl { flex: 1 1 0; min-width: 0; text-align: center; font-size: 13.5px; font-weight: 500; line-height: 1.3; padding: 0 4px; }
+.xl small { display: block; font-family: var(--mono); font-size: 11px; font-weight: 400; letter-spacing: 0.03em; color: var(--muted); margin-top: 2px; }
+.xtitle { grid-column: 2; text-align: center; margin-top: 10px; }
+.glab { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal .bar { transform: scaleY(0); transform-origin: center bottom; transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.2s ease; transition-delay: calc(var(--i, 0) * 40ms); }
+  .reveal.in .bar { transform: none; }
+  .reveal .bar .lab { opacity: 0; transition: opacity 0.4s ease; transition-delay: calc(var(--i, 0) * 40ms + 300ms); }
+  .reveal.in .bar .lab { opacity: 1; }
+  .reveal .anno { opacity: 0; transform: translateY(4px); transition: opacity 0.4s ease 0.5s, transform 0.4s ease 0.5s; }
+  .reveal.in .anno { opacity: 1; transform: none; }
+  .reveal.in.settled .bar, .reveal.in.settled .bar .lab { transition-delay: 0s; }
+}
+
+@media (max-width: 560px) {
+  .flip .plot { grid-template-columns: 1fr; }
+  .flip .area { grid-column: 1; height: auto; margin-bottom: 26px; }
+  .flip .ylines { inset: 0 var(--hg, 56px) 0 0; }
+  .flip .yl { left: var(--p); right: auto; top: 0; bottom: 0; width: 1px; height: auto; }
+  .flip .yl i { right: auto; left: 50%; top: calc(100% + 6px); transform: translateX(-50%); }
+  .flip .groups { position: static; display: block; padding-right: var(--hg, 56px); }
+  .flip .group { display: block; padding: 0 0 18px; }
+  .flip .group:last-child { padding-bottom: 0; }
+  .flip .anno { position: static; text-align: left; margin: 2px 0 6px; }
+  .flip .anno small { display: inline; margin-left: 6px; }
+  .flip .bars { display: flex; flex-direction: column; gap: 4px; }
+  .flip .bar { flex: none; width: var(--v); height: 16px; min-width: 2px; }
+  .flip .bar .lab { bottom: auto; left: 100%; top: 50%; transform: translateY(-50%); margin: 0 0 0 6px; }
+  .flip .xlabels { display: none; }
+  .flip .glab { display: block; margin: 0 0 6px; font-size: 14px; font-weight: 500; }
+  .flip .glab small { font-family: var(--mono); font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 8px; }
+  .flip .bars { margin-top: 2px; }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal.flip .bar { transform: scaleX(0); transform-origin: left center; }
+    .reveal.flip.in .bar { transform: none; }
+  }
+}
+
+.plot { --h: 300px; } .plot, .xlabels { --yw: 52px; }
+.group { padding: 0 4%; gap: 5px; }
+.bar { --bw: 54px; }
+@media (max-width: 900px) { .plot { --h: 260px; } .anno small { display: none; } .bar .lab { font-size: 11px; } }
+@media (max-width: 700px) { .xl { font-size: 12.5px; } .anno { font-size: 11px; } }
+@media (max-width: 560px) { .anno small { display: inline; } .flip .ylines { inset: 0 64px 0 0; } .flip .groups { padding-right: 64px; } }
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+  <header class="head">
+    <span class="badge">Speed</span>
+    <h1>Speed per classification</h1>
+    <p class="sub"><span class="dir">Lower is better.</span> Mean wall-clock time to classify one text, on the same three datasets as the cost comparison.</p>
+  </header>
+
+  <div class="controls">
+    <div class="k">Mean time per review &middot; log scale</div>
+    <div class="legend" id="legend" role="group" aria-label="Highlight a model"></div>
+  </div>
+  <div class="reveal flip" id="chart">
+    <div class="plot" id="plot">
+      <div class="area">
+        <div class="ylines" id="ylines" aria-hidden="true"></div>
+        <div class="groups" id="groups"></div>
+      </div>
+    </div>
+    <div class="xlabels" aria-hidden="true"><div></div><div class="xrow" id="xrow"></div></div>
+  </div>
+  <p class="note">Bars are on a log scale, so each gridline is a tenfold change in time. Microsoft-Decision-1 answers every dataset in under <span class="num">200 ms</span> per text; GPT-6 Sol takes between <span class="num">2.6</span> and <span class="num">2.8 s</span>.</p>
+
+  <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+</div>
+<script>
+(function () {
+  var motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  var root = document.getElementById('root');
+  var tip = document.getElementById('tip');
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+  function setVar(n, k, v) { n.style.setProperty(k, v); }
+  function fmtN(n, d) { return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+  // ---- Tooltip (hover, keyboard focus and tap) ---------------------------
+  var hot = null;
+  function renderTip(spec) {
+    tip.innerHTML = '';
+    if (spec.title) tip.appendChild(el('div', 't', spec.title));
+    (spec.rows || []).forEach(function (r) {
+      var row = el('div', 'r' + (r[2] ? ' ' + r[2] : ''));
+      row.appendChild(el('span', null, r[0]));
+      row.appendChild(el('span', 'num', r[1]));
+      tip.appendChild(row);
+    });
+    if (spec.note) tip.appendChild(el('div', 's', spec.note));
+  }
+  function placeTip(node, prefer) {
+    var rr = root.getBoundingClientRect();
+    var nr = node.getBoundingClientRect();
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var left = nr.left - rr.left + (prefer === 'above' ? nr.width / 2 - tw / 2 : 0);
+    left = Math.max(0, Math.min(left, rr.width - tw));
+    var below = nr.bottom - rr.top + 6;
+    var above = nr.top - rr.top - th - (prefer === 'above' ? 26 : 6);
+    var top;
+    if (prefer === 'above') top = above >= 0 ? above : Math.min(below, rr.height - th);
+    else top = (below + th <= rr.height) ? below : Math.max(0, above);
+    // Stay inside the widget so the auto-sized frame never clips the tip.
+    tip.style.left = left + 'px';
+    tip.style.top = Math.max(0, top) + 'px';
+  }
+  function showTip(node, build, prefer) {
+    if (hot === node) return;
+    hideTip();
+    hot = node;
+    node.classList.add('hot');
+    renderTip(build(node));
+    tip.classList.add('show');
+    tip.setAttribute('aria-hidden', 'false');
+    placeTip(node, prefer);
+  }
+  function hideTip() {
+    if (hot) hot.classList.remove('hot');
+    hot = null;
+    tip.classList.remove('show');
+    tip.setAttribute('aria-hidden', 'true');
+  }
+  function bindTips(selector, build, prefer) {
+    function find(t) {
+      var n = t;
+      while (n && n !== root) {
+        if (n.matches && n.matches(selector)) return n;
+        n = n.parentNode;
+      }
+      return null;
+    }
+    root.addEventListener('mouseover', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('mouseout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('focusin', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('focusout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideTip(); });
+  }
+
+  // ---- Count-up (visibility-triggered via reveal) -------------------------
+  var EASE = function (t) { return 1 - Math.pow(1 - t, 3); };
+  function countUp(node, to, fmt, ms, delay) {
+    if (!motion) { node.textContent = fmt(to); return; }
+    var start = null;
+    node.textContent = fmt(0);
+    function frame(now) {
+      if (start === null) start = now + (delay || 0);
+      var t = Math.min(1, Math.max(0, (now - start) / ms));
+      node.textContent = fmt(to * EASE(t));
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---- Reveal (IntersectionObserver only; no timers start anything) ------
+  // `settled` removes stagger delays once the entrance has played so hover,
+  // toggles and filters respond immediately afterwards.
+  function reveal(group, count, cb) {
+    group.classList.add('in');
+    if (cb) cb();
+    if (!motion) { group.classList.add('settled'); return; }
+    var wait = Math.min(count, 30) * 45 + 700;
+    var t0 = performance.now();
+    (function tick(now) { if (now - t0 >= wait) group.classList.add('settled'); else requestAnimationFrame(tick); })(t0);
+  }
+  function observe(items) { // items: [[node, fn]]
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          items.forEach(function (it) { if (it[0] === e.target) it[1](); });
+        });
+      }, { threshold: 0.05 });
+      items.forEach(function (it) { io.observe(it[0]); });
+    } else {
+      items.forEach(function (it) { it[1](); });
+    }
+  }
+  var head = document.querySelector('.head');
+
+  var DATA = {
+    series: [
+      ['GPT-6 Sol', 'ref'],
+      ['Microsoft-Decision-1', 'pri']
+    ],
+    groups: [
+      // dataset, unit, [GPT-6 Sol, MD1] mean ms per review, "faster" annotation
+      ['Racing Title', '753 reviews', [2800, 159], '18'],
+      ['First-Person Shooter', '341 reviews', [2600, 188], '14'],
+      ['Studio Livestream', '1030 posts', [2600, 143], '18']
+    ],
+    domain: [50, 10000],
+    ticks: [[100, '100 ms'], [1000, '1 s'], [10000, '10 s']]
+  };
+  function ms(v) { return v >= 1000 ? fmtN(v / 1000, 1) + ' s' : Math.round(v) + ' ms'; }
+  function pct(v) {
+    var lo = Math.log(DATA.domain[0]), hi = Math.log(DATA.domain[1]);
+    return Math.max(0, (Math.log(Math.max(v, DATA.domain[0])) - lo) / (hi - lo) * 100);
+  }
+
+  var ylines = document.getElementById('ylines');
+  var groups = document.getElementById('groups');
+  var xrow = document.getElementById('xrow');
+  var counters = [];
+  var k = 0;
+
+  DATA.ticks.forEach(function (t) {
+    var y = el('span', 'yl'); setVar(y, '--p', pct(t[0]) + '%');
+    y.appendChild(el('i', null, t[1])); ylines.appendChild(y);
+  });
+  var base = el('span', 'yl base'); setVar(base, '--p', '0%'); ylines.appendChild(base);
+
+  DATA.groups.forEach(function (g, gi) {
+    var group = el('div', 'group');
+    var glab = el('div', 'glab', g[0]); glab.appendChild(el('small', null, g[1]));
+    group.appendChild(glab);
+    var anno = el('div', 'anno', '~' + g[3] + '× faster');
+    anno.appendChild(el('small', null, 'Microsoft-Decision-1 vs GPT-6 Sol'));
+    group.appendChild(anno);
+    var bars = el('div', 'bars');
+    DATA.series.forEach(function (s, si) {
+      var v = g[2][si];
+      var bar = el('button', 'bar ' + s[1] + ' s' + si); bar.type = 'button';
+      setVar(bar, '--v', pct(v) + '%'); setVar(bar, '--i', String(k++));
+      bar.dataset.g = String(gi); bar.dataset.s = String(si);
+      bar.setAttribute('aria-label', s[0] + ', ' + g[0] + ': ' + ms(v) + ' mean time per review');
+      var lab = el('span', 'lab', ms(v)); counters.push([lab, v]);
+      bar.appendChild(lab); bars.appendChild(bar);
+    });
+    group.appendChild(bars);
+    groups.appendChild(group);
+    var xl = el('div', 'xl', g[0]); xl.appendChild(el('small', null, g[1]));
+    xrow.appendChild(xl);
+  });
+
+  var legend = document.getElementById('legend');
+  var plot = document.getElementById('plot');
+  DATA.series.forEach(function (s, si) {
+    var b = el('button', null); b.type = 'button';
+    b.setAttribute('aria-pressed', 'false'); b.dataset.s = String(si);
+    b.appendChild(el('span', 'sw ' + s[1])); b.appendChild(el('span', null, s[0]));
+    legend.appendChild(b);
+  });
+  var iso = null;
+  legend.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    iso = iso === b.dataset.s ? null : b.dataset.s;
+    Array.prototype.forEach.call(legend.querySelectorAll('button'), function (x) { x.setAttribute('aria-pressed', x.dataset.s === iso ? 'true' : 'false'); });
+    legend.classList.toggle('iso', iso !== null);
+    plot.classList.toggle('iso', iso !== null);
+    Array.prototype.forEach.call(plot.querySelectorAll('.bar'), function (bar) { bar.classList.toggle('on', bar.dataset.s === iso); });
+  });
+
+  bindTips('.bar', function (bar) {
+    var g = DATA.groups[+bar.dataset.g], si = +bar.dataset.s, s = DATA.series[si];
+    var spec = { title: s[0] + ' · ' + g[0], rows: [['Mean time per review', ms(g[2][si]), s[1] === 'pri' ? 'hi' : ''], ['Dataset', g[1]]] };
+    spec.note = si === 1 ? '~' + g[3] + '× faster than GPT-6 Sol on this dataset.' : 'Mean wall-clock time to classify one text.';
+    return spec;
+  }, 'above');
+
+  var chart = document.getElementById('chart');
+  observe([
+    [head, function () { head.classList.add('in'); }],
+    [chart, function () {
+      reveal(chart, counters.length, function () {
+        counters.forEach(function (c) { countUp(c[0], c[1], ms, 800, 250); });
+      });
+    }]
+  ]);
+
+})();
+</script>
+</body>
+</html>

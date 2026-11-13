@@ -1,0 +1,1629 @@
+{
+  "generated_at_utc": "2026-10-15T06:28:36.618250+00:00",
+  "source_root": "D:/projects/jev",
+  "scope": "Local inventory, not a rerun or validation of labels/model performance",
+  "unified": {
+    "path": "D:/projects/jev/bench/data/unified.jsonl",
+    "bytes": 83930867,
+    "sha256": "2e6b52f545c9c0b6abafd442c21e189d12a597b25d4f190a928e91d9f6526545",
+    "rows": 27230,
+    "unique_uids": 27230,
+    "labels": {
+      "0": 10966,
+      "1": 14476,
+      "None": 1788
+    },
+    "corpora": {
+      "agentdojo": {
+        "rows": 63,
+        "labels": {
+          "0": 21,
+          "1": 35,
+          "None": 7
+        },
+        "stages": {
+          "S2_inbound_content": 63
+        },
+        "label_semantics": {
+          "outcome_unsafe": 63
+        },
+        "source_ids": {
+          "banking": 11,
+          "slack": 5,
+          "travel": 20,
+          "workspace": 27
+        }
+      },
+      "agentdojo_user": {
+        "rows": 83,
+        "labels": {
+          "0": 83
+        },
+        "stages": {
+          "S3_user_request": 83
+        },
+        "label_semantics": {
+          "should_refuse": 83
+        },
+        "source_ids": {
+          "banking": 16,
+          "slack": 15,
+          "travel": 20,
+          "workspace": 32
+        }
+      },
+      "agentic5k_test": {
+        "rows": 545,
+        "labels": {
+          "0": 265,
+          "1": 280
+        },
+        "stages": {
+          "S2_inbound_content": 545
+        },
+        "label_semantics": {
+          "artifact_threat": 545
+        },
+        "source_ids": {
+          "3nesdeniz_5k": 545
+        }
+      },
+      "atbench": {
+        "rows": 1000,
+        "labels": {
+          "0": 503,
+          "1": 497
+        },
+        "stages": {
+          "S5_trajectory": 1000
+        },
+        "label_semantics": {
+          "outcome_unsafe": 1000
+        },
+        "source_ids": {
+          "None": 1000
+        }
+      },
+      "atbench500": {
+        "rows": 500,
+        "labels": {
+          "0": 250,
+          "1": 250
+        },
+        "stages": {
+          "S5_trajectory": 500
+        },
+        "label_semantics": {
+          "outcome_unsafe": 500
+        },
+        "source_ids": {
+          "None": 500
+        }
+      },
+      "bipia": {
+        "rows": 3178,
+        "labels": {
+          "0": 178,
+          "1": 3000
+        },
+        "stages": {
+          "S2_inbound_content": 3178
+        },
+        "label_semantics": {
+          "artifact_threat": 3178
+        },
+        "source_ids": {
+          "bipia/code": 586,
+          "bipia/email": 851,
+          "bipia/table": 1741
+        }
+      },
+      "boundary_pairs_test": {
+        "rows": 240,
+        "labels": {
+          "0": 120,
+          "1": 120
+        },
+        "stages": {
+          "S2_inbound_content": 240
+        },
+        "label_semantics": {
+          "artifact_threat": 240
+        },
+        "source_ids": {
+          "3nesdeniz_bp": 240
+        }
+      },
+      "deepset_test": {
+        "rows": 116,
+        "labels": {
+          "0": 56,
+          "1": 60
+        },
+        "stages": {
+          "S2_inbound_content": 116
+        },
+        "label_semantics": {
+          "artifact_threat": 116
+        },
+        "source_ids": {
+          "deepset": 116
+        }
+      },
+      "jackhhao_test": {
+        "rows": 262,
+        "labels": {
+          "0": 123,
+          "1": 139
+        },
+        "stages": {
+          "S2_inbound_content": 262
+        },
+        "label_semantics": {
+          "artifact_threat": 262
+        },
+        "source_ids": {
+          "jackhhao": 262
+        }
+      },
+      "llmail_phase2": {
+        "rows": 2000,
+        "labels": {
+          "1": 2000
+        },
+        "stages": {
+          "S2_inbound_content": 2000
+        },
+        "label_semantics": {
+          "artifact_threat": 2000
+        },
+        "source_ids": {
+          "llmail/phase2": 2000
+        }
+      },
+      "mcptox": {
+        "rows": 847,
+        "labels": {
+          "0": 362,
+          "1": 485
+        },
+        "stages": {
+          "S1_supply_chain": 847
+        },
+        "label_semantics": {
+          "artifact_threat": 847
+        },
+        "source_ids": {
+          "12306-mcp": 2,
+          "AWSKnowledgeBase": 3,
+          "AdFin": 33,
+          "AgentQL": 7,
+          "AlphaVantage": 36,
+          "AmapMap": 22,
+          "Apify": 32,
+          "BaiduMap": 21,
+          "BraveSearch": 13,
+          "Claude Post": 8,
+          "ClickHouse": 27,
+          "Codacy": 36,
+          "Commander": 44,
+          "DoDo Payments": 28,
+          "DumplingAI": 32,
+          "E2B": 2,
+          "Email": 58,
+          "EverArt": 11,
+          "Everything": 16,
+          "Fetch": 2,
+          "FileSystem": 35,
+          "Financial Dataset": 38,
+          "Flomo": 2,
+          "Git": 22,
+          "Github": 39,
+          "Gitlab": 18,
+          "Google Maps": 13,
+          "GoogleDrive": 4,
+          "Gyazo": 9,
+          "HyperBrowser": 21,
+          "KeywordsPeopleUse": 7,
+          "Memory": 24,
+          "OP.GG": 38,
+          "Prisma": 31,
+          "Puppeteer": 23,
+          "QuickChart": 3,
+          "Redis": 9,
+          "SQLite": 14,
+          "Sentry": 2,
+          "Sequential Thinking": 2,
+          "Slack": 22,
+          "Tavily": 8,
+          "gNucleus Text to CAD": 2,
+          "mcp-simple-arxiv": 21,
+          "wechat": 7
+        }
+      },
+      "msb": {
+        "rows": 2137,
+        "labels": {
+          "0": 937,
+          "1": 1200
+        },
+        "stages": {
+          "S1_supply_chain": 2137
+        },
+        "label_semantics": {
+          "artifact_threat": 2137
+        },
+        "source_ids": {
+          "SRC001": 338,
+          "SRC002": 131,
+          "SRC004": 25,
+          "SRC005": 24,
+          "SRC006": 100,
+          "SRC008": 2,
+          "SRC009": 217,
+          "SRC010": 732,
+          "SRC011": 415,
+          "SRC012": 104,
+          "SRC013": 49
+        }
+      },
+      "neuralchemy_test": {
+        "rows": 942,
+        "labels": {
+          "0": 390,
+          "1": 552
+        },
+        "stages": {
+          "S2_inbound_content": 942
+        },
+        "label_semantics": {
+          "artifact_threat": 942
+        },
+        "source_ids": {
+          "neuralchemy": 942
+        }
+      },
+      "notinject": {
+        "rows": 339,
+        "labels": {
+          "0": 339
+        },
+        "stages": {
+          "S2_inbound_content": 339
+        },
+        "label_semantics": {
+          "artifact_threat": 339
+        },
+        "source_ids": {
+          "notinject/Common Queries": 126,
+          "notinject/Multilingual": 84,
+          "notinject/Technique Queries": 87,
+          "notinject/Virtual Creation": 42
+        }
+      },
+      "orbench_hard": {
+        "rows": 1319,
+        "labels": {
+          "0": 1319
+        },
+        "stages": {
+          "S3_user_request": 1319
+        },
+        "label_semantics": {
+          "should_refuse": 1319
+        },
+        "source_ids": {
+          "orbench_hard": 1319
+        }
+      },
+      "piarena": {
+        "rows": 1500,
+        "labels": {
+          "0": 750,
+          "1": 750
+        },
+        "stages": {
+          "S2_inbound_content": 1500
+        },
+        "label_semantics": {
+          "artifact_threat": 1500
+        },
+        "source_ids": {
+          "piarena/dolly_closed_qa": 300,
+          "piarena/dolly_information_extraction": 300,
+          "piarena/dolly_summarization": 300,
+          "piarena/hotpotqa_rag": 200,
+          "piarena/msmarco_rag": 200,
+          "piarena/nq_rag": 200
+        }
+      },
+      "simsonsun_jailbreaks": {
+        "rows": 2426,
+        "labels": {
+          "1": 2426
+        },
+        "stages": {
+          "S3_user_request": 2426
+        },
+        "label_semantics": {
+          "should_refuse": 2426
+        },
+        "source_ids": {
+          "simsonsun/Article": 1,
+          "simsonsun/Bravansky/compact-jailbreaks": 2,
+          "simsonsun/CompactJailbreak": 795,
+          "simsonsun/Github": 3,
+          "simsonsun/GuardrailsAI/detect-jailbreak": 1,
+          "simsonsun/MindGard": 2,
+          "simsonsun/Nannazi": 1135,
+          "simsonsun/Overlap analysis": 30,
+          "simsonsun/Reddit": 6,
+          "simsonsun/Tulu": 407,
+          "simsonsun/injectPrompt": 3,
+          "simsonsun/r1-1776": 1,
+          "simsonsun/r1-1776-jailbreak": 36,
+          "simsonsun/tridm/jailbreak_test_v1.0": 4
+        }
+      },
+      "slabs_test": {
+        "rows": 2101,
+        "labels": {
+          "0": 1050,
+          "1": 1051
+        },
+        "stages": {
+          "S2_inbound_content": 2101
+        },
+        "label_semantics": {
+          "artifact_threat": 2101
+        },
+        "source_ids": {
+          "slabs": 2101
+        }
+      },
+      "ts_bench": {
+        "rows": 7182,
+        "labels": {
+          "0": 3770,
+          "1": 1631,
+          "None": 1781
+        },
+        "stages": {
+          "S4_action": 7182
+        },
+        "label_semantics": {
+          "outcome_unsafe": 7182
+        },
+        "source_ids": {
+          "agentdojo:banking": 87,
+          "agentdojo:slack": 101,
+          "agentdojo:travel": 177,
+          "agentdojo:workspace": 855,
+          "agentharm:benign": 206,
+          "agentharm:harmful": 525,
+          "asb:DPI_attack_success": 2293,
+          "asb:OPI_attack_success": 2509,
+          "asb:attack_failure": 429
+        }
+      },
+      "xstest": {
+        "rows": 450,
+        "labels": {
+          "0": 450
+        },
+        "stages": {
+          "S3_user_request": 450
+        },
+        "label_semantics": {
+          "should_refuse": 450
+        },
+        "source_ids": {
+          "xstest/safe": 250,
+          "xstest/unsafe": 200
+        }
+      }
+    }
+  },
+  "scans": [
+    {
+      "path": "D:/projects/jev/bench/data/scans/jev-v1-full.jsonl",
+      "bytes": 5451505,
+      "sha256": "e915aa579f07494dcf40e10b8ccd3851c53e9ff70797e55d92d0249f00bd41b4",
+      "rows": 13185,
+      "unique_nonnull_uids": 13185,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 13173,
+      "rows_with_error": 12,
+      "models": {
+        "None": 12,
+        "jev-1.13.0": 13173
+      },
+      "profiles": {
+        "None": 13185
+      },
+      "fingerprints": {
+        "421420877d407682": 13173,
+        "None": 12
+      },
+      "corpora": {
+        "None": 12,
+        "agentic5k_test": 545,
+        "atbench": 999,
+        "atbench500": 498,
+        "bipia": 50,
+        "boundary_pairs_test": 240,
+        "deepset_test": 116,
+        "jackhhao_test": 262,
+        "llmail_phase2": 25,
+        "mcptox": 845,
+        "msb": 2135,
+        "neuralchemy_test": 941,
+        "notinject": 339,
+        "orbench_hard": 1317,
+        "piarena": 50,
+        "simsonsun_jailbreaks": 2425,
+        "slabs_test": 1936,
+        "xstest": 450
+      },
+      "rows_with_latency_ms": 13173,
+      "rows_with_nonempty_usage": 13173,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "error",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/local-models-2026-10-09/decider.jsonl",
+      "bytes": 73731,
+      "sha256": "4e862473d0ed84f96dfb5bbd2bf989d1a6c3adfc12334bae4544c79ba5056a67",
+      "rows": 100,
+      "unique_nonnull_uids": 100,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 100,
+      "rows_with_error": 0,
+      "models": {
+        "None": 100
+      },
+      "profiles": {
+        "jev-direct-safe-v1": 60,
+        "jev-stage-s4-v2": 40
+      },
+      "fingerprints": {
+        "None": 100
+      },
+      "corpora": {
+        "mcptox": 30,
+        "msb": 30,
+        "ts_bench": 40
+      },
+      "rows_with_latency_ms": 100,
+      "rows_with_nonempty_usage": 100,
+      "field_names": [
+        "authority",
+        "calls",
+        "corpus",
+        "engine",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "pred",
+        "profile",
+        "profile_hash",
+        "raw_score",
+        "record_sha256",
+        "score",
+        "subject_role",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/local-models-2026-10-09/deepseek-yesconfidence.jsonl",
+      "bytes": 170972,
+      "sha256": "ea3c93dae4fbc28d515df59546a5b0fbb6f6ac1a1ab21e1abd94e85dd38bd506",
+      "rows": 100,
+      "unique_nonnull_uids": 100,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 100,
+      "rows_with_error": 0,
+      "models": {
+        "deepseek-flash": 100
+      },
+      "profiles": {
+        "jev-direct-safe-v1": 60,
+        "jev-stage-s4-v2": 40
+      },
+      "fingerprints": {
+        "None": 100
+      },
+      "corpora": {
+        "mcptox": 30,
+        "msb": 30,
+        "ts_bench": 40
+      },
+      "rows_with_latency_ms": 100,
+      "rows_with_nonempty_usage": 100,
+      "field_names": [
+        "authority",
+        "calls",
+        "corpus",
+        "engine",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "pred",
+        "profile",
+        "profile_hash",
+        "raw_score",
+        "record_sha256",
+        "score",
+        "subject_role",
+        "system_sha256",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/local-models-2026-10-09/deepseek.jsonl",
+      "bytes": 142908,
+      "sha256": "13fb507f4f7125ac837b43b4314a6191d9dcdbd381009d3ade56adc8ad27980e",
+      "rows": 100,
+      "unique_nonnull_uids": 100,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 100,
+      "rows_with_error": 0,
+      "models": {
+        "deepseek-flash": 100
+      },
+      "profiles": {
+        "jev-direct-safe-v1": 60,
+        "jev-stage-s4-v2": 40
+      },
+      "fingerprints": {
+        "None": 100
+      },
+      "corpora": {
+        "mcptox": 30,
+        "msb": 30,
+        "ts_bench": 40
+      },
+      "rows_with_latency_ms": 100,
+      "rows_with_nonempty_usage": 100,
+      "field_names": [
+        "authority",
+        "calls",
+        "corpus",
+        "engine",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "pred",
+        "profile",
+        "profile_hash",
+        "raw_score",
+        "record_sha256",
+        "score",
+        "subject_role",
+        "system_sha256",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/local-models-2026-10-09/disagreements.jsonl",
+      "bytes": 14631,
+      "sha256": "6330f1a66fb884f9aca8c665487af077907e998f3b033b0d218a9066917e2475",
+      "rows": 58,
+      "unique_nonnull_uids": 58,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 0,
+      "rows_with_error": 0,
+      "models": {
+        "None": 58
+      },
+      "profiles": {
+        "None": 58
+      },
+      "fingerprints": {
+        "None": 58
+      },
+      "corpora": {
+        "None": 58
+      },
+      "rows_with_latency_ms": 0,
+      "rows_with_nonempty_usage": 0,
+      "field_names": [
+        "label",
+        "predictions",
+        "uid"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/local-models-2026-10-09/h2o.jsonl",
+      "bytes": 79646,
+      "sha256": "5d004d21430315704a510aec38029d8349cddf4024c33a6434c7d3262d98596b",
+      "rows": 100,
+      "unique_nonnull_uids": 100,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 100,
+      "rows_with_error": 0,
+      "models": {
+        "None": 100
+      },
+      "profiles": {
+        "jev-direct-safe-v1": 60,
+        "jev-stage-s4-v2": 40
+      },
+      "fingerprints": {
+        "None": 100
+      },
+      "corpora": {
+        "mcptox": 30,
+        "msb": 30,
+        "ts_bench": 40
+      },
+      "rows_with_latency_ms": 100,
+      "rows_with_nonempty_usage": 100,
+      "field_names": [
+        "authority",
+        "calls",
+        "corpus",
+        "engine",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "pred",
+        "profile",
+        "profile_hash",
+        "raw_score",
+        "record_sha256",
+        "score",
+        "subject_role",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/local-models-2026-10-09/plumb.jsonl",
+      "bytes": 79493,
+      "sha256": "b2a3c128ee001849c4be9fc8bc697a58100dfbab0283b6ae65679fe82497b5df",
+      "rows": 100,
+      "unique_nonnull_uids": 100,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 100,
+      "rows_with_error": 0,
+      "models": {
+        "None": 100
+      },
+      "profiles": {
+        "jev-direct-safe-v1": 60,
+        "jev-stage-s4-v2": 40
+      },
+      "fingerprints": {
+        "None": 100
+      },
+      "corpora": {
+        "mcptox": 30,
+        "msb": 30,
+        "ts_bench": 40
+      },
+      "rows_with_latency_ms": 100,
+      "rows_with_nonempty_usage": 100,
+      "field_names": [
+        "authority",
+        "calls",
+        "corpus",
+        "engine",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "pred",
+        "profile",
+        "profile_hash",
+        "raw_score",
+        "record_sha256",
+        "score",
+        "subject_role",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/new-corpora-check.jsonl",
+      "bytes": 17850,
+      "sha256": "ca46daf16f49398c17b156295904de753803ff464bb70c9dd6dc25d1d6ab260d",
+      "rows": 42,
+      "unique_nonnull_uids": 42,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 42,
+      "rows_with_error": 0,
+      "models": {
+        "jev-1.13.0": 42
+      },
+      "profiles": {
+        "None": 42
+      },
+      "fingerprints": {
+        "421420877d407682": 42
+      },
+      "corpora": {
+        "agentdojo": 18,
+        "agentdojo_user": 6,
+        "ts_bench": 18
+      },
+      "rows_with_latency_ms": 42,
+      "rows_with_nonempty_usage": 42,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/refactor-smoke-jev.jsonl",
+      "bytes": 1218,
+      "sha256": "af3bf7616b50c6d8e13520607dd355f981c67a21046b02e15486e7ce664fbed5",
+      "rows": 3,
+      "unique_nonnull_uids": 3,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 3,
+      "rows_with_error": 0,
+      "models": {
+        "jev-1.13.0": 3
+      },
+      "profiles": {
+        "None": 3
+      },
+      "fingerprints": {
+        "421420877d407682": 3
+      },
+      "corpora": {
+        "msb": 3
+      },
+      "rows_with_latency_ms": 3,
+      "rows_with_nonempty_usage": 3,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/refactor-smoke.jsonl",
+      "bytes": 32321,
+      "sha256": "7a3a5032e6efb2ae34bf935c96f70a28b5a429b535fde0d241425eb46be2c469",
+      "rows": 87,
+      "unique_nonnull_uids": 87,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 87,
+      "rows_with_error": 0,
+      "models": {
+        "regex-baseline": 87
+      },
+      "profiles": {
+        "None": 87
+      },
+      "fingerprints": {
+        "4d36084ed1e800cf": 87
+      },
+      "corpora": {
+        "agentic5k_test": 6,
+        "atbench": 6,
+        "atbench500": 6,
+        "bipia": 6,
+        "boundary_pairs_test": 6,
+        "deepset_test": 6,
+        "jackhhao_test": 6,
+        "llmail_phase2": 3,
+        "mcptox": 6,
+        "msb": 6,
+        "neuralchemy_test": 6,
+        "notinject": 3,
+        "orbench_hard": 3,
+        "piarena": 6,
+        "simsonsun_jailbreaks": 3,
+        "slabs_test": 6,
+        "xstest": 3
+      },
+      "rows_with_latency_ms": 87,
+      "rows_with_nonempty_usage": 0,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/regex-full.jsonl",
+      "bytes": 7402221,
+      "sha256": "b30a5f03721f2be7afe2f20dd4e94cecb620ac3371ea355979d0b369265b68f1",
+      "rows": 19902,
+      "unique_nonnull_uids": 19902,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 19902,
+      "rows_with_error": 0,
+      "models": {
+        "regex-baseline": 19902
+      },
+      "profiles": {
+        "None": 19902
+      },
+      "fingerprints": {
+        "4d36084ed1e800cf": 19902
+      },
+      "corpora": {
+        "agentic5k_test": 545,
+        "atbench": 1000,
+        "atbench500": 500,
+        "bipia": 3178,
+        "boundary_pairs_test": 240,
+        "deepset_test": 116,
+        "jackhhao_test": 262,
+        "llmail_phase2": 2000,
+        "mcptox": 847,
+        "msb": 2137,
+        "neuralchemy_test": 942,
+        "notinject": 339,
+        "orbench_hard": 1319,
+        "piarena": 1500,
+        "simsonsun_jailbreaks": 2426,
+        "slabs_test": 2101,
+        "xstest": 450
+      },
+      "rows_with_latency_ms": 19902,
+      "rows_with_nonempty_usage": 0,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/regex-new-corpora.jsonl",
+      "bytes": 2722458,
+      "sha256": "c28b39f12c83d5d2f507dae05ddaa01ad16d805bd151fc8102bbf66893833ba8",
+      "rows": 7328,
+      "unique_nonnull_uids": 7328,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 7328,
+      "rows_with_error": 0,
+      "models": {
+        "regex-baseline": 7328
+      },
+      "profiles": {
+        "None": 7328
+      },
+      "fingerprints": {
+        "4d36084ed1e800cf": 7328
+      },
+      "corpora": {
+        "agentdojo": 63,
+        "agentdojo_user": 83,
+        "ts_bench": 7182
+      },
+      "rows_with_latency_ms": 7328,
+      "rows_with_nonempty_usage": 0,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/s4-default-q.jsonl",
+      "bytes": 33354,
+      "sha256": "352b8100026804df745fe9934c6f01eda173e467d172a2c92cf1db57d913eaa1",
+      "rows": 75,
+      "unique_nonnull_uids": 75,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 75,
+      "rows_with_error": 0,
+      "models": {
+        "jev-1.13.0": 75
+      },
+      "profiles": {
+        "jev-direct-safe-v1": 75
+      },
+      "fingerprints": {
+        "421420877d407682": 75
+      },
+      "corpora": {
+        "ts_bench": 75
+      },
+      "rows_with_latency_ms": 75,
+      "rows_with_nonempty_usage": 75,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "profile",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/s4-stage-q.jsonl",
+      "bytes": 33976,
+      "sha256": "363e4331c93bb203e3c710f2bd8be25c4c9915ebbf8473062e35e7e89f2e8d2b",
+      "rows": 75,
+      "unique_nonnull_uids": 75,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 75,
+      "rows_with_error": 0,
+      "models": {
+        "jev-1.13.0": 75
+      },
+      "profiles": {
+        "jev-stage-s4-v1": 75
+      },
+      "fingerprints": {
+        "6d30b301e55a6fcc": 75
+      },
+      "corpora": {
+        "ts_bench": 75
+      },
+      "rows_with_latency_ms": 75,
+      "rows_with_nonempty_usage": 75,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "profile",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/s4b-v1.jsonl",
+      "bytes": 35806,
+      "sha256": "4e7ca158e1c7b1f594d731b512d416a9ac6759ae410567ee37b257a37e423d36",
+      "rows": 80,
+      "unique_nonnull_uids": 80,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 80,
+      "rows_with_error": 0,
+      "models": {
+        "jev-1.13.0": 80
+      },
+      "profiles": {
+        "jev-stage-s4-v1": 80
+      },
+      "fingerprints": {
+        "c6f985778b755399": 80
+      },
+      "corpora": {
+        "ts_bench": 80
+      },
+      "rows_with_latency_ms": 80,
+      "rows_with_nonempty_usage": 80,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "profile",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/s4b-v2.jsonl",
+      "bytes": 35874,
+      "sha256": "90a4a78db268528cd90d6b76aa14b79f24f107f4d4f98807e53841ab0c2c532b",
+      "rows": 80,
+      "unique_nonnull_uids": 80,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 80,
+      "rows_with_error": 0,
+      "models": {
+        "jev-1.13.0": 80
+      },
+      "profiles": {
+        "jev-stage-s4-v2": 80
+      },
+      "fingerprints": {
+        "c40ff20ac22ea229": 80
+      },
+      "corpora": {
+        "ts_bench": 80
+      },
+      "rows_with_latency_ms": 80,
+      "rows_with_nonempty_usage": 80,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "profile",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    },
+    {
+      "path": "D:/projects/jev/bench/data/scans/smoke.jsonl",
+      "bytes": 35890,
+      "sha256": "e3e105c0daa91138af3ea0f1eb2ec0b23fcd70ecdccdf2e87df79f736fe357dc",
+      "rows": 87,
+      "unique_nonnull_uids": 87,
+      "rows_with_uid_outside_current_unified": 0,
+      "rows_with_numeric_score": 87,
+      "rows_with_error": 0,
+      "models": {
+        "jev-1.13.0": 87
+      },
+      "profiles": {
+        "None": 87
+      },
+      "fingerprints": {
+        "421420877d407682": 87
+      },
+      "corpora": {
+        "agentic5k_test": 6,
+        "atbench": 6,
+        "atbench500": 6,
+        "bipia": 6,
+        "boundary_pairs_test": 6,
+        "deepset_test": 6,
+        "jackhhao_test": 6,
+        "llmail_phase2": 3,
+        "mcptox": 6,
+        "msb": 6,
+        "neuralchemy_test": 6,
+        "notinject": 3,
+        "orbench_hard": 3,
+        "piarena": 6,
+        "simsonsun_jailbreaks": 3,
+        "slabs_test": 6,
+        "xstest": 3
+      },
+      "rows_with_latency_ms": 87,
+      "rows_with_nonempty_usage": 87,
+      "field_names": [
+        "authority",
+        "chunks",
+        "corpus",
+        "engine",
+        "fingerprint",
+        "label",
+        "label_semantics",
+        "latency_ms",
+        "model",
+        "overrefusal_probe",
+        "pred",
+        "score",
+        "text_stage",
+        "threshold",
+        "uid",
+        "usage"
+      ]
+    }
+  ],
+  "raw_source_files": [
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.banking.injection_tasks.cpython-312.pyc",
+      "bytes": 18827,
+      "sha256": "6c3a446f70bade2d75484e28baee39042151c9fda32edb87429d0e629a118cbe"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.banking.user_tasks.cpython-312.pyc",
+      "bytes": 21221,
+      "sha256": "58938862ae80c977abf95d5858f5a8bcc1ec61d278a909dbe13dc4c50edfd262"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.slack.injection_tasks.cpython-312.pyc",
+      "bytes": 9692,
+      "sha256": "cb6f4a0f3f4330ae5a9919cf99ea4a2e8b8b12b05a0919d6aff73fe842d59aba"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.slack.user_tasks.cpython-312.pyc",
+      "bytes": 29231,
+      "sha256": "e124169c711121fbb095663da829fb67f8d21e8df8f457bc99448ffee9d35e58"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.travel.injection_tasks.cpython-312.pyc",
+      "bytes": 13841,
+      "sha256": "ff961b29a833af76b689e37ea5ac7948450cf8e0e1a16e425018959335a92c9d"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.travel.user_tasks.cpython-312.pyc",
+      "bytes": 76897,
+      "sha256": "e7b384a949e47a21be88e0b67097ceeebc5e6d39f60480d3223757a27b89633d"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.workspace.injection_tasks.cpython-312.pyc",
+      "bytes": 11937,
+      "sha256": "1ac3473e4d123efb4d752787df0d7d95fbb000a9f36f417497f30b0c6256586b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1.workspace.user_tasks.cpython-312.pyc",
+      "bytes": 61823,
+      "sha256": "8afd2ff6551ca93f9a4916467f9ba31ed4a786d5b7fc059e22b120d496d2e094"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1.travel.user_tasks.cpython-312.pyc",
+      "bytes": 74983,
+      "sha256": "36a121002e0882c327fbb4c23895cb50f67ab698b346e5f654f2b20084733d8b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_1.banking.user_tasks.cpython-312.pyc",
+      "bytes": 3399,
+      "sha256": "8efc73ef3f0940ad0eb0075e91311280aa7e5e7eec494c796255e3db314e00ae"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_1.slack.user_tasks.cpython-312.pyc",
+      "bytes": 12902,
+      "sha256": "b7ab7541b759481d859c11691ae98f9caa029309fc8f2e69639ce639c36d7a69"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_1.travel.injection_tasks.cpython-312.pyc",
+      "bytes": 3657,
+      "sha256": "85df1b4c811b9a52dc11babef23607f7c8110c92121ad16ac891fd5a3327edd7"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_1.travel.user_tasks.cpython-312.pyc",
+      "bytes": 5005,
+      "sha256": "2bcb527f1b53ca3fdbe3ec0128dc7cd1c2343bd7798b0062c0ba83a84ef59653"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_1.workspace.user_tasks.cpython-312.pyc",
+      "bytes": 9815,
+      "sha256": "85f1d7b757dfa93f97950c0f84249c824365cdef7df24570d8e746be4b29b170"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_2.travel.injection_tasks.cpython-312.pyc",
+      "bytes": 6263,
+      "sha256": "97ee5dc48e8f8c2434654abea0a50e3d9119f92aafb5d148d2ba918c8fb8f471"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_2.workspace.injection_tasks.cpython-312.pyc",
+      "bytes": 9378,
+      "sha256": "8071d989d45683e8aa8a760f0c89cd12ed0d68f65d969319f70da8bc0dfb471b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_1_2.workspace.user_tasks.cpython-312.pyc",
+      "bytes": 6136,
+      "sha256": "5ae7ddec49ffe9aff3db5f6798f1049cfd32f90fd7e021731b8edafcd42d745d"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2.banking.injection_tasks.cpython-312.pyc",
+      "bytes": 18504,
+      "sha256": "5dbca3e34edd3bf4a549edc033985d03cd6d3af2a3e014d337c1bf6ff71fddb2"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2.slack.user_tasks.cpython-312.pyc",
+      "bytes": 3992,
+      "sha256": "1e324c941ff245f46a859ba8a5ecfba0443c5394a15c462e0873b9c3ca72a90d"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2.travel.injection_tasks.cpython-312.pyc",
+      "bytes": 2358,
+      "sha256": "41a72db534ba9f49990df8bd145e9a8839173ca767e7bb4283faef75b089d3a8"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2.travel.user_tasks.cpython-312.pyc",
+      "bytes": 5810,
+      "sha256": "8c96053e8081a21e320839099cb90592ea1c3165772cee653c5642746c8b3bd2"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2.workspace.injection_tasks.cpython-312.pyc",
+      "bytes": 23219,
+      "sha256": "7ba2c11231e49d5a4661b03becbb6b7250ffd9fc101dd52f0bb82128635f4129"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2.workspace.user_tasks.cpython-312.pyc",
+      "bytes": 10679,
+      "sha256": "236ff7887bb06da4c3906edd80216a538c674cca4b2f90a10e6b50137d23801c"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2_1.workspace.injection_tasks.cpython-312.pyc",
+      "bytes": 6124,
+      "sha256": "d5144fc2f077e08e5aca8dcfc27309496d90e1871fd79815b57c024d46ffcc4d"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2_2.banking.user_tasks.cpython-312.pyc",
+      "bytes": 2899,
+      "sha256": "66cfad00895f66e213b4a0f2e610ee9cdf8792881756ccd1183fa697ced2d47d"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/__pycache__/v1_2_2.workspace.user_tasks.cpython-312.pyc",
+      "bytes": 1822,
+      "sha256": "edcc0de367202998c3388eb045f6a3a740b24310f5c621c6284dd60bdace3a0f"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/banking.injection_vectors.yaml",
+      "bytes": 657,
+      "sha256": "4eb98a601c108d9b4d88f5d3f2dbf455f775a718975a0ae2624b4cf0d0f6f819"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/slack.injection_vectors.yaml",
+      "bytes": 554,
+      "sha256": "efc01621ffa7955ee10e00e916ac933a41bd8347ba285e1e4888813bf5e0d3a2"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/travel.injection_vectors.yaml",
+      "bytes": 1529,
+      "sha256": "a6ab848b39d862439e7b4844a617e578294de93cd0176c1851184dd901edb51c"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.banking.injection_tasks.py",
+      "bytes": 15309,
+      "sha256": "fa2dedf8e66c95ffadb54f5a26648728b08c56f302858de4ee9a5cc0b3891618"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.banking.user_tasks.py",
+      "bytes": 19450,
+      "sha256": "37af838194f001af80cc040315bcb2d69d0112324d424f9a323473b41b317f82"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.slack.injection_tasks.py",
+      "bytes": 9144,
+      "sha256": "d5775da1689e13192b665837e72cee88ed76f622e9b998e9def18b700fdc5afc"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.slack.user_tasks.py",
+      "bytes": 26012,
+      "sha256": "25e43a0c58109765da090aa2f01bfb0892aaee70ca1622028074d7b49443a57b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.travel.injection_tasks.py",
+      "bytes": 12604,
+      "sha256": "9252be834b0ae0e28fe06744e052987d71d8ad3666b8d0b1f65f2875f998fca8"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.travel.user_tasks.py",
+      "bytes": 76962,
+      "sha256": "757f0e28208f92c2082e016469654524cb1120ec10928ce229da15fe32f6d3ee"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.workspace.injection_tasks.py",
+      "bytes": 10615,
+      "sha256": "03e0894ffb544a79fd0bfd2c62cc5f90b19a2b1d429068d800239bfd020b6dcc"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1.workspace.user_tasks.py",
+      "bytes": 55415,
+      "sha256": "d2a550b812b7f40ee2dea17ac19d44f2dd063d103524118216b563eca6e44171"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1.travel.user_tasks.py",
+      "bytes": 73458,
+      "sha256": "de8746e57fa85a5ee3ec9e4e6d66316c7c33e166e51404ffb64709b4458b9ae6"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_1.banking.user_tasks.py",
+      "bytes": 2751,
+      "sha256": "d7858d3f9a573fcc334d19d4aa63ba92867cd8d5b99e2d102f7c60840fd42b81"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_1.slack.user_tasks.py",
+      "bytes": 11114,
+      "sha256": "d63bace385d0f341cb3d20bbb698a3d1530d7eb6e346cc65d04e4b7ea255467d"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_1.travel.injection_tasks.py",
+      "bytes": 2995,
+      "sha256": "23f325aa0821c7982991657588ee0b58057423559e97d6ebd6febc8274b5ac1b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_1.travel.user_tasks.py",
+      "bytes": 4257,
+      "sha256": "356e46470861de40172a252e92149a2396bca3f66cfcadc0e5a4450fe11c979f"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_1.workspace.user_tasks.py",
+      "bytes": 8010,
+      "sha256": "76da20246f658609a96d95dc206ae7f58785cab5b1f100f76d367c8e4b6fc7f9"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_2.travel.injection_tasks.py",
+      "bytes": 5267,
+      "sha256": "d8688a8896736e4807b649340b84af65eb7b36f34d082073690333445a410b39"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_2.workspace.injection_tasks.py",
+      "bytes": 8339,
+      "sha256": "3ffccf1e54362377a3d02955010b041a572c64aa209bb3e8b70c1fe5fc76fdad"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_1_2.workspace.user_tasks.py",
+      "bytes": 5395,
+      "sha256": "ff4e1b65f10346ba167d44b3236f4fe10fbb2066d6e2a22c4edc8b243d0f0a53"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2.banking.injection_tasks.py",
+      "bytes": 15207,
+      "sha256": "3e678ad165f911dbc16c8307de761dcc15da274716bec7ac0d05db167ec2c311"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2.slack.user_tasks.py",
+      "bytes": 3377,
+      "sha256": "36c51c6fd744301ed5dd9b654f02aca504af50df827453d1754862ed6201fcc2"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2.travel.injection_tasks.py",
+      "bytes": 2048,
+      "sha256": "15b8ccee487223bfc6afc58cf05591e3a96fb668eee39d7d47ac2fd98f5173c0"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2.travel.user_tasks.py",
+      "bytes": 5037,
+      "sha256": "a563163efea5e723e4fbbafae66fca33e6b743e50f6c25865167dc0663615ef9"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2.workspace.injection_tasks.py",
+      "bytes": 17855,
+      "sha256": "d11a9a4aa86085a1b0e8cea20652dd20f903adedfc6065175a0ead858c29e4a3"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2.workspace.user_tasks.py",
+      "bytes": 8951,
+      "sha256": "6b21b84053d1ac1703674e75d75dd4986e489d3434fcf60e8707b96114ab03bb"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2_1.workspace.injection_tasks.py",
+      "bytes": 4361,
+      "sha256": "5a30d439850b58cfb834840bdfe7bbdf4405859bb1899e59ef476f29156078e8"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2_2.banking.user_tasks.py",
+      "bytes": 1945,
+      "sha256": "f3b8417c51b7fe33c0f85571d543a64811f6ef3e4ab9c7ae9568834db66064b2"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/v1_2_2.workspace.user_tasks.py",
+      "bytes": 1452,
+      "sha256": "4873a5c1ba3be813cff5f85e6f921f92f7b3a90e21d2d412e043bcfea696de9b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/agentdojo/workspace.injection_vectors.yaml",
+      "bytes": 2997,
+      "sha256": "3390ac3da090ea0fde5f50ef0a74bf260786b35ab6ff14d47a199ecb41a15489"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/agentdojo-banking.json",
+      "bytes": 239239,
+      "sha256": "eb4a314845c8236ba1bbcd9855973f59279a70368b6eb31d447a4cd243086029"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/agentdojo-slack.json",
+      "bytes": 361979,
+      "sha256": "08152de8cf9c39d01d58eb708f3a820a892f493841b975e09654ab904cf8a0d5"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/agentdojo-travel.json",
+      "bytes": 1071254,
+      "sha256": "1935121585fb1a02662e8121fe80e78c6d89b77e0c6035ea2b75b593e3728a22"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/agentdojo-workspace.json",
+      "bytes": 8959525,
+      "sha256": "74b20a4fcd7df1c3e39a231e64860aeac8cd57ce3531728b329080abbcc862d0"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/agentharm-benign.json",
+      "bytes": 689251,
+      "sha256": "f44fce25b0ed795e3c11fadafb8d8c959d2ae4513e6e9f15e154fa4aba9bf020"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/agentharm-harmful.json",
+      "bytes": 1764105,
+      "sha256": "6046b4f4b2e5086c98780433bddf74be542eeec910e3260b4727bf22a9a3365b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/asb-atttack_failure.json",
+      "bytes": 945992,
+      "sha256": "6cf422389a41416e05d236252ecba8757c1f7d7a978ae270e419ff846ae98f51"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/asb-DPI_attack_success.json",
+      "bytes": 5205776,
+      "sha256": "a900a0775addf35588154d28438127f9c830a08845a105e084b319b1e984d4af"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/asb-opi.json",
+      "bytes": 4712262,
+      "sha256": "e491c96e43c8352e65ca948a72cb3e6f366d60f14fd7d3d6e374865eb092ae47"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/atttack_failure.json",
+      "bytes": 945992,
+      "sha256": "6cf422389a41416e05d236252ecba8757c1f7d7a978ae270e419ff846ae98f51"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/banking.json",
+      "bytes": 239239,
+      "sha256": "eb4a314845c8236ba1bbcd9855973f59279a70368b6eb31d447a4cd243086029"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/benign_steps.json",
+      "bytes": 689251,
+      "sha256": "f44fce25b0ed795e3c11fadafb8d8c959d2ae4513e6e9f15e154fa4aba9bf020"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/DPI_attack_success.json",
+      "bytes": 5205776,
+      "sha256": "a900a0775addf35588154d28438127f9c830a08845a105e084b319b1e984d4af"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/harmful_steps.json",
+      "bytes": 1764105,
+      "sha256": "6046b4f4b2e5086c98780433bddf74be542eeec910e3260b4727bf22a9a3365b"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/OPI_attack_success.json",
+      "bytes": 4712262,
+      "sha256": "e491c96e43c8352e65ca948a72cb3e6f366d60f14fd7d3d6e374865eb092ae47"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/slack.json",
+      "bytes": 361979,
+      "sha256": "08152de8cf9c39d01d58eb708f3a820a892f493841b975e09654ab904cf8a0d5"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/travel.json",
+      "bytes": 1071254,
+      "sha256": "1935121585fb1a02662e8121fe80e78c6d89b77e0c6035ea2b75b593e3728a22"
+    },
+    {
+      "path": "D:/projects/jev/bench/raw/tsbench/workspace.json",
+      "bytes": 8959525,
+      "sha256": "74b20a4fcd7df1c3e39a231e64860aeac8cd57ce3531728b329080abbcc862d0"
+    }
+  ],
+  "agentdojo_static_variants": {
+    "raw_goal": 35,
+    "clean_slot_default": 28
+  },
+  "tsbench_groups": {
+    "AgentDojo": 1220,
+    "AgentHarm": 731,
+    "ASB": 5231
+  },
+  "scripted_harness": {
+    "path": "D:/projects/jev/harness/runs/gate-placement/episodes.jsonl",
+    "bytes": 92929,
+    "sha256": "2d4a74d20aec46779223fa9d09c69ba492584e78da88939f9940ff2efe81e021",
+    "rows": 78,
+    "unique_task_ids": 13,
+    "guards": {
+      "jev-action-gate-v1": 26,
+      "jev-direct-safe-v1": 26,
+      "none": 26
+    },
+    "evidence_boundary": "Scripted policy and simulated tools; not a live LLM-agent evaluation"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "check": "public-index fixture aggregation, not a model or dataset rebuild",
+  "revision": "f8552a13b643d39f61185f5951bb5fed16bedf51",
+  "passed": 11,
+  "area_weights": {
+    "knowledge": 0.258494,
+    "language": 0.258494,
+    "retrieval": 0.200229,
+    "tools": 0.182783,
+    "arts": 0.1
+  },
+  "scoreable_requests": 140178,
+  "entrants": [
+    {
+      "engine": "jev",
+      "expected": 57.96,
+      "computed": 57.96355089485665,
+      "delta": 0.0035508948566516096
+    },
+    {
+      "engine": "pplx-decider-v1.1-27b",
+      "expected": 62.25,
+      "computed": 62.25432422898316,
+      "delta": 0.004324228983158207
+    },
+    {
+      "engine": "decision-27b-ckpt-nothink",
+      "expected": 59.06,
+      "computed": 59.062668469785294,
+      "delta": 0.0026684697852914496
+    },
+    {
+      "engine": "torchcast-decision-27b",
+      "expected": 65.1,
+      "computed": 65.10205348376245,
+      "delta": 0.0020534837624524016
+    },
+    {
+      "engine": "kev-27b",
+      "expected": 56.69,
+      "computed": 56.693292840992406,
+      "delta": 0.0032928409924082302
+    },
+    {
+      "engine": "quyet-1.0-large",
+      "expected": 60.79,
+      "computed": 60.785910325396664,
+      "delta": 0.004089674603335425
+    },
+    {
+      "engine": "clef",
+      "expected": 61.71,
+      "computed": 61.711381407891395,
+      "delta": 0.0013814078913938488
+    },
+    {
+      "engine": "jpt-9b",
+      "expected": 46.96,
+      "computed": 46.95892395904628,
+      "delta": 0.0010760409537198257
+    },
+    {
+      "engine": "jpt-0.8b",
+      "expected": 19.37,
+      "computed": 19.365887324671682,
+      "delta": 0.004112675328318716
+    },
+    {
+      "engine": "lavoir",
+      "expected": 8.85,
+      "computed": 8.85396580132273,
+      "delta": 0.003965801322729945
+    },
+    {
+      "engine": "verdict-8af2496e",
+      "expected": 1.86,
+      "computed": 1.8603687310890464,
+      "delta": 0.0003687310890463369
+    }
+  ]
+}

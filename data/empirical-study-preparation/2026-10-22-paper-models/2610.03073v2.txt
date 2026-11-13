@@ -1,0 +1,3301 @@
+
+
+
+SecJev: Bringing Security Expertise to System One Decision Models
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ Report GitHub Issue
+ ×
+ 
+
+ 
+ Title:
+ 
+
+ 
+Content selection saved. Describe the issue below:
+
+ Description:
+ 
+ 
+
+ 
+ Submit without GitHub
+ Submit in GitHub
+ 
+ 
+
+ 
+ arXiv is now an independent nonprofit!
+ Learn more
+ ×
+ 
+
+
+ 
+ 
+ Back to arXiv
+ 
+ 
+ 
+ 
+ Why HTML?
+ 
+ 
+ 
+ 
+ Report Issue
+ 
+ 
+ 
+ 
+ 
+ 
+ Back to Abstract
+ 
+ 
+ 
+ 
+ 
+ 
+ Download PDF
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+Abstract
+
+1 Introduction
+
+2 Related Work
+
+
+Domain and security specialization.
+
+Decision interfaces.
+
+Security observations and policies.
+
+
+3 SecJev
+
+
+3.1 Decision Interface
+
+3.2 Single-Pass Candidate Scoring
+
+3.3 Security Adaptation
+
+
+4 SecJev-Corpus
+
+
+4.1 Task Construction
+
+
+Tool-output security.
+
+Traffic and vehicle observations.
+
+Client updates and voting.
+
+Authentication policies.
+
+
+4.2 Splits and Quality Control
+
+
+5 Experiments
+
+
+5.1 Experimental Setup
+
+
+Evaluation.
+
+Training and precision.
+
+
+5.2 Security Specialization and Model Size
+
+5.3 Comparison with Other Decision Interfaces
+
+5.4 Transfer to Related Security Data
+
+
+6 Analysis
+
+
+6.1 Question Meaning and Candidate Order
+
+6.2 Value of General Decision Initialization
+
+6.3 Retention and Confidence
+
+6.4 Data Validity and Supervision Semantics
+
+
+7 Conclusion
+
+References
+
+A Implementation and Model Selection
+
+
+A.1 Model Selection
+
+
+B Corpus and Evaluation Audit
+
+
+Answer agreement.
+
+Evidence quality.
+
+
+C Semantic Consistency by Task
+
+D Direct-Qwen Initialization
+
+E Paired Uncertainty and General Confidence
+
+F Generative and Classification Baselines
+
+G Matched-Precision Timing Details
+
+
+
+
+ 
+ License: arXiv.org perpetual non-exclusive license
+ 
+ 
+arXiv:2610.03073v2 [cs.CR] 14 Oct 2026
+
+
+
+SecJev: Bringing Security Expertise to System One Decision Models
+
+
+Zheng Chen
+
+Affiliation: University of Electronic Science and Technology of China
+
+  
+Fei Yu
+
+Affiliation: National Key Laboratory of Security Communicationhttps://github.com/UESTC1010/SecJev
+
+  
+Haohao Huang
+
+Affiliation: University of Electronic Science and Technology of China
+
+  
+Yang Li
+
+Affiliation: National Key Laboratory of Security Communicationhttps://github.com/UESTC1010/SecJev
+
+  
+Anlong Chen
+
+Affiliation: University of Electronic Science and Technology of China
+
+  
+Lei Chen
+
+Affiliation: National Key Laboratory of Security Communicationhttps://github.com/UESTC1010/SecJev
+
+
+Abstract
+ 
+
+Security workflows need models that turn complex observations and explicit policies into decisions. System One models introduced by Jev return typed predictions and probabilities; security specialization supplies the domain expertise behind those predictions. We introduce SecJev, to our knowledge the first family of Jev-style decision models specialized for security, spanning 0.8B to 9B parameters. Built on Kev’s single-pass candidate scorer, SecJev learns Boolean, choice, and ordered decisions from text, telemetry, and observation histories. We develop SecJev-Corpus to unify source-label prediction and explicit-policy evaluation across 14 tasks and eight sources. It covers tool outputs, traffic, federated updates, consensus, authentication, and vehicle messages. Scene-weighted training adapts the models across these domains while preserving a shared typed decision interface. Security specialization improves every model in the family; SecJev-0.8B outperforms general Kev-9B by 20.51 percentage points in task-macro accuracy. At 0.8B and 4B, SecJev achieves accuracy and latency close to answer-only generative fine-tuning with lower peak allocated GPU memory. SecJev-4B improves on Kev-4B and security-trained generation in prompt-injection and traffic transfer tests. We release adapters, decision heads, SecJev-Corpus, and training and inference code.
+ 
+
+
+
+
+
+
+
+1 Introduction
+
+
+
+Security workflows repeatedly turn complex observations into decisions about tool outputs, authentication histories, or voting evidence (Debenedetti et al., 2024; Kent, 2016; Bano et al., 2022). The same tool response can require both injection detection and a trust-boundary action, while voting evidence can require both a quorum judgment and a policy decision. Each answer depends on how the observation relates to the question and any applicable policy.
+
+
+Figure 1: SecJev’s shared decision path and security adaptation. Source annotations and explicit policies provide requests and targets. One backbone with layerwise LoRA adapters produces decision-marker and candidate-end states; the pointer head scores candidates to obtain typed outputs. Solid edges carry forward computation during both training and inference. Gray dashed edges supply gold labels and logits to scene-weighted cross-entropy; coral dashed edges update only LoRA and the head, leaving the backbone frozen. General-decision initialization uses official Kev for 0.8B/4B/9B and our pretrained 2B model.
+
+
+
+Jev introduced System One models in September 2026 that return typed decisions and probabilities directly (Almeida, 2026). Kev provides open weights for training and running Jev-style models (Palmer, 2026). Here, Jev-style denotes models that take observations, a question, and candidate meanings as input and return probabilities over Boolean, choice, or ordered alternatives. Security specialization equips this general decision interface with the expertise to interpret domain observations and apply stated policies.
+
+
+
+We introduce SecJev, to our knowledge the first family of Jev-style models specialized for security, at 0.8B, 2B, 4B, and 9B. SecJev brings security expertise to Kev’s single-pass candidate scorer through trained adapters and a decision head. All four models support Boolean, choice, and ordered outputs, allowing distinct questions about a scene to share the same model and typed interface.
+
+
+
+We develop SecJev-Corpus to train this capability across tool outputs, traffic, federated updates, consensus, authentication, and vehicle messages. Its 170,185 questions combine source-annotation prediction from observations with explicit-policy evaluation against visible evidence. Questions and candidate descriptions preserve the target semantics of each task. Scene-weighted training balances scenes with different numbers of questions while retaining the single-pass decision path (Figure 1).
+
+
+
+Security specialization improves all 14 tasks at all four sizes. SecJev-0.8B gains 39.40 percentage points in task-macro accuracy over Kev-0.8B and exceeds general Kev-9B by 20.51 points. At 0.8B and 4B, SecJev combines accuracy and latency close to answer-only generation with lower peak allocated GPU memory. General-decision initialization improves the 0.8B model over training the pointer directly on Qwen3.5. Four-shot BIPIA and IoT-23 tests extend the gains to related security tasks. Paraphrase and candidate-permutation tests show stable task aggregates, while general-task evaluation measures capability retention. We release the models, SecJev-Corpus, and code.
+
+
+
+
+2 Related Work
+
+
+
+Domain and security specialization.
+
+
+
+Domain-adaptive pretraining and instruction tuning focus language models on specialized distributions (Gururangan et al., 2020; Wadden et al., 2025; Shi et al., 2025; Zeng et al., 2024). CyberBench combines a multitask cybersecurity benchmark with CyberInstruct, a family of security instruction-tuned generative models (Liu et al., 2024). SecBench evaluates security knowledge and reasoning through multiple-choice and short-answer questions (Jing et al., 2024). LLM fine-tuning also supports anomaly detection in behavior logs (Song et al., 2025). SecJev develops a security-specialized Jev-style family whose shared scorer conditions on the observation, question, and candidate meanings. This supports both source-label prediction and explicit-policy decisions across security domains.
+
+
+
+
+Decision interfaces.
+
+
+
+Jev introduced typed System One predictions (Almeida, 2026); Kev supplies the pointer head and Boolean, choice, and ordered-score interfaces used here (Palmer, 2026). SecJev specializes this architecture through low-rank adaptation (LoRA) (Hu et al., 2022), with temperature scaling for confidence (Guo et al., 2017). Prompt-injection attacks on Jev motivate evaluating how decision models interpret security evidence (Wu and Lim, 2026). Classification-head fine-tuning also provides discriminative multiple-choice decisions, scoring each context–candidate sequence separately (Sood and Savelka, 2026). SecJev brings security specialization to Jev-style models with a shared single-pass candidate scorer, and compares the family with one-token generation and candidate-sequence classification.
+
+
+
+
+Security observations and policies.
+
+
+
+AgentDojo and InjecAgent provide tool-integrated injection scenarios (Debenedetti et al., 2024; Zhan et al., 2024). CICIoT2023, ToN-IoT, LANL, and VeReMi supply network, authentication, and vehicle observations (Neto et al., 2023; Moustafa, 2021a; Kent, 2015; Hermann et al., 2026). Twins and ByzFL support controlled consensus and federated-learning scenarios (Bano et al., 2022; González et al., 2025). SecJev-Corpus preserves their target semantics while expressing questions and candidate meanings through one interface.
+
+
+
+
+
+3 SecJev
+
+
+
+3.1 Decision Interface
+
+
+
+A scene contains a state ss and one or more questions. Each question supplies an instruction qq and candidate descriptions C=(c1,…,cK)C=(c_{1},\ldots,c_{K}). The state holds text, telemetry, or an observation history, including any policy required by the question. A Boolean request returns the probability of true; a choice returns candidate probabilities and the highest-scoring key; an ordered request additionally returns the expected level. Candidate descriptions are inputs, allowing one head to support different answer vocabularies.
+
+
+
+Kev renders each question as an independent causal row containing the state, question, delimited candidates, and a final decision marker, preserving field names and order. This accommodates Qwen3.5’s hybrid recurrent and attention backbone (Qwen Team, 2026). Batches contain independently encoded questions, with candidate order visible within each row.
+
+
+
+
+3.2 Single-Pass Candidate Scoring
+
+
+
+Let hdh_{d} be the hidden state at the final decision marker and hkh_{k} the state at candidate kk’s closing delimiter. Kev’s learned affine projections map both to dimension dp=256d_{p}=256, giving
+
+
+
+
+
+zk=(WQ​hd+bQ)𝖳​(WK​hk+bK)dp.z_{k}=\frac{(W_{Q}h_{d}+b_{Q})^{\mathsf{T}}(W_{K}h_{k}+b_{K})}{\sqrt{d_{p}}}.
+
+(1)
+
+
+The projections are shared across candidates. Probabilities are
+
+
+
+
+
+p⁡(ck∣s,q,C)=exp⁡(zk/T)∑j=1Kexp⁡(zj/T),p(c_{k}\mid s,q,C)=\frac{\exp(z_{k}/T)}{\sum_{j=1}^{K}\exp(z_{j}/T)},
+
+(2)
+
+
+with T=1T=1 during training. Prediction takes the maximum-probability candidate. For levels 0,…,K−10,\ldots,K-1, the expected level is ∑k(k−1)​p​(ck∣s,q,C)\sum_{k}(k-1)p(c_{k}\mid s,q,C). Answer keys and probability fields are assembled after scoring; no answer tokens are decoded autoregressively.
+
+
+
+
+3.3 Security Adaptation
+
+
+
+The 0.8B, 4B, and 9B models inherit released Kev adapters and heads. The 2B model first learns general decisions on Qwen3.5-2B-Base using Kev’s general-decision data and a supplement covering date reasoning and missing evidence. All four use a three-epoch security-training budget.
+
+
+
+We freeze the backbone and train rank-16 LoRA adapters with scaling factor 32 and dropout 0.05, together with the pointer head. Adapters cover attention, feed-forward, and DeltaNet projections. Every security question appears once per epoch, without general-domain replay. To balance scenes containing different numbers of questions, question jj in scene ii receives weight 1/mi1/m_{i}. For NN scenes, the objective is
+
+
+
+
+
+ℒ=−1N∑i=1N1mi∑j=1milogp(yi​j∣si,qi​j,Ci​j).\mathcal{L}=-\frac{1}{N}\sum_{i=1}^{N}\frac{1}{m_{i}}\sum_{j=1}^{m_{i}}\log p(y_{ij}\mid s_{i},q_{ij},C_{ij}).
+
+(3)
+
+
+All output types share this candidate cross-entropy objective.
+
+
+
+A separate calibration split fits one positive scalar temperature by minimizing negative log-likelihood (NLL). Scaling changes confidence while preserving the highest-scoring candidate. Appendix A.1 specifies checkpoint selection and Appendix A gives the training details.
+
+
+
+
+
+4 SecJev-Corpus
+
+
+
+SecJev-Corpus contains 170,185 questions from 115,324 scenes and eight sources (Table 1). There are 137,067 Boolean, 25,721 choice, and 7,397 ordered questions. The ordered task concerns consensus evidence, where each level has an explicit meaning. Construction follows two target families: source-annotation prediction from observations, and policy evaluation from a displayed rule and history. Questions and candidate descriptions specify which decision the shared model should make.
+
+
+
+
+
+
+Source
+Decision task
+Type
+Questions
+
+
+
+
+CICIoT2023
+Attack-capture label
+Boolean
+48,000
+
+
+ToN-IoT
+Connection attack label
+Boolean
+40,000
+
+
+Twins / Streamlet
+Observed candidate-voter conflict
+Boolean
+7,397
+
+
+
+Candidate quorum
+Boolean
+7,397
+
+
+
+Certificate policy action
+Choice
+7,397
+
+
+
+Evidence level
+Ordered
+7,397
+
+
+VeReMi NextGen
+Message-manipulation label
+Boolean
+11,249
+
+
+
+Ten-way attack/normal label
+Choice
+11,249
+
+
+ByzFL-based experiments
+Attack-generated client update
+Boolean
+17,000
+
+
+LANL authentication
+Prior-failure threshold
+Boolean
+3,951
+
+
+
+Logon policy triage
+Choice
+3,951
+
+
+AgentDojo
+Embedded prompt injection
+Boolean
+2,073
+
+
+
+Trust-boundary action
+Choice
+2,070
+
+
+InjecAgent
+Requested operation
+Choice
+1,054
+
+
+Total
+14 tasks
+
+170,185
+
+
+Table 1: Corpus coverage across all splits. Several tasks can share a scene; the 17,000 client-update questions instantiate one task.
+
+
+
+4.1 Task Construction
+
+
+
+Tool-output security.
+
+
+
+AgentDojo scenes preserve the trusted request, tool call, untrusted response, and trust policy. Questions ask whether an embedded injection is present and whether the response should be used as data or its redirecting instruction excluded. InjecAgent questions distinguish instructions requesting information transfer from other operations. The target describes the requested operation, not attack success or the sensitivity of every transmitted item. A detection formulation with only positive labels is excluded.
+
+
+
+
+Traffic and vehicle observations.
+
+
+
+CICIoT2023 predicts attack-capture labels from measured traffic. ToN-IoT predicts connection labels from protocol and application telemetry, omitting endpoint identities. VeReMi uses local vehicle-message histories to predict the final message’s manipulation label and one of ten attack/normal categories. These tasks predict the original source annotations from the displayed observations.
+
+
+
+
+Client updates and voting.
+
+
+
+ByzFL-based supervision comes from 80 controlled MNIST experiments. Inputs contain measured update magnitudes, median distances, and historical cosine similarities, informed by FoolsGold (Fung et al., 2020). Labels distinguish attack-generated updates from honest local training, including non-IID clients. Twins scenes show received messages, a candidate block and round, validators, and a quorum threshold. Questions address visible conflict, quorum, certificate action, and evidence level. The stated policy rejects an observed conflicting voter, otherwise accepts a quorum, and otherwise waits. The targets therefore describe the received evidence and its policy consequences.
+
+
+
+
+Authentication policies.
+
+
+
+LANL scenes use the current event and a source account/computer’s preceding 300-second history (Kent, 2016). Same-second events are excluded because their ordering is unknown. Questions concern a prior-failure threshold and a stated logon-triage policy. This is post-event triage: the current success/failure may be visible. This supplies policy-defined supervision for events without attack annotations.
+
+
+
+
+
+4.2 Splits and Quality Control
+
+
+
+Records separate visible evidence from labels and provenance. Source labels map to semantic candidates; policy answers are computed from the displayed rule and history. Identifiers are locally aliased without breaking relationships. Questions are added only when the source supports the corresponding distinction.
+
+
+
+Table 2 gives the four splits. All questions from a scene remain together. Grouping uses captures for CICIoT2023, source hosts for ToN-IoT, simulation runs for Twins/ByzFL, and chronological days for LANL. AgentDojo groups link records sharing normalized tool responses; InjecAgent groups records by trusted user task. VeReMi retains its independent test boundary and groups related non-test vehicle observations. Every semantic class has at least 50 questions per task/split; no class exceeds 80%, and the largest cross-split class-share gap is 8.58 percentage points. Unordered correct-answer positions are distributed within classes and splits; ordered levels retain their order.
+
+
+
+
+
+
+Split
+Scenes
+Questions
+
+
+
+
+Training
+81,410
+118,818
+
+
+Calibration
+9,333
+14,821
+
+
+Development
+9,911
+14,912
+
+
+Test
+14,670
+21,634
+
+
+Total
+115,324
+170,185
+
+
+Table 2: Corpus partition. Calibration fits temperature; checkpoint selection is specified in Appendix A.1.
+
+
+
+Exhaustive checks cover schemas, candidate-label agreement, duplicates, contradictory labels, and group overlap. Independent policy recomputation checks 37,490 LANL/Twins questions. Inputs exclude supervision and provenance, and fit within 8,192 tokens without truncation. The release preserves source-specific terms, including ToN-IoT’s academic-use conditions and requested attribution.11
+ 1
+ 
+ 
+ 
+ Companion publications: Booij et al. (2022); Alsaedi et al. (2020); Moustafa et al. (2020b); Moustafa et al. (2020a); Moustafa (2019); Moustafa (2021b); Ashraf et al. (2021).
+
+
+
+
+
+5 Experiments
+
+
+
+We evaluate security capability across sizes, accuracy and inference cost against generation, and transfer to related sources. Analyses examine initialization, semantic consistency, and general-decision retention.
+
+
+
+5.1 Experimental Setup
+
+
+
+Evaluation.
+
+
+
+We evaluate all 21,634 security-test questions. Task-macro accuracy gives each of the 14 tasks equal weight; micro accuracy weights individual questions. Task-macro balanced accuracy additionally averages class recall within each task. All three output types use their highest-probability candidate for accuracy. A majority baseline selects each task’s most frequent training semantic class, independent of answer position. Paired 95% intervals use 2,000 source-stratified bootstrap draws of whole groups, sharing group weights across associated tasks (Appendix E).
+
+
+
+
+Training and precision.
+
+
+
+Security adaptation uses AdamW and rank-16 LoRA. Peak learning rates are 2×10−52\times 10^{-5} for the first epoch and 10−510^{-5} for continuation, with effective batches of 128 and 192. Security-test accuracy uses 32-bit floating-point (FP32) backbones for 0.8B/2B/4B and bfloat16 (BF16) for 9B, with FP32 adapters and heads. Each parent–SecJev pair uses matching precision and complete inputs. Appendix A gives the optimizer and schedule details.
+
+
+
+
+
+5.2 Security Specialization and Model Size
+
+
+
+Table 3 measures the capability gained by security specialization, pairing each SecJev model with its general-decision initialization. Adaptation improves every task at every size. Macro gains are 39.40, 40.83, 26.63, and 24.26 percentage points for 0.8B, 2B, 4B, and 9B. All four macro-gain intervals exclude zero; the 4B gain has a 95% interval of [18.59,30.75][18.59,30.75] points. The training-majority baseline reaches 62.89% macro accuracy. SecJev-0.8B exceeds Kev-9B by 20.51 points, using roughly one eleventh of its nominal parameters.
+
+
+
+
+
+
+
+
+
+0.8B
+2B
+4B
+9B
+
+
+Task
+nn
+Maj.
+Init.
+SecJev
+Init.
+SecJev
+Init.
+SecJev
+Init.
+SecJev
+
+
+AgentDojo: boundary
+426
+77.46
+51.88
+80.28
+40.85
+92.96
+54.23
+99.53
+61.97
+98.83
+
+
+AgentDojo: injection
+426
+77.46
+32.86
+79.81
+29.81
+92.72
+73.00
+98.36
+64.55
+98.83
+
+
+ByzFL: client update
+800
+80.00
+79.62
+92.62
+80.00
+97.50
+79.88
+95.88
+80.25
+93.88
+
+
+CICIoT2023: attack
+6,000
+75.00
+25.00
+91.80
+25.00
+92.13
+26.28
+91.72
+37.93
+90.27
+
+
+InjecAgent: operation
+124
+56.45
+44.35
+100.00
+51.61
+98.39
+62.90
+100.00
+57.26
+100.00
+
+
+LANL: logon action
+540
+50.93
+72.41
+98.89
+72.78
+99.81
+79.81
+100.00
+96.11
+99.63
+
+
+LANL: failure threshold
+540
+75.56
+80.74
+99.81
+99.44
+100.00
+99.44
+100.00
+99.81
+100.00
+
+
+ToN-IoT: attack
+3,500
+75.00
+25.00
+98.03
+25.00
+98.97
+50.66
+98.80
+24.83
+98.89
+
+
+Twins: evidence level
+659
+39.15
+41.12
+98.79
+40.06
+99.85
+81.18
+99.54
+81.94
+99.85
+
+
+Twins: policy action
+659
+39.15
+47.65
+98.48
+39.45
+100.00
+71.78
+99.85
+88.16
+100.00
+
+
+Twins: quorum
+659
+64.49
+53.41
+99.70
+64.95
+99.85
+78.15
+100.00
+91.81
+99.85
+
+
+Twins: conflict
+659
+69.80
+64.04
+99.24
+70.11
+99.70
+97.12
+99.85
+96.97
+100.00
+
+
+VeReMi: manipulation
+3,321
+52.24
+47.76
+63.11
+48.12
+66.21
+47.76
+70.34
+47.76
+69.26
+
+
+VeReMi: attack type
+3,321
+47.76
+47.24
+64.14
+42.97
+63.69
+48.09
+69.23
+48.15
+67.90
+
+
+Micro accuracy
+21,634
+64.25
+40.53
+85.03
+40.44
+86.48
+50.49
+88.01
+50.87
+87.18
+
+
+Task-macro accuracy
+21,634
+62.89
+50.94
+90.34
+52.15
+92.98
+67.88
+94.51
+69.82
+94.08
+
+
+Task-macro balanced
+21,634
+43.57
+51.86
+88.00
+51.34
+90.31
+67.16
+92.42
+70.36
+91.27
+
+
+Table 3: Full security-test accuracy (%). Maj. predicts the training-majority semantic class. Init. denotes official Kev for 0.8B/4B/9B and our general-decision model for 2B. Checkpoint choices are given in Appendix A.1. Macro weights tasks equally; balanced macro also balances semantic classes.
+
+
+
+Security specialization produces gains throughout the family, with 4B leading task-macro accuracy (94.51%) and balanced macro (92.42%). The capability profile spans three settings: at 4B, task-macro accuracy rises from 63.38 to 99.30% on the three tool-text tasks, from 50.53 to 85.19% on the five source-label tasks, and from 84.58 to 99.87% on the six explicit-policy tasks. Near-perfect policy scores show that the models learn to apply stated rules to visible evidence; strong gains also extend to predicting source annotations and interpreting tool responses. ByzFL peaks at 2B, while both VeReMi tasks remain below 72%. Vehicle-message classification accounts for 6,642 test questions but only two macro-average terms, explaining the lower micro accuracy. Together, the gains on source-label, tool-text, and explicit-policy tasks show security specialization across distinct target semantics through one candidate-scoring interface.
+
+
+
+
+5.3 Comparison with Other Decision Interfaces
+
+
+
+SecGen is the generative supervised fine-tuning (SFT) baseline on SecJev-Corpus at 0.8B and 4B, using matching Qwen3.5 bases, rank-16 LoRA, scene weighting, and three epochs. It predicts one answer-key token with full-vocabulary cross-entropy and a frozen vocabulary head. At 0.8B, we also train a shared scalar classification head on separately encoded context–candidate sequences (Sood and Savelka, 2026), using the same security recipe. A direct-Qwen pointer measures candidate scoring without Kev initialization. Appendix F gives protocols and development-based selection.
+
+
+
+Timing uses one RTX 3090, a common BF16 backbone with FP32 adapters and heads, and matching attention implementations. Accuracy is recomputed on the full security test with the serial timing implementation for Table 4. Batch-one latency includes request parsing and validation, tokenization, device transfer, inference, and answer processing after warm-up, excluding model loading. Each request contains one question, with no prompt-cache reuse. Short inputs have at most 512 tokens and long inputs have 2,048–8,192; each stratum contains 100 fixed development questions. Greedy generative decoding uses an answer-key grammar and stops at key completion. Invalid outputs count as errors. We report medians, pooled P95, serial batch-one throughput, and peak allocated GPU memory over five timing passes.
+
+
+
+
+
+
+Size
+Method
+Macro acc.
+Short ms
+Long ms
+P95 ms
+Q/s
+GiB
+
+
+
+
+0.8B
+SecJev
+90.46
+79.2
+164.1
+256.0
+7.32
+2.56
+
+
+0.8B
+SecGen
+90.01
+80.4
+167.4
+260.1
+7.22
+3.52
+
+
+0.8B
+Direct-Qwen pointer
+88.12
+80.4
+164.6
+256.7
+7.27
+2.56
+
+
+4B
+SecJev
+94.48
+109.1
+578.8
+890.5
+2.54
+10.18
+
+
+4B
+SecGen
+94.34
+116.9
+599.9
+910.6
+2.47
+12.58
+
+
+9B
+Kev
+69.79
+169.1
+861.0
+1278.5
+1.73
+17.11
+
+
+Table 4: Matched accuracy and inference cost. Accuracy (%) is re-evaluated at common precision. Short/long latencies are medians; P95 is the pooled 95th-percentile latency. Q/s is mean serial throughput at batch size one, and GiB is peak allocated GPU memory. Each pass measures 100 short and 100 long requests.
+
+
+
+At FP32 precision, SecGen reaches 90.02/94.35% task-macro accuracy at 0.8B/4B, versus SecJev’s 90.34/94.51%; balanced macro is 87.79/92.30% versus 88.00/92.42%. The 0.8B classifier reaches 89.85% macro and 86.84% balanced macro, between SecJev and the direct-Qwen pointer (88.17/83.75%). Security supervision thus supports several output interfaces, with SecJev leading these task aggregates. At common BF16 precision, both SecJev and the one-token generative baseline require one forward pass, with close latency and serial throughput (Table 4). SecJev reduces peak allocated GPU memory from 3.52 to 2.56 GiB at 0.8B and from 12.58 to 10.18 GiB at 4B, reductions of about 27% and 19%. The candidate scorer thus supports typed security decisions with a smaller measured memory footprint at comparable inference cost. Section 6.2 isolates the contribution of Kev initialization at 0.8B; Appendix G reports timing variability.
+
+
+
+
+
+
+Dataset
+Model
+nn
+Accuracy
+Precision
+Recall
+FPR
+
+
+
+
+BIPIA
+Kev-4B
+1000
+71.30
+64.14
+96.60
+54.00
+
+
+BIPIA
+SecJev-4B
+1000
+83.60
+75.38
+99.80
+32.60
+
+
+BIPIA
+SecGen-4B
+1000
+79.60
+71.39
+98.80
+39.60
+
+
+IoT-23
+Kev-4B
+1000
+73.00
+65.54
+97.00
+51.00
+
+
+IoT-23
+SecJev-4B
+1000
+90.20
+86.95
+94.60
+14.20
+
+
+IoT-23
+SecGen-4B
+1000
+84.30
+76.34
+99.40
+30.80
+
+
+Table 5: Transfer performance of 4B models on BIPIA and IoT-23 (%), with 1,000 test examples per dataset. SecGen-4B is the answer-only generative baseline. Injected content and malicious traffic are the positive classes for precision, recall, and false-positive rate (FPR).
+
+
+
+
+
+
+Change
+SecJev size
+Pairs
+Original acc.
+Changed acc.
+Consistency
+Both correct
+
+
+
+
+Paraphrase
+0.8B
+1400
+88.64
+87.79
+95.36
+85.93
+
+
+
+2B
+1400
+90.79
+89.86
+96.57
+88.79
+
+
+
+4B
+1400
+91.64
+91.14
+98.36
+90.57
+
+
+
+9B
+1400
+90.71
+90.64
+96.43
+88.93
+
+
+Choice permutation
+0.8B
+500
+83.00
+82.60
+98.80
+82.20
+
+
+
+2B
+500
+84.80
+84.00
+97.40
+83.40
+
+
+
+4B
+500
+89.00
+89.00
+98.40
+88.20
+
+
+
+9B
+500
+87.40
+87.80
+98.60
+87.00
+
+
+Table 6: Paired semantic consistency (%). Original/changed accuracy uses the same eligible questions: 1,400 for paraphrasing and 500 for permutation. Consistency is semantic answer agreement; both-correct requires both predictions to match the label. Tasks have equal weight within each condition.
+
+
+
+
+5.4 Transfer to Related Security Data
+
+
+
+We evaluate transfer to BIPIA-derived prompt-injection detection22
+ 2
+ 
+ 
+ 
+ https://github.com/microsoft/BIPIA and IoT-23 malicious-flow identification,33
+ 3
+ 
+ 
+ 
+ https://www.stratosphereips.org/datasets-iot23 extending the tool-output and traffic settings represented in SecJev-Corpus. Each dataset contains 1,000 binary test examples, with 500 examples per class. All three 4B models use 4-shot prompts with four labeled demonstrations retrieved from a pool disjoint from the test sets. The demonstrations specify source-specific label meanings and decision criteria, providing a compact way to configure a new security task. Model parameters remain fixed.
+
+
+
+On BIPIA, SecJev-4B reaches 83.60% accuracy, exceeding Kev-4B’s 71.30% and SecGen-4B’s 79.60% by 12.30 and 4.00 percentage points (Table 5). SecJev combines 99.80% recall with 75.38% precision. Its false-positive rate falls to 32.60%, from 54.00% for Kev and 39.60% for SecGen. In this test, SecJev combines higher injection recall with fewer false alarms.
+
+
+
+On IoT-23, SecJev-4B achieves 90.20% accuracy, versus 73.00% for Kev-4B and 84.30% for SecGen-4B, gaining 17.20 and 5.90 points. Precision rises to 86.95%, and the false-positive rate falls to 14.20%, versus SecGen’s 76.34% and 30.80%. SecGen has higher recall (99.40% versus 94.60%), while SecJev’s fewer benign-flow errors yield higher overall accuracy. SecJev leads both baselines across the two tasks under this four-example setup. These gains support using one security-specialized decision interface for both untrusted text and structured traffic observations.
+
+
+
+
+
+6 Analysis
+
+
+
+6.1 Question Meaning and Candidate Order
+
+
+
+A shared decision model should track question and candidate meanings across equivalent formulations. We test paraphrased questions and permuted unordered alternatives, keeping evidence, field order, rules, and semantic labels fixed. We use 100 test questions per task, each paraphrased once (1,400 pairs). Each of 100 questions from five choice tasks also receives one nonidentity permutation (500 pairs); ordered levels are not shuffled. Together with the originals, this yields 3,300 requests per model. Predictions are mapped back to semantic keys.
+
+
+
+In Table 6, paraphrasing reduces accuracy by 0.07–0.93 percentage points across all four sizes, while permutation changes it by −0.80-0.80 to +0.40+0.40 points. Answer agreement is 95.36–98.36% for paraphrases and 97.40–98.80% for permutations. Both-correct scores separate preserved correct decisions from stable mistakes. Aggregate accuracy is stable across the tested formulations; paired agreement measures which individual decisions persist.
+
+
+
+Task-level results separate aggregate stability from changes in individual decisions. For 0.8B, paraphrasing reduces federated-update accuracy from 91% to 85% and vehicle attack-type accuracy from 39% to 32%. For 9B, ToN-IoT falls from 95% to 89%, while CICIoT rises from 88% to 95%; these offsetting shifts yield a net loss of just one answer. Across sizes, 15–38 previously correct answers become incorrect among the 1,400 paraphrase pairs. For 9B VeReMi manipulation, prediction agreement is 77%, with a one-point accuracy change. Fixed-batch controls are discussed in Appendix C.
+
+
+
+
+6.2 Value of General Decision Initialization
+
+
+
+The 0.8B comparison fixes the backbone, pointer architecture, security data, and three-epoch budget. One model inherits Kev’s adapters and head; the other learns these components directly on Qwen3.5. Development selection favors epoch 3 for both. Kev initialization reaches 90.34% test macro accuracy versus 88.17% for direct-Qwen training, a 2.17-point gain; balanced macro rises from 83.75% to 88.00% (Table 7). Direct-Qwen training performs better on AgentDojo boundary actions and federated-update classification, while Kev initialization yields its largest gains on vehicle manipulation and attack type (Appendix D). Overall, general-decision initialization provides a stronger starting point for security adaptation under the fixed training budget.
+
+
+
+
+
+
+0.8B initialization
+Dev. bal.
+Test macro
+Test bal.
+
+
+
+
+Kev
+90.36
+90.34
+88.00
+
+
+Qwen3.5 directly
+84.85
+88.17
+83.75
+
+
+Table 7: Initialization comparison (%). Dev./test bal. are task-macro balanced accuracy. Both initializations select epoch 3 on development data. Test results cover all 21,634 questions.
+
+
+
+
+6.3 Retention and Confidence
+
+
+
+We evaluate general capability retention on two Kev suites (Table 8). General decision tests held-out examples from Kev’s training sources; general transfer tests new sources and policy-rule types. General decision accuracy changes by at most 0.50 points after security training. General transfer falls from 68.45% to 66.01% at 0.8B, while changes at larger sizes stay within 0.46 points. The 0.8B transfer decline has a paired 95% interval of [−4.73,−0.15][-4.73,-0.15] points; all other general-accuracy intervals include zero (Appendix E).
+
+
+
+
+
+
+
+General decision
+General transfer
+
+
+Size
+Init.
+SecJev
+Init.
+SecJev
+
+
+
+
+0.8B
+83.50
+83.08
+68.45
+66.01
+
+
+2B
+84.00
+84.50
+75.91
+75.91
+
+
+4B
+87.08
+86.58
+83.69
+83.84
+
+
+9B
+87.50
+87.42
+85.06
+84.60
+
+
+Table 8: General-task accuracy (%) before and after specialization: 1,200 general decision and 656 general transfer questions. Init. denotes the model before security training. Suite definitions appear in Section 6.3.
+
+
+
+We evaluate confidence quality alongside accuracy. Temperature scaling improves security-test NLL for all sizes (Table 9), while Brier score and expected calibration error (ECE) worsen. For example, 9B NLL falls from 0.364 to 0.355 while ECE rises from 1.53% to 2.48%. On both general suites, the frozen security temperature improves SecJev NLL, Brier, and ECE at every size, while general-suite NLL remains higher than for the initialization (Appendix E). Accuracy retention alone therefore misses changes in confidence.
+
+
+
+
+
+
+Size
+Probabilities
+NLL
+Brier
+ECE (%)
+
+
+
+
+0.8B
+Raw
+0.435
+0.211
+2.18
+
+
+0.8B
+Scaled
+0.412
+0.213
+3.34
+
+
+2B
+Raw
+0.399
+0.191
+1.80
+
+
+2B
+Scaled
+0.385
+0.194
+3.28
+
+
+4B
+Raw
+0.358
+0.173
+1.84
+
+
+4B
+Scaled
+0.344
+0.177
+3.56
+
+
+9B
+Raw
+0.364
+0.181
+1.53
+
+
+9B
+Scaled
+0.355
+0.182
+2.48
+
+
+Table 9: Security-test confidence metrics, averaged over questions. Lower is better for all three. ECE uses 15 equal-width bins. Scaling uses only the held-out calibration split.
+
+
+
+
+6.4 Data Validity and Supervision Semantics
+
+
+
+Exhaustive checks find no schema or candidate-label violations in 170,185 questions and no disagreement in 37,490 independently recomputed policy answers. Two human reviewers independently assess 280 questions, 20 per task, and agree on 261 answers (93.21%). Both match the corpus labels on all 180 tool-text and explicit-policy questions. On the 100 source-label questions, they agree on 81 answers and both rate the visible evidence as sufficient for 28. The review supports the interpretability of tool and policy supervision, while locating the main uncertainty in inferring source annotations from partial observations (Appendix B).
+
+
+
+
+
+7 Conclusion
+
+
+
+SecJev brings security expertise to System One decision models through four Jev-style models with a shared typed interface. Training across 14 tasks improves every model and enables SecJev-0.8B to outperform general Kev-9B. SecJev-Corpus combines source-label prediction and explicit-policy evaluation. The 0.8B and 4B models achieve accuracy close to answer-only generation with lower peak allocated GPU memory. SecJev-4B also improves transfer accuracy on BIPIA and IoT-23. General decision initialization also strengthens the 0.8B model beyond security-only training. Question-conditioned scoring lets one model express distinct judgments about the same evidence through a shared security-trained head. SecJev-Corpus provides the security supervision connecting these judgments to source annotations and explicit policy rules. We release SecJev, SecJev-Corpus, and code for security-specialized System One models.
+
+
+
+
+
+Limitations
+
+
+
+SecJev evaluates finite decisions over supplied observations. Capture and experiment annotations can depend on information outside an individual input, so those tasks measure source-label prediction. Policy tasks measure application of the displayed rule. End-to-end attack prevention and autonomous response require separate deployment evaluation.
+
+
+
+The 14 tasks have uneven difficulty: near-perfect policy scores coexist with lower vehicle-message accuracy. Task-macro averages weight these tasks equally. Recorded group boundaries address specific dependencies; residual semantic overlap and transfer beyond the tested sources remain open. Human review concentrates answer disagreements in source-label tasks, where visible telemetry provides incomplete evidence about the source annotation.
+
+
+
+
+Ethical Considerations
+
+
+
+The corpus includes attack-bearing text and security observations for research on defensive decisions. Local aliases preserve within-scene relationships while reducing unnecessary identifiers. We retain source attribution and source-specific usage conditions rather than assigning a blanket permissive license to all underlying data. Model predictions and calibrated probabilities are fallible, particularly when evidence is incomplete; consequential actions require an application-specific policy and evaluation.
+
+
+
+
+References
+
+
+ 
+
+Almeida (2026)
+
+Diogo Almeida. 2026.
+
+
+Introducing
+System One Models & Jev.
+
+
+TypeSafe AI Blog.
+
+
+ 
+
+Alsaedi et al. (2020)
+
+Abdullah Alsaedi, Nour Moustafa, Zahir Tari, Abdun Mahmood, and Adnan Anwar.
+2020.
+
+
+TON_IoT
+Telemetry Dataset: A New Generation Dataset of IoT and IIoT for Data-Driven
+Intrusion Detection Systems.
+
+
+IEEE Access, 8:165130–165150.
+
+
+ 
+
+Ashraf et al. (2021)
+
+Javed Ashraf, Marwa Keshk, Nour Moustafa, Mohamed Abdel-Basset, Hasnat
+Khurshid, Asim D. Bakhshi, and Reham R. Mostafa. 2021.
+
+
+IoTBoT-IDS: A
+novel statistical learning-enabled botnet detection framework for protecting
+networks of smart cities.
+
+
+Sustainable Cities and Society, 72:103041.
+
+
+ 
+
+Bano et al. (2022)
+
+Shehar Bano, Alberto Sonnino, Andrey Chursin, Dmitri Perelman, Zekun Li, Avery
+Ching, and Dahlia Malkhi. 2022.
+
+
+Twins: BFT
+Systems Made Robust.
+
+
+In 25th International Conference on Principles of Distributed
+Systems (OPODIS 2021), volume 217 of Leibniz International Proceedings
+in Informatics (LIPIcs), pages 7:1–7:29, Dagstuhl, Germany. Schloss
+Dagstuhl – Leibniz-Zentrum für Informatik.
+
+
+ 
+
+Booij et al. (2022)
+
+Tim M. Booij, Irina Chiscop, Erik Meeuwissen, Nour Moustafa, and Frank T. H.
+den Hartog. 2022.
+
+
+ToN_IoT: The
+role of heterogeneity and the need for standardization of features and attack
+types in IoT network intrusion data sets.
+
+
+IEEE Internet of Things Journal, 9(1):485–496.
+
+
+ 
+
+Debenedetti et al. (2024)
+
+Edoardo Debenedetti, Jie Zhang, Mislav Balunović, Luca Beurer-Kellner, Marc
+Fischer, and Florian Tramèr. 2024.
+
+
+AgentDojo: A dynamic
+environment to evaluate prompt injection attacks and defenses for LLM
+agents.
+
+
+In Advances in Neural Information Processing Systems,
+volume 37, pages 82895–82920. Curran Associates, Inc.
+
+
+ 
+
+Fung et al. (2020)
+
+Clement Fung, Chris J. M. Yoon, and Ivan Beschastnikh. 2020.
+
+
+The limitations of federated learning in sybil settings.
+
+
+In 23rd International Symposium on Research in Attacks,
+Intrusions and Defenses (RAID 2020), pages 301–316, San Sebastian. USENIX
+Association.
+
+
+ 
+
+González et al. (2025)
+
+Marc González, Rachid Guerraoui, Rafael Pinot, Geovani Rizk, John Stephan,
+and François Taïani. 2025.
+
+
+ByzFL: Research framework
+for robust federated learning.
+
+
+Preprint, arXiv:2505.24802.
+
+
+ 
+
+Guo et al. (2017)
+
+Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Weinberger. 2017.
+
+
+On calibration
+of modern neural networks.
+
+
+In Proceedings of the 34th International Conference on Machine
+Learning, volume 70 of Proceedings of Machine Learning Research,
+pages 1321–1330. PMLR.
+
+
+ 
+
+Gururangan et al. (2020)
+
+Suchin Gururangan, Ana Marasović, Swabha Swayamdipta, Kyle Lo, Iz Beltagy,
+Doug Downey, and Noah A. Smith. 2020.
+
+
+Don’t stop
+pretraining: Adapt language models to domains and tasks.
+
+
+In Proceedings of the 58th Annual Meeting of the Association
+for Computational Linguistics, pages 8342–8360, Online. Association for
+Computational Linguistics.
+
+
+ 
+
+Hermann et al. (2026)
+
+Artur Hermann, Jan-Niklas Remmers, Dennis Eisermann, Benjamin Erb, and Frank
+Kargl. 2026.
+
+
+VeReMi NextGen: A
+dataset for evaluating misbehavior detection systems in VANETs.
+
+
+Zenodo, version 1.
+
+
+ 
+
+Hu et al. (2022)
+
+Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean
+Wang, Lu Wang, and Weizhu Chen. 2022.
+
+
+LoRA: Low-rank
+adaptation of large language models.
+
+
+In International Conference on Learning Representations.
+
+
+ 
+
+Jing et al. (2024)
+
+Pengfei Jing, Mengyun Tang, Xiaorong Shi, Xing Zheng, Sen Nie, Shi Wu, Yong
+Yang, and Xiapu Luo. 2024.
+
+
+SecBench: A comprehensive
+multi-dimensional benchmarking dataset for LLMs in cybersecurity.
+
+
+Preprint, arXiv:2412.20787.
+
+
+ 
+
+Kent (2015)
+
+Alexander D. Kent. 2015.
+
+
+Comprehensive, multi-source
+cyber-security events data set.
+
+
+Los Alamos National Laboratory.
+
+
+ 
+
+Kent (2016)
+
+Alexander D. Kent. 2016.
+
+
+Cyber security
+data sources for dynamic network research.
+
+
+In Niall Adams and Nick Heard, editors, Dynamic Networks and
+Cyber-Security, pages 37–65. World Scientific.
+
+
+ 
+
+Liu et al. (2024)
+
+Zefang Liu, Jialei Shi, and John F. Buford. 2024.
+
+
+CyberBench: A multi-task benchmark for evaluating large language models in
+cybersecurity.
+
+
+In AAAI 2024 Workshop on Artificial Intelligence for Cyber
+Security.
+
+
+ 
+
+Moustafa (2019)
+
+Nour Moustafa. 2019.
+
+
+New generations of internet of things datasets for cybersecurity
+applications based machine learning: TON_IoT datasets.
+
+
+Presentation at eResearch Australasia.
+
+
+ 
+
+Moustafa (2021a)
+
+Nour Moustafa. 2021a.
+
+
+A new distributed
+architecture for evaluating AI-based security systems at the edge: Network
+TON_IoT datasets.
+
+
+Sustainable Cities and Society, 72:102994.
+
+
+ 
+
+Moustafa (2021b)
+
+Nour Moustafa. 2021b.
+
+
+A systemic
+IoT–fog–cloud architecture for big-data analytics and cyber security
+systems: A review of fog computing.
+
+
+In Mohiuddin Ahmed and Paul Haskell-Dowland, editors, Secure
+Edge Computing: Applications, Techniques and Challenges, pages 41–50. CRC
+Press.
+
+
+ 
+
+Moustafa et al. (2020a)
+
+Nour Moustafa, Mohiuddin Ahmed, and Sherif Ahmed. 2020a.
+
+
+Data
+analytics-enabled intrusion detection: Evaluations of ToN_IoT Linux
+datasets.
+
+
+In 2020 IEEE 19th International Conference on Trust, Security
+and Privacy in Computing and Communications (TrustCom), pages 727–735.
+IEEE.
+
+
+ 
+
+Moustafa et al. (2020b)
+
+Nour Moustafa, Marwa Keshk, Essam Debie, and Helge Janicke. 2020b.
+
+
+Federated
+TON_IoT Windows datasets for evaluating AI-based security
+applications.
+
+
+In 2020 IEEE 19th International Conference on Trust, Security
+and Privacy in Computing and Communications (TrustCom), pages 848–855.
+IEEE.
+
+
+ 
+
+Neto et al. (2023)
+
+Euclides Carlos Pinto Neto, Sajjad Dadkhah, Raphael Ferreira, Alireza
+Zohourian, Rongxing Lu, and Ali A. Ghorbani. 2023.
+
+
+CICIoT2023: A Real-Time
+Dataset and Benchmark for Large-Scale Attacks in IoT Environment.
+
+
+Sensors, 23(13):5941.
+
+
+ 
+
+Palmer (2026)
+
+Jared Palmer. 2026.
+
+
+Kev.
+
+
+Software.
+
+
+ 
+
+Qwen Team (2026)
+
+Qwen Team. 2026.
+
+
+Qwen3.5: Towards native
+multimodal agents.
+
+
+ 
+
+Shi et al. (2025)
+
+Kaize Shi, Xueyao Sun, Dingxian Wang, Yinlin Fu, Guandong Xu, and Qing Li.
+2025.
+
+
+LLaMA-E:
+Empowering E-commerce authoring with object-interleaved instruction
+following.
+
+
+In Proceedings of the 31st International Conference on
+Computational Linguistics, pages 870–885, Abu Dhabi, UAE. Association for
+Computational Linguistics.
+
+
+ 
+
+Song et al. (2025)
+
+Shuang Song, Yifei Zhang, and Neng Gao. 2025.
+
+
+Confront
+insider threat: Precise anomaly detection in behavior logs based on LLM
+fine-tuning.
+
+
+In Proceedings of the 31st International Conference on
+Computational Linguistics, pages 8589–8601, Abu Dhabi, UAE. Association for
+Computational Linguistics.
+
+
+ 
+
+Sood and Savelka (2026)
+
+Bhavesh Sood and Jaromir Savelka. 2026.
+
+
+Punching above their
+weight: Classification-head fine-tuning of tiny language models (TLMs) for
+verifiable multiple-choice tasks.
+
+
+Preprint, arXiv:2607.03801.
+
+
+ 
+
+Wadden et al. (2025)
+
+David Wadden, Kejian Shi, Jacob Morrison, Alan Li, Aakanksha Naik, Shruti
+Singh, Nitzan Barzilay, Kyle Lo, Tom Hope, Luca Soldaini, Shannon Zejiang
+Shen, Doug Downey, Hannaneh Hajishirzi, and Arman Cohan. 2025.
+
+
+SciRIFF:
+A resource to enhance language model instruction-following over scientific
+literature.
+
+
+In Proceedings of the 2025 Conference on Empirical Methods in
+Natural Language Processing, pages 6072–6109, Suzhou, China. Association
+for Computational Linguistics.
+
+
+ 
+
+Wu and Lim (2026)
+
+Tiantong Wu and Wei Yang Bryan Lim. 2026.
+
+
+Decision hijacking: Prompt
+injection attacks on Jev’s typed probabilistic decisions.
+
+
+Preprint, arXiv:2609.28613.
+
+
+ 
+
+Zeng et al. (2024)
+
+Aohan Zeng, Mingdao Liu, Rui Lu, Bowen Wang, Xiao Liu, Yuxiao Dong, and Jie
+Tang. 2024.
+
+
+AgentTuning: Enabling generalized agent abilities for LLMs.
+
+
+In Findings of the Association for Computational Linguistics:
+ACL 2024, pages 3053–3077, Bangkok, Thailand. Association for Computational
+Linguistics.
+
+
+ 
+
+Zhan et al. (2024)
+
+Qiusi Zhan, Zhixiang Liang, Zifan Ying, and Daniel Kang. 2024.
+
+
+InjecAgent: Benchmarking indirect prompt injections in tool-integrated
+large language model agents.
+
+
+In Findings of the Association for Computational Linguistics:
+ACL 2024, pages 10471–10506, Bangkok, Thailand. Association for
+Computational Linguistics.
+
+
+ 
+
+
+
+
+
+Appendix A Implementation and Model Selection
+
+
+
+Training runs span three security epochs and 118,818 questions per epoch. We train one run per condition. AdamW uses weight decay 0.01 and gradient clipping at 1.0. The first epoch and the two-epoch continuation each use a 5% warm-up followed by cosine decay to one tenth of their respective peak learning rates; optimizer states continue across epochs. The effective batches correspond to 929 updates in epoch 1 and 619 updates in each continuation epoch, totaling 2,167 updates and 356,454 question presentations. The reported 9B epoch-2 checkpoint has 1,548 updates and 237,636 question presentations. No security evidence is truncated to fit the 8,192-token limit. The 9B run keeps the frozen backbone in BF16 and its adapters, decision head, and optimizer states in FP32; the smaller runs use FP32 master weights with BF16 autocast during training. Evaluation precision follows Section 5.1.
+
+
+
+The 2B initialization is trained on Kev’s general-decision training split (upstream decision-v7), with the date-reasoning and missing-evidence supplement. Official Kev initializations are used at 0.8B, 4B, and 9B. The direct-Qwen control starts without this general decision stage.
+
+
+
+A.1 Model Selection
+
+
+
+The 0.8B, 2B, and 4B models use epoch 3, selected by development task-macro balanced accuracy over semantic classes. The reported 9B model uses epoch 2.
+
+
+
+
+
+Appendix B Corpus and Evaluation Audit
+
+
+
+Table 10 summarizes construction checks. Two reviewers with AI and cybersecurity backgrounds independently assess 280 label-stratified questions, 20 per task and 70 per split, spanning 278 scenes. They read the complete state, question, and candidates without reference labels or model predictions, recording an answer, rationale, clarity, option exclusivity, and evidence sufficiency. Answers may include “insufficient information” or “ambiguous” (Table 11).
+
+
+
+Answer agreement.
+
+
+
+The reviewers agree on 261 of 280 answers (93.21%). All 180 tool-text and explicit-policy answers agree between reviewers and match the corpus labels. The 100 source-label questions yield 81 agreements: 20/20 for CICIoT, 17/20 for ByzFL, 11/20 for ToN-IoT, 18/20 for VeReMi manipulation, and 15/20 for VeReMi attack type. Reviewers A and C match the corpus labels on 250/280 and 261/280 questions, respectively. Fourteen shared answers differ from the source labels. C records insufficient information for two VeReMi questions; these remain in the 280-question denominator.
+
+
+
+
+Evidence quality.
+
+
+
+Both reviewers judge all 280 questions clear. A judges all option sets mutually exclusive; C marks two VeReMi attack-type sets uncertain. Evidence-sufficiency judgments agree on 244 questions (87.14%). A rates 232 as sufficient and 48 as partial; C rates 207 as sufficient, 58 as partial, and 15 as insufficient. Joint sufficiency covers 179/180 tool-text and explicit-policy questions and 28/100 source-label questions. The task profile separates applying a stated policy or interpreting a tool response from recovering an experiment or capture annotation. Review rationales identify short vehicle histories, unknown absolute positions, and network or update patterns compatible with multiple source conditions as recurring causes of uncertainty.
+
+
+
+Source rechecks cover 20 original InjecAgent records, 30 network CSV rows, and 20 retained ByzFL construction records; retained fields and label mappings match. VeReMi checks cover temporal structure, target selection, and binary/type consistency, rather than independently establishing hidden simulator labels. One InjecAgent source example exposes an operation-category ambiguity: updating profile fields is labeled other_operation, while information_transfer includes entering information on a website.
+
+
+
+
+
+
+
+
+Check
+
+
+
+Scope
+
+
+
+Result
+
+
+
+
+
+
+
+Schema and label validity
+
+
+
+170,185 questions
+
+
+
+No violations found
+
+
+
+
+
+Scene duplication and split isolation
+
+
+
+115,324 scenes and source groups
+
+
+
+No violations found under the recorded grouping rules
+
+
+
+
+
+Independent policy recomputation
+
+
+
+37,490 LANL/Twins questions
+
+
+
+0 inconsistent answers
+
+
+
+
+
+Semantic-class distribution
+
+
+
+Every task and split
+
+
+
+Maximum class share 80%. Maximum cross-split gap 8.58 pp
+
+
+
+
+
+Source-record recheck
+
+
+
+50 original records; 20 retained ByzFL records
+
+
+
+No mismatches in the checked fields or label mappings
+
+
+
+
+
+Independent human review
+
+
+
+280 questions; 20 per task
+
+
+
+261 answer agreements (93.21%); 180/180 tool-text and policy answers match labels
+
+
+
+
+
+Source-label observability
+
+
+
+100 source-classification questions
+
+
+
+81 answer agreements; 28 rated sufficient by both reviewers
+
+
+
+Table 10: Corpus construction checks, source-record rechecks, and independent human review.
+
+
+
+
+
+
+
+
+
+Matches corpus label
+Evidence sufficient
+
+
+Task
+Questions
+A–C agree
+A
+C
+A
+C
+
+
+AgentDojo: boundary action
+20
+20
+20
+20
+20
+19
+
+
+AgentDojo: injection
+20
+20
+20
+20
+20
+20
+
+
+CICIoT: attack
+20
+20
+14
+14
+6
+3
+
+
+ByzFL: update attack
+20
+17
+17
+18
+4
+0
+
+
+InjecAgent: operation
+20
+20
+20
+20
+20
+20
+
+
+LANL: logon action
+20
+20
+20
+20
+20
+20
+
+
+LANL: failure threshold
+20
+20
+20
+20
+20
+20
+
+
+ToN-IoT: attack
+20
+11
+11
+20
+3
+0
+
+
+Twins: evidence level
+20
+20
+20
+20
+20
+20
+
+
+Twins: policy action
+20
+20
+20
+20
+20
+20
+
+
+Twins: quorum
+20
+20
+20
+20
+20
+20
+
+
+Twins: visible conflict
+20
+20
+20
+20
+20
+20
+
+
+VeReMi: manipulation
+20
+18
+14
+15
+19
+11
+
+
+VeReMi: attack type
+20
+15
+14
+14
+20
+14
+
+
+Tool text and explicit policy
+180
+180
+180
+180
+180
+179
+
+
+Source-label prediction
+100
+81
+70
+81
+52
+28
+
+
+All tasks
+280
+261
+250
+261
+232
+207
+
+
+Table 11: Independent human review of 280 questions. Entries are counts. A–C agreement compares the reviewers’ answers; label matches compare each answer with the corpus target. Evidence sufficiency is a separate judgment.
+
+
+
+
+
+Appendix C Semantic Consistency by Task
+
+
+
+Table 12 separates original, paraphrased, and reordered accuracy by task. The original column for a choice task is also its permutation reference, since all 100 questions are shared. Each question has a single paraphrase and each eligible choice has a single permutation. Across 0.8B, 2B, and 4B, paraphrasing changes 38, 28, and 15 correct predictions to incorrect ones; permutation does so for 4, 7, and 4 predictions, respectively. For 9B epoch 2, paraphrasing introduces 25 errors and corrects 24; permutation introduces two and corrects four. Reverse transitions partially offset these losses in aggregate accuracy.
+
+
+
+Batch-one checks reproduce the smaller-model predictions, including all 163 checked discordant pairs across 0.8B, 2B, and 4B. The reported 9B epoch-2 checkpoint is evaluated on all 3,300 requests in fixed batches ordered by full-suite length and identifier.
+
+
+
+
+
+
+Task
+0.8B
+2B
+4B
+9B
+
+
+
+
+AgentDojo: boundary action
+78 / 81 / 79
+91 / 90 / 88
+99 / 99 / 99
+97 / 97 / 98
+
+
+AgentDojo: injection
+85 / 86 / –
+88 / 91 / –
+95 / 95 / –
+98 / 98 / –
+
+
+CICIoT: attack
+93 / 94 / –
+94 / 93 / –
+93 / 94 / –
+88 / 95 / –
+
+
+ByzFL: update attack
+91 / 85 / –
+95 / 94 / –
+88 / 84 / –
+83 / 85 / –
+
+
+InjecAgent: operation
+100 / 98 / 100
+98 / 94 / 98
+100 / 100 / 100
+100 / 99 / 100
+
+
+LANL: logon action
+100 / 100 / 100
+100 / 100 / 100
+100 / 100 / 100
+99 / 100 / 99
+
+
+LANL: failure threshold
+100 / 100 / –
+100 / 100 / –
+100 / 100 / –
+100 / 100 / –
+
+
+ToN-IoT: attack
+94 / 95 / –
+96 / 95 / –
+95 / 95 / –
+95 / 89 / –
+
+
+Twins: evidence level
+99 / 98 / –
+100 / 100 / –
+100 / 100 / –
+100 / 100 / –
+
+
+Twins: policy action
+98 / 98 / 97
+100 / 100 / 100
+100 / 100 / 100
+100 / 100 / 99
+
+
+Twins: quorum
+100 / 99 / –
+100 / 99 / –
+100 / 98 / –
+100 / 97 / –
+
+
+Twins: visible conflict
+97 / 99 / –
+98 / 98 / –
+100 / 98 / –
+100 / 100 / –
+
+
+VeReMi: manipulation
+67 / 64 / –
+76 / 68 / –
+67 / 68 / –
+69 / 68 / –
+
+
+VeReMi: attack type
+39 / 32 / 37
+35 / 36 / 34
+46 / 45 / 46
+41 / 41 / 43
+
+
+Table 12: Accuracy by task (%): original / paraphrase / permutation, with 100 questions per applicable condition. A dash means permutation is not evaluated for that answer type.
+
+
+
+
+Appendix D Direct-Qwen Initialization
+
+
+
+The 0.8B initialization comparison fixes the security examples and their order, learning-rate schedule, effective batches, and scene-weighted loss. Both runs select epoch 3 using development task-macro balanced accuracy. Evaluation uses FP32 backbones, adapters, and heads. The first epoch uses two devices for Kev initialization and three for direct-Qwen initialization at the same effective batch; subsequent epochs use three devices. Table 13 gives task-level results for the selected checkpoints.
+
+
+
+
+
+
+Task
+Questions
+Kev initialization
+Direct-Qwen initialization
+
+
+
+
+AgentDojo: boundary action
+426
+80.28
+82.86
+
+
+AgentDojo: injection
+426
+79.81
+71.60
+
+
+ByzFL: update attack
+800
+92.62
+95.38
+
+
+CICIoT: attack
+6000
+91.80
+91.47
+
+
+InjecAgent: operation
+124
+100.00
+96.77
+
+
+LANL: logon action
+540
+98.89
+97.78
+
+
+LANL: failure threshold
+540
+99.81
+99.44
+
+
+ToN-IoT: attack
+3500
+98.03
+98.11
+
+
+Twins: evidence level
+659
+98.79
+98.63
+
+
+Twins: policy action
+659
+98.48
+96.81
+
+
+Twins: quorum
+659
+99.70
+97.57
+
+
+Twins: visible conflict
+659
+99.24
+98.94
+
+
+VeReMi: manipulation
+3321
+63.11
+54.05
+
+
+VeReMi: attack type
+3321
+64.14
+54.95
+
+
+Table 13: Per-task test accuracy for the development-selected 0.8B checkpoints (%).
+
+
+
+
+Appendix E Paired Uncertainty and General Confidence
+
+
+
+The training-majority baseline selects a semantic class separately for each task from 118,818 training questions; deterministic lexical order resolves ties. On the 21,634 test questions, it scores 64.25% micro accuracy, 62.89% task-macro accuracy, and 43.57% task-macro balanced accuracy.
+
+
+
+For paired intervals, we resample whole groups within each source, keeping all questions from a selected group together and applying the same multiplicity across tasks. We use 2,000 draws with seed 20260929 and report the 2.5th and 97.5th percentiles. Every draw includes all tasks. The security test contains 485 groups: AgentDojo 2, ByzFL 5, CICIoT2023 8, InjecAgent 2, LANL 7, ToN-IoT 6, Twins 34, and VeReMi 421. The two general suites contain 880 and 544 groups, respectively. These intervals describe variation over the observed source groups; estimates are coarser for sources with few groups.
+
+
+
+
+
+
+Size
+Security task-macro
+General decision micro
+General transfer micro
+
+
+
+
+0.8B
++39.40+39.40 [+30.16,+43.48][+30.16,+43.48]
+−0.42-0.42 [−1.42,+0.58][-1.42,+0.58]
+−2.44-2.44 [−4.73,−0.15][-4.73,-0.15]
+
+
+2B
++40.83+40.83 [+28.62,+45.32][+28.62,+45.32]
++0.50+0.50 [−0.50,+1.42][-0.50,+1.42]
++0.00+0.00 [−1.98,+1.98][-1.98,+1.98]
+
+
+4B
++26.63+26.63 [+18.59,+30.75][+18.59,+30.75]
+−0.50-0.50 [−1.17,+0.17][-1.17,+0.17]
++0.15+0.15 [−1.07,+1.37][-1.07,+1.37]
+
+
+9B
++24.26+24.26 [+15.38,+28.40][+15.38,+28.40]
+−0.08-0.08 [−0.58,+0.42][-0.58,+0.42]
+−0.46-0.46 [−2.29,+1.37][-2.29,+1.37]
+
+
+Table 14: SecJev minus initialization, in percentage points, with paired 95% group-bootstrap intervals. Positive differences favor SecJev. These are intervals for accuracy differences, not for absolute scores.
+
+
+
+The general decision and general transfer suites use Kev’s upstream versions decision-v7 and transfer-v4, respectively; the suffixes identify dataset revisions. We evaluate their clean subsets of 1,200 and 656 questions (Table 15). Raw probabilities use T=1T=1. Scaled SecJev probabilities use the temperature fitted on security calibration data. Initialization rows retain their original stored temperatures; the 2B initialization uses T=1T=1. Thus the raw columns compare confidence without temperature differences, whereas the scaled columns describe the stored models as used. NLL averages negative log probability of the correct candidate; multiclass Brier sums squared probability error across candidates; ECE uses 15 equal-width confidence bins.
+
+
+
+All SecJev models have higher raw NLL than their initialization on both general suites, despite the small accuracy changes. Security temperature scaling lowers all three general-suite metrics for every SecJev size, but the calibrated 0.8B transfer ECE remains 21.10%, compared with 4.19% for its initialization. General decision accuracy and transferable confidence are therefore distinct aspects of retention.
+
+
+
+
+
+
+
+
+
+
+Raw (T=1T=1)
+Stored temperature
+
+
+Suite
+Size
+Model
+TT
+NLL
+Brier
+ECE
+NLL
+Brier
+ECE
+
+
+
+
+General decision
+0.8B
+Init.
+2.406
+0.652
+0.268
+9.94
+0.449
+0.240
+2.69
+
+
+General decision
+0.8B
+SecJev
+1.353
+0.946
+0.293
+12.86
+0.734
+0.281
+11.26
+
+
+General decision
+2B
+Init.
+1.000
+0.574
+0.241
+9.22
+0.574
+0.241
+9.22
+
+
+General decision
+2B
+SecJev
+1.292
+0.749
+0.249
+9.88
+0.616
+0.241
+8.48
+
+
+General decision
+4B
+Init.
+2.144
+0.468
+0.207
+7.32
+0.360
+0.189
+2.60
+
+
+General decision
+4B
+SecJev
+1.335
+0.573
+0.218
+8.83
+0.465
+0.208
+7.31
+
+
+General decision
+9B
+Init.
+2.297
+0.479
+0.201
+7.28
+0.352
+0.181
+1.90
+
+
+General decision
+9B
+SecJev
+1.181
+0.533
+0.206
+7.57
+0.472
+0.201
+6.81
+
+
+General transfer
+0.8B
+Init.
+2.406
+0.868
+0.460
+15.63
+0.692
+0.412
+4.19
+
+
+General transfer
+0.8B
+SecJev
+1.353
+1.357
+0.543
+24.36
+1.079
+0.511
+21.10
+
+
+General transfer
+2B
+Init.
+1.000
+0.687
+0.343
+11.58
+0.687
+0.343
+11.58
+
+
+General transfer
+2B
+SecJev
+1.292
+0.941
+0.382
+15.02
+0.787
+0.365
+12.50
+
+
+General transfer
+4B
+Init.
+2.144
+0.564
+0.255
+10.00
+0.426
+0.232
+5.00
+
+
+General transfer
+4B
+SecJev
+1.335
+0.841
+0.277
+11.57
+0.671
+0.267
+9.16
+
+
+General transfer
+9B
+Init.
+2.297
+0.566
+0.238
+8.38
+0.417
+0.224
+4.02
+
+
+General transfer
+9B
+SecJev
+1.181
+0.593
+0.227
+9.45
+0.528
+0.221
+8.39
+
+
+Table 15: General-suite confidence before and after security specialization. Lower is better; ECE is in percent. No temperature is fitted on these general test subsets. Init. is Kev at 0.8B/4B/9B and the general-decision starting point at 2B.
+
+
+
+
+Appendix F Generative and Classification Baselines
+
+
+
+SecGen-0.8B and SecGen-4B start from Qwen3.5 and train rank-16 LoRA adapters on the same 118,818 security questions for three epochs, each totaling 356,454 question presentations and 2,167 updates. The original backbone and vocabulary head are frozen. Training retains FP32 weights and optimizer states with BF16 autocast; development, calibration, and test inference use FP32 throughout, without TF32, at batch size one. Supervision is full-vocabulary cross-entropy on one answer-key token, weighted by the inverse number of questions in its scene. Decoding selects the highest-scoring valid key and ends after that token. For these one-token keys, ranking their vocabulary log-probabilities is identical to constrained greedy selection.
+
+
+
+The 0.8B candidate-sequence classifier adapts Sood and Savelka (2026): each state and question is concatenated with one candidate, and its final nonpadding hidden state is mapped to a scalar by a shared bias-free linear head. Cross-entropy normalizes these scores across the question’s candidates. Starting from Qwen3.5-0.8B-Base, we train the fresh head and rank-16 LoRA adapters with the same security data, scene weighting, optimizer schedule, and three-epoch budget as the other Qwen controls. Training uses BF16 autocast with FP32 master parameters; evaluation is FP32 without TF32. The three epochs take 8.75 hours on nine RTX 3090s. This comparison evaluates a candidate-conditioned encoding interface, which repeats the context for each option, alongside SecJev’s shared encoding of all candidates.
+
+
+
+Each epoch is evaluated on all 14,912 development questions. Semantic-class balanced macro selects epoch 3 for SecGen at both sizes (Table 16); ties select the earlier epoch. Temperatures of 1.466 and 1.264 for 0.8B and 4B are fitted to candidate-normalized NLL on 14,821 calibration questions, before evaluating the 21,634 test questions. At both sizes, the unconstrained vocabulary argmax is a valid answer key for every test question. For classification, full-development semantic-class balanced macro selects epoch 3; the same calibration split gives a single global temperature of 1.288.
+
+
+
+
+
+
+Model
+Epoch
+Micro
+Macro
+Bal. macro
+
+
+
+
+SecGen-0.8B
+3
+89.40
+91.90
+89.46
+
+
+Cls-0.8B
+3
+89.09
+90.76
+88.39
+
+
+SecGen-4B
+3
+91.15
+94.11
+92.35
+
+
+Table 16: Development accuracy (%) for selected SecGen and candidate-sequence classification (Cls) checkpoints. Balanced macro groups recall by semantic answer label.
+
+
+
+
+
+
+Size
+Method
+Test micro
+Test macro
+Test balanced macro
+
+
+0.8B
+SecJev (Kev initialization)
+85.03
+90.34
+88.00
+
+
+0.8B
+Direct-Qwen pointer
+81.96
+88.17
+83.75
+
+
+0.8B
+SecGen
+84.75
+90.02
+87.79
+
+
+0.8B
+Candidate-sequence classification
+84.39
+89.85
+86.84
+
+
+4B
+SecJev (Kev initialization)
+88.01
+94.51
+92.42
+
+
+4B
+SecGen
+87.95
+94.35
+92.30
+
+
+Table 17: FP32 test accuracy for development-selected models (%). All select epoch 3. These scores use FP32; Table 4 uses a BF16 backbone.
+
+
+
+Table 17 compares the selected models at FP32 precision. Task-level results in Table 18 locate the aggregate differences across decision interfaces: classification exceeds SecGen-0.8B on boundary action and traffic classification, while SecGen leads on injection identification, ByzFL, and VeReMi manipulation. Table 4 reports inference cost.
+
+
+
+
+
+
+
+
+SecGen-0.8B
+Cls-0.8B
+SecGen-4B
+
+
+Task
+Questions
+Acc.
+Bal.
+Acc.
+Bal.
+Acc.
+Bal.
+
+
+
+
+AgentDojo: boundary action
+426
+76.29
+80.63
+84.27
+80.62
+96.71
+94.92
+
+
+AgentDojo: injection
+426
+79.11
+80.24
+75.35
+74.49
+97.89
+96.42
+
+
+ByzFL: update attack
+800
+95.62
+93.05
+94.00
+88.28
+97.25
+96.17
+
+
+CICIoT: attack
+6000
+91.30
+86.44
+92.07
+89.33
+91.70
+87.29
+
+
+InjecAgent: operation
+124
+99.19
+99.07
+100.00
+100.00
+100.00
+100.00
+
+
+LANL: logon action
+540
+98.89
+98.64
+98.70
+98.36
+100.00
+100.00
+
+
+LANL: failure threshold
+540
+100.00
+100.00
+100.00
+100.00
+100.00
+100.00
+
+
+ToN-IoT: attack
+3500
+98.29
+96.88
+99.00
+98.46
+98.94
+98.19
+
+
+Twins: evidence level
+659
+98.79
+98.67
+97.27
+97.00
+99.85
+99.83
+
+
+Twins: policy action
+659
+98.63
+98.50
+97.42
+97.21
+99.70
+99.66
+
+
+Twins: quorum
+659
+99.24
+99.12
+99.54
+99.55
+99.85
+99.88
+
+
+Twins: visible conflict
+659
+98.94
+98.38
+98.33
+97.66
+99.85
+99.75
+
+
+VeReMi: manipulation
+3321
+66.06
+66.67
+61.88
+62.44
+70.58
+71.21
+
+
+VeReMi: attack type
+3321
+59.98
+32.70
+60.10
+32.38
+68.56
+48.80
+
+
+Table 18: Full-test results for selected SecGen and classification (Cls) checkpoints (%). Balanced accuracy averages recall across semantic answer labels, independent of candidate order.
+
+
+
+
+Appendix G Matched-Precision Timing Details
+
+
+
+An answer is complete when the final structured decision is available to the caller. Timing includes tokenization and output parsing, and excludes model loading. All six models run serially on the same RTX 3090 with Python 3.11.11, PyTorch 2.6.0, CUDA 12.6, Transformers 5.17.0, PEFT 0.21.0, and NVIDIA driver 570.133.20. Both interfaces use scaled dot-product attention (SDPA). Backbone weights are BF16; original FP32 adapter and output-head values are retained. Full-test accuracy is recomputed serially at batch size one on all 21,634 questions per model (Table 19). The Kev-9B scores in Table 3 use its original three-shard batched evaluation. Balanced macro groups gold answers by semantic label, not by their displayed position.
+
+
+
+The fixed timing workload contains 200 development questions from distinct scenes, selected by hash order and task round-robin without predictions or labels. Length limits hold for every method. The 100 short requests span 11 tasks; the long stratum contains 34 ByzFL and 33 questions from each LANL task. Thus length-stratum results also reflect different task composition. Each pass uses the same requests in a shuffled order with seed 20260929+r20260929+r, for pass r=0,…,4r=0,\ldots,4, following two warm-up requests per stratum. Timed predictions are not used for model selection.
+
+
+
+Table 20 gives the range of per-pass medians and the mean and sample standard deviation of serial batch-one throughput. In each pass, throughput is 200/∑i=1200ti200/\sum_{i=1}^{200}t_{i}, where tit_{i} is the measured request time in seconds. The fixed workload contains equal numbers of short and long requests; throughput therefore differs from the reciprocal of either stratum median. All six models complete five serial batch-one passes.
+
+
+
+
+
+
+Size
+Method
+Micro
+Macro
+Semantic balanced macro
+
+
+
+
+0.8B
+SecJev
+85.14
+90.46
+88.04
+
+
+0.8B
+SecGen
+84.70
+90.01
+87.76
+
+
+0.8B
+Direct-Qwen pointer
+81.85
+88.12
+83.72
+
+
+4B
+SecJev
+87.94
+94.48
+92.38
+
+
+4B
+SecGen
+87.95
+94.34
+92.26
+
+
+9B
+Kev
+50.87
+69.79
+70.32
+
+
+Table 19: Full-test accuracy (%) recomputed with the serial BF16-backbone timing implementation. Each row contains 21,634 unique questions across 14 tasks.
+
+
+
+
+
+
+Size
+Method
+Short median range (ms)
+Long median range (ms)
+Batch-one Q/s
+
+
+
+
+0.8B
+SecJev
+79.0–79.7
+163.5–164.4
+7.319±0.0167.319\pm 0.016
+
+
+0.8B
+SecGen
+80.2–80.7
+166.8–167.6
+7.220±0.0077.220\pm 0.007
+
+
+0.8B
+Direct-Qwen pointer
+80.3–80.7
+164.5–164.7
+7.272±0.0067.272\pm 0.006
+
+
+4B
+SecJev
+107.4–110.3
+577.6–579.2
+2.537±0.0012.537\pm 0.001
+
+
+4B
+SecGen
+112.9–135.2
+597.5–600.3
+2.470±0.0262.470\pm 0.026
+
+
+9B
+Kev
+168.8–169.4
+859.3–862.0
+1.726±0.0031.726\pm 0.003
+
+
+Table 20: Variation over five timing passes. Ranges describe per-pass medians, not confidence intervals. Serial batch-one throughput is mean ±\pm sample standard deviation over the same 200-request workload.
+
+
+
+
+
+
+
+
+ 
+ Experimental support, please
+ view the build logs
+ for errors. Generated by
+ 
+ 
+ L
+ A
+ T
+ E
+ 
+ xml
+ 
+ .
+ 
+ 
+ 
+Instructions for reporting errors
+ 
+We are continuing to improve HTML versions of papers, and your feedback helps enhance accessibility and mobile
+ support. To report errors in the HTML that will help us improve conversion and rendering, choose any of the
+ methods listed below:
+ 
+ 
+Click the "Report Issue" (
+ 
+ ) button, located in the page header.
+ 
+ 
+Tip: You can select the relevant text first, to include it in your report.
+ 
+Our team has already identified the following issues. We appreciate your time reviewing and reporting rendering errors we
+ may not have found yet. Your efforts will help us improve the HTML versions for all readers, because disability
+ should not be a barrier to accessing research. Thank you for your continued support in championing open access for
+ all.
+ 
+Have a free development cycle? Help support accessibility at arXiv! Our collaborators at LaTeXML maintain a list of packages that need conversion, and welcome developer contributions.
+ 
+
+ 
+ 
+ 
+ We gratefully acknowledge support from
+ our major funders,
+ member institutions, ,
+ and all contributors.
+ 
+ 
+ About
+ ·
+ Help
+ ·
+ Contact
+ ·
+ Subscribe
+ ·
+ Copyright
+ ·
+ Privacy
+ ·
+ Accessibility
+ ·
+ Operational Status (opens in new tab)
+ 
+ 
+
+ 
+ Major funding support from
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+
+

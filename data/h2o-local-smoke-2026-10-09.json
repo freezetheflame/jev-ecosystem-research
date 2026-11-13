@@ -1,0 +1,102 @@
+{
+  "model": "h2o",
+  "graphs": false,
+  "torch": "2.11.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 4070 SUPER",
+  "load_s": 70.51956318099997,
+  "allocated_gib": 7.858733177185059,
+  "reserved_gib": 7.875,
+  "cases": [
+    {
+      "case": "billing",
+      "expected": "billing",
+      "answer": {
+        "type": "choice",
+        "choice": "billing",
+        "probabilities": {
+          "billing": 0.9333530232551481,
+          "technical": 0.033540382137378325,
+          "sales": 0.033106594607473595
+        },
+        "confidence": 0.9000295348827222,
+        "input_tokens": 95
+      },
+      "first_s": 1.1094366159999254,
+      "warm_median_s": 0.08373142300001746
+    },
+    {
+      "case": "parcel",
+      "expected": "misdelivered",
+      "answer": {
+        "type": "choice",
+        "choice": "misdelivered",
+        "probabilities": {
+          "delivered": 0.037783091059636904,
+          "misdelivered": 0.9377415495363958,
+          "unknown": 0.02447535940396739
+        },
+        "confidence": 0.9066123243045935,
+        "input_tokens": 108
+      },
+      "first_s": 0.06512587700001404,
+      "warm_median_s": 0.07806498099989767
+    },
+    {
+      "case": "refund",
+      "expected": false,
+      "answer": {
+        "type": "noul",
+        "noul": 0.07672496781196374,
+        "raw_noul_before_floor": 0.07672496781196374,
+        "input_tokens": 106
+      },
+      "first_s": 0.06667417300002398,
+      "warm_median_s": 0.09063779699999941
+    },
+    {
+      "case": "chinese",
+      "expected": "账单与退款",
+      "answer": {
+        "type": "choice",
+        "choice": "账单与退款",
+        "probabilities": {
+          "账单与退款": 0.9519852527250549,
+          "技术支持": 0.026979022778256208,
+          "销售咨询": 0.02103572449668895
+        },
+        "confidence": 0.9279778790875821,
+        "input_tokens": 111
+      },
+      "first_s": 0.11659081300001617,
+      "warm_median_s": 0.08454496399997424
+    },
+    {
+      "case": "score",
+      "expected": "highest level",
+      "answer": {
+        "type": "score",
+        "score": 1.9243340893495784,
+        "legend": {
+          "0": "low: cosmetic issue",
+          "1": "medium: partial degradation",
+          "2": "high: complete outage"
+        },
+        "probabilities": {
+          "0": 0.015112099353303708,
+          "1": 0.04544171194381408,
+          "2": 0.9394461887028822
+        },
+        "confidence": 0.9091692830543233,
+        "input_tokens": 105
+      },
+      "first_s": 0.08148969299998043,
+      "warm_median_s": 0.0858274029999393
+    }
+  ],
+  "backend": "Transformers, official v1.1 shim prompt and formatting; not vLLM",
+  "temperature": 0.8,
+  "noul_floor": 0.801,
+  "checkpoint_revision": "193ad740925b176a3b70a5a13a7cff2f2fadd01e",
+  "checkpoint_sha256": "c65443b1d28891ffc4b6f7d90028c542d6ccb24c2f9cd6a46a8294a44ab0ffae",
+  "date": "2026-10-09"
+}

@@ -1,0 +1,26 @@
+{
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "{\"insert_after\": \"b0\", \"sentence\": \"This approach is often used when a firm introduces a new product in a market where customers face significant switching costs once they adopt a particular brand.\"}"
+      },
+      "finish_reason": "stop",
+      "logprobs": null
+    }
+  ],
+  "created": 1791791271,
+  "id": "chatcmpl-0938dd0c-d50d-97cc-9c4b-9bc472b61f58",
+  "model": "deepseek-v4-flash-0731",
+  "object": "chat.completion",
+  "request_id": "req_0a23cf64-0614-41d9-8faf-ca31066608b5",
+  "usage": {
+    "prompt_tokens": 594,
+    "total_tokens": 637,
+    "completion_tokens": 43,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  }
+}

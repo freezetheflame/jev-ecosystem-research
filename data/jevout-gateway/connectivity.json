@@ -1,0 +1,50 @@
+{
+  "endpoint": "https://ai-gateway.vercel.sh/v1/evaluate",
+  "status": 403,
+  "request": {
+    "model": "typesafe-ai/jev",
+    "state": "In this fictional test scene, the sky is blue.",
+    "questions": {
+      "blue": {
+        "type": "boolean",
+        "instructions": "Is the sky explicitly described as blue?"
+      }
+    }
+  },
+  "response": {
+    "error": {
+      "message": "Free tier users do not have access to this model. Upgrade to paid credits at https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dtop-up for unrestricted access.",
+      "type": "no_providers_available",
+      "param": {
+        "error": "Free tier users do not have access to this model. Upgrade to paid credits at https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dtop-up for unrestricted access.",
+        "type": "no_providers_available",
+        "statusCode": 403,
+        "name": "RestrictedModelsError",
+        "message": "Free tier users do not have access to this model. Upgrade to paid credits at https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai%3Fmodal%3Dtop-up for unrestricted access."
+      }
+    },
+    "providerMetadata": {
+      "gateway": {
+        "routing": {
+          "originalModelId": "typesafe-ai/jev",
+          "resolvedProvider": "typesafe-ai",
+          "fallbacksAvailable": [
+            "digitalocean"
+          ],
+          "canonicalSlug": "typesafe-ai/jev",
+          "modelAttemptCount": 1,
+          "modelAttempts": [
+            {
+              "canonicalSlug": "typesafe-ai/jev",
+              "success": false,
+              "providerAttemptCount": 0,
+              "providerAttempts": []
+            }
+          ],
+          "totalProviderAttemptCount": 0
+        },
+        "generationId": "gen_01M4QNT9ZS28SWZR72FCSK0V1D"
+      }
+    }
+  }
+}

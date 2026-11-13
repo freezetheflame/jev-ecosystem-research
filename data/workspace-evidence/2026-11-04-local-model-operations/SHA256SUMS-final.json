@@ -1,0 +1,16 @@
+{
+  "final-checks.json": "3d134d28136d1252616455b793b116c0807f056ebbdee8058fc74aa3d9a0256b",
+  "inventory.json": "3539afb2844feeef03a07626e6c9b61de82e5b5c7292fbf1ac63142315e4d8fd",
+  "local-models.machine.json": "1debe44a0dcfb4f9efeeb4ee1e035c0a8bfb14ae59f1b33d9f02dcc70f89c164",
+  "machine_benchmark.py": "f8c16069d8f4b7d7ebe4680bcdc34456e0176ad8a2b8fd654f8512b60fdcc1da",
+  "model_services.py": "ae88d8f7f84ddbf4c2d26f0b0d17f5b8e43eaf064e63c893631016780ef3e6f4",
+  "README.md": "7b265e3c0d00175644104dd528f5024d3bba85617728a4bad7ee0e79ab9f6bb7",
+  "SHA256SUMS.json": "9edc2ab06ddb051a4aa418dcb9251fc51f33f7e5965ee02312bf234fa9749ee0",
+  "verification.json": "e896fe4360772d42de60a4d487d3fe95eb5069593b77f1d74dd96974d9748f3d",
+  "implementation-final/local-models.machine.json": "1debe44a0dcfb4f9efeeb4ee1e035c0a8bfb14ae59f1b33d9f02dcc70f89c164",
+  "implementation-final/local_gliguard_server.py": "d7fac5ab9d07d1710760f2292f7e3bbc97e685e5959f0faa72aaaca3b165f10b",
+  "implementation-final/local_guard_server.py": "2b19ae737d1cf0887bcef4b6cbbcb1e95c3f1fb483dd2bbc1638f7567fa70366",
+  "implementation-final/local_laya_server.py": "4b7caf6a809f4266af1e78a9aede6d7699c36f03bdcca175b481113b2bd790dd",
+  "implementation-final/machine_benchmark.py": "4b501f3fc840ba93210a09f5ae73a5cddb59df0cbd8b167af28638a522188eab",
+  "implementation-final/model_services.py": "ae88d8f7f84ddbf4c2d26f0b0d17f5b8e43eaf064e63c893631016780ef3e6f4"
+}

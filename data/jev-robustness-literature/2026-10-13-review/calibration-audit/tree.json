@@ -1,0 +1,306 @@
+{
+  "sha": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+  "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/trees/daab9e2c2d5d5683bf07f3482deb653c26856219",
+  "tree": [
+    {
+      "path": ".env.example",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bf52a01a44f1f53060ec6699ac8136272119f20",
+      "size": 31,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/1bf52a01a44f1f53060ec6699ac8136272119f20"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "008ead9be4b3d2f2b7d187edbe40d2f3f9ed7324",
+      "size": 94,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/008ead9be4b3d2f2b7d187edbe40d2f3f9ed7324"
+    },
+    {
+      "path": ".python-version",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e4fba2183587225f216eeada4c78dfab6b2e65f5",
+      "size": 5,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/e4fba2183587225f216eeada4c78dfab6b2e65f5"
+    },
+    {
+      "path": "@STATUS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f0ade27142a06f6a387300deafc5ecaf81141e16",
+      "size": 3679,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/f0ade27142a06f6a387300deafc5ecaf81141e16"
+    },
+    {
+      "path": "FINDINGS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "865be696ae96f5d4312ff691587dc62170f914cc",
+      "size": 9986,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/865be696ae96f5d4312ff691587dc62170f914cc"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51c66a7c757cf0c49bde86f37b44f7bdac8b11a3",
+      "size": 1066,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/51c66a7c757cf0c49bde86f37b44f7bdac8b11a3"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e86387395010a195407220d264777a6235fa2007",
+      "size": 6184,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/e86387395010a195407220d264777a6235fa2007"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "42b129fdbddb0b95367ee86e597816887d985e71",
+      "size": 485,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/42b129fdbddb0b95367ee86e597816887d985e71"
+    },
+    {
+      "path": "results",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f99e051ef65ed5585f146fc211c81208dc167c4d",
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/trees/f99e051ef65ed5585f146fc211c81208dc167c4d"
+    },
+    {
+      "path": "results/abstention.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb33316e094566d66c5f5c22b41ac54ac7a6e1f8",
+      "size": 2425,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/cb33316e094566d66c5f5c22b41ac54ac7a6e1f8"
+    },
+    {
+      "path": "results/coherence.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5e15f25a9eae2f75a9a3913664e3c35c65c275c",
+      "size": 361,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/c5e15f25a9eae2f75a9a3913664e3c35c65c275c"
+    },
+    {
+      "path": "results/drift_ledger.jsonl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23c62c9f8f26bc719a2e38b1fa40245615c4a854",
+      "size": 5932,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/23c62c9f8f26bc719a2e38b1fa40245615c4a854"
+    },
+    {
+      "path": "results/interference.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13450948832142696efcc249d04990c1db7861f7",
+      "size": 1123,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/13450948832142696efcc249d04990c1db7861f7"
+    },
+    {
+      "path": "results/parallel_ko_en.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb503c8cb5b07ab0b7f3f761c159c5793d3f7faf",
+      "size": 2699,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/cb503c8cb5b07ab0b7f3f761c159c5793d3f7faf"
+    },
+    {
+      "path": "results/preflight.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19d1834b92814acfe269d36f016abc8c846f6999",
+      "size": 1033,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/19d1834b92814acfe269d36f016abc8c846f6999"
+    },
+    {
+      "path": "results/preflight_n50.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "daeabe66d0bcf3fc05a0c51e852fd81e053955ca",
+      "size": 1057,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/daeabe66d0bcf3fc05a0c51e852fd81e053955ca"
+    },
+    {
+      "path": "results/raw",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ec4ffec87389f8dfef7f2fd889f9214ee58426df",
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/trees/ec4ffec87389f8dfef7f2fd889f9214ee58426df"
+    },
+    {
+      "path": "results/raw/abstention.jsonl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5da503ed2466cef57f6c6a825016de81e6c22abd",
+      "size": 463598,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/5da503ed2466cef57f6c6a825016de81e6c22abd"
+    },
+    {
+      "path": "results/raw/coherence.jsonl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31dbb3025cf10108259e15b6575dc4b5ff7c33e6",
+      "size": 127241,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/31dbb3025cf10108259e15b6575dc4b5ff7c33e6"
+    },
+    {
+      "path": "results/raw/interference.jsonl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e6bf98a94c82f2cd34abb95a49a721d431f3150a",
+      "size": 231950,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/e6bf98a94c82f2cd34abb95a49a721d431f3150a"
+    },
+    {
+      "path": "results/raw/parallel_ko_en.jsonl",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5876c98c16eaa49f0169af7c8eed02a2f40d0783",
+      "size": 1061202,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/5876c98c16eaa49f0169af7c8eed02a2f40d0783"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "715dcf6776a3200cd010ebda53ae7c74dd609a10",
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/trees/715dcf6776a3200cd010ebda53ae7c74dd609a10"
+    },
+    {
+      "path": "src/jev_audit",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e84526f96f1c5e463ca3208aca1f55cd14c8703d",
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/trees/e84526f96f1c5e463ca3208aca1f55cd14c8703d"
+    },
+    {
+      "path": "src/jev_audit/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d98c8166ff9c60d7427684b16e818ed8d659e02c",
+      "size": 134,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/d98c8166ff9c60d7427684b16e818ed8d659e02c"
+    },
+    {
+      "path": "src/jev_audit/client.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e79c58c3920e5d6d5c9693a444c6ddb26648bebb",
+      "size": 4780,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/e79c58c3920e5d6d5c9693a444c6ddb26648bebb"
+    },
+    {
+      "path": "src/jev_audit/data.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a1c7a0d84c87e4fe6e0e69c33191769e7724810b",
+      "size": 4215,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/a1c7a0d84c87e4fe6e0e69c33191769e7724810b"
+    },
+    {
+      "path": "src/jev_audit/drift.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52c73cd5e8d6f2e21a984d290cc9cd885cd3e346",
+      "size": 2857,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/52c73cd5e8d6f2e21a984d290cc9cd885cd3e346"
+    },
+    {
+      "path": "src/jev_audit/experiments",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6308a4a789b815b3b731d6f1d1f6073ea4128d66",
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/trees/6308a4a789b815b3b731d6f1d1f6073ea4128d66"
+    },
+    {
+      "path": "src/jev_audit/experiments/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "size": 0,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "src/jev_audit/experiments/abstention.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5822abe5c9f583435dbaa41610ab746670bbd262",
+      "size": 4720,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/5822abe5c9f583435dbaa41610ab746670bbd262"
+    },
+    {
+      "path": "src/jev_audit/experiments/coherence.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2231576df7a318f3ceeac44ffcfbab3ef15b494",
+      "size": 4152,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/c2231576df7a318f3ceeac44ffcfbab3ef15b494"
+    },
+    {
+      "path": "src/jev_audit/experiments/interference.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1cd05da1a20e94c5bca6811ab97fe384bb8ed91c",
+      "size": 5362,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/1cd05da1a20e94c5bca6811ab97fe384bb8ed91c"
+    },
+    {
+      "path": "src/jev_audit/experiments/parallel_ko_en.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3c1dc0c8fb1025ef5381f8517702ef9d4619c8be",
+      "size": 5157,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/3c1dc0c8fb1025ef5381f8517702ef9d4619c8be"
+    },
+    {
+      "path": "src/jev_audit/metrics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de26d1eb4579f751508b8f19414f982a978d6a68",
+      "size": 2989,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/de26d1eb4579f751508b8f19414f982a978d6a68"
+    },
+    {
+      "path": "src/jev_audit/preflight.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c2847775d761fd14f247c52f6c997c0d13bb24d",
+      "size": 5695,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/1c2847775d761fd14f247c52f6c997c0d13bb24d"
+    },
+    {
+      "path": "src/jev_audit/probes.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "299b863689339a5fc67b1d2347c8bcccdb6a4c85",
+      "size": 2357,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/299b863689339a5fc67b1d2347c8bcccdb6a4c85"
+    },
+    {
+      "path": "src/jev_audit/runner.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94563969b5a7d22ed95295b245eec240e499cbb8",
+      "size": 2345,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/94563969b5a7d22ed95295b245eec240e499cbb8"
+    },
+    {
+      "path": "uv.lock",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "797c134e191a3a1618c80e3713d916cfd9eb850e",
+      "size": 338357,
+      "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/git/blobs/797c134e191a3a1618c80e3713d916cfd9eb850e"
+    }
+  ],
+  "truncated": false
+}

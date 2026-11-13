@@ -1,0 +1,38 @@
+[
+  {
+    "name": "coherence",
+    "url": "https://jevbench.github.io/",
+    "retrieved_at_utc": "2026-10-12T08:53:02.877996+00:00",
+    "resolved_url": "https://jevbench.github.io/",
+    "file": "coherence.html",
+    "bytes": 9839,
+    "sha256": "489df76debf923c389190359c9f2b862aa85fe244cd5779548e47c451b248dd2"
+  },
+  {
+    "name": "probability-axioms",
+    "url": "https://arxiv.org/abs/2609.33209",
+    "retrieved_at_utc": "2026-10-12T08:53:02.878997+00:00",
+    "resolved_url": "https://arxiv.org/abs/2609.33209",
+    "file": "probability-axioms.html",
+    "bytes": 43961,
+    "sha256": "0d9921d2a9343ab87050a291ebbfdaef13c93abd46445eac1e103a8233b1bcac"
+  },
+  {
+    "name": "checklist",
+    "url": "https://arxiv.org/abs/2005.04118",
+    "retrieved_at_utc": "2026-10-12T08:53:02.878997+00:00",
+    "resolved_url": "https://arxiv.org/abs/2005.04118",
+    "file": "checklist.html",
+    "bytes": 42140,
+    "sha256": "4d9f60de50ad7483fe62a8a9685086da373c42df3a24f7540dbb3a5b90dc643f"
+  },
+  {
+    "name": "textflint",
+    "url": "https://arxiv.org/abs/2103.11441",
+    "retrieved_at_utc": "2026-10-12T08:53:02.878997+00:00",
+    "resolved_url": "https://arxiv.org/abs/2103.11441",
+    "file": "textflint.html",
+    "bytes": 48699,
+    "sha256": "3f2ececc755f877b107c9c975eedce9eef66f8f543440613cb1c71e2e70ece7c"
+  }
+]

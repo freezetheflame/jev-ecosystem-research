@@ -1,0 +1,44 @@
+{
+  "source_sha256": "d1e855aefe58bf0a045a311adecc379cc438f89ed59d97183f2b41255f66fbe6",
+  "scope": "Arithmetic checks on author-released summaries, no raw-trace or model replication.",
+  "checks": {
+    "S2-1": {
+      "n_tasks": 500,
+      "wins": 2,
+      "losses": 13,
+      "success_arm": 0.972,
+      "success_reference": 0.994,
+      "success_difference_pp": -2.1999999999999997,
+      "cost_saving_percent": 40.72661976790902
+    },
+    "S2-2": {
+      "n_tasks": 500,
+      "wins": 1,
+      "losses": 14,
+      "success_arm": 0.972,
+      "success_reference": 0.998,
+      "success_difference_pp": -2.6,
+      "cost_saving_percent": 27.025846701262914
+    },
+    "S2-4": {
+      "n_tasks": 500,
+      "wins": 3,
+      "losses": 0,
+      "success_arm": 1.0,
+      "success_reference": 0.994,
+      "success_difference_pp": 0.6,
+      "cost_saving_percent": 81.12576370196784
+    },
+    "economics": {
+      "payback_episodes_at_reported_training_cost_192_93_usd": 5758.477336456289,
+      "reported_model_call_latency_change_percent": 43.630081785838534,
+      "latency_caveat": "Different serving windows/concurrency; not an isolated causal effect."
+    },
+    "zero_event_bound": {
+      "n": 500,
+      "alpha": 0.05,
+      "one_sided_95_percent_upper_bound": 0.005973551516349596,
+      "scope": "Illustrative independent-task zero-event bound; not an adversarial safety guarantee."
+    }
+  }
+}

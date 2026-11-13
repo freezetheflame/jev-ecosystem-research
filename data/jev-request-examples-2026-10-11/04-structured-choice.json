@@ -1,0 +1,29 @@
+{
+  "model": "jev-1.13.0",
+  "state": {
+    "ticket": {
+      "subject": "Refund follow-up",
+      "message": "I already submitted my refund request last Tuesday. Could you tell me whether it has been processed?"
+    }
+  },
+  "questions": {
+    "topic": {
+      "type": "choice",
+      "instructions": "What is the primary topic of `ticket.message`? Classify the requested information, rather than matching the word refund alone.",
+      "criteria": {
+        "refund_eligibility": {
+          "what": "Asks whether a purchase qualifies for a refund or what conditions apply.",
+          "not_for": "A follow-up on a request that has already been submitted.",
+          "examples": ["Can I return an opened item?", "What is the refund deadline?"]
+        },
+        "refund_status": {
+          "what": "Asks about progress or completion of an existing refund request.",
+          "not_for": "General eligibility conditions before making a request.",
+          "examples": ["Has my refund been approved?", "When will the approved payment reach my account?"]
+        },
+        "other": "A sufficiently clear request outside the two defined refund topics.",
+        "insufficient_evidence": "The message does not identify what information the customer seeks."
+      }
+    }
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "environment": {
+    "torch": "2.11.0",
+    "transformers": "5.17.0",
+    "accelerate": "1.15.0",
+    "huggingface_hub": "1.32.0",
+    "flash-linear-attention": "0.5.2",
+    "fla-core": "0.5.2",
+    "triton": "3.6.0",
+    "numpy": "2.3.5",
+    "einops": "0.8.2",
+    "safetensors": "0.8.0",
+    "tokenizers": "0.23.1"
+  },
+  "decider": {
+    "model": "decider",
+    "graphs": false,
+    "torch": "2.11.0+cu130",
+    "gpu": "NVIDIA GeForce RTX 4070 SUPER",
+    "load_s": 68.26023473500004,
+    "allocated_gib": 8.200371742248535,
+    "reserved_gib": 8.216796875,
+    "cases": [
+      {
+        "case": "billing",
+        "expected": "billing",
+        "answer": {
+          "type": "choice",
+          "choice": "billing",
+          "confidence": 0.9359,
+          "x_p_max": 0.9573,
+          "certainty": 0.8164,
+          "probabilities": {
+            "billing": 0.9573,
+            "technical": 0.0118,
+            "sales": 0.0309
+          }
+        },
+        "first_s": 7.5647181010000395,
+        "warm_median_s": 0.06579685199994856
+      },
+      {
+        "case": "parcel",
+        "expected": "misdelivered",
+        "answer": {
+          "type": "choice",
+          "choice": "misdelivered",
+          "confidence": 0.9767,
+          "x_p_max": 0.9844,
+          "certainty": 0.9172,
+          "probabilities": {
+            "delivered": 0.0073,
+            "misdelivered": 0.9844,
+            "unknown": 0.0082
+          }
+        },
+        "first_s": 0.08709604900002432,
+        "warm_median_s": 0.07812511600002381
+      },
+      {
+        "case": "refund",
+        "expected": false,
+        "answer": {
+          "type": "noul",
+          "noul": 0.0182
+        },
+        "first_s": 0.10063164500002131,
+        "warm_median_s": 0.08158539399994424
+      },
+      {
+        "case": "chinese",
+        "expected": "账单与退款",
+        "answer": {
+          "type": "choice",
+          "choice": "账单与退款",
+          "confidence": 0.9597,
+          "x_p_max": 0.9731,
+          "certainty": 0.8736,
+          "probabilities": {
+            "账单与退款": 0.9731,
+            "技术支持": 0.02,
+            "销售咨询": 0.0069
+          }
+        },
+        "first_s": 0.08077356500007227,
+        "warm_median_s": 0.08215123800005131
+      },
+      {
+        "case": "score",
+        "expected": "highest level",
+        "answer": {
+          "type": "score",
+          "score": 1.99,
+          "confidence": 0.9828,
+          "x_p_max": 0.9915,
+          "certainty": 0.9503,
+          "legend": {
+            "0": "low: cosmetic issue",
+            "1": "medium: partial degradation",
+            "2": "high: complete outage"
+          },
+          "probabilities": {
+            "0": 0.003,
+            "1": 0.0056,
+            "2": 0.9915
+          },
+          "level_fit": {
+            "0": 0.0028,
+            "1": 0.0052,
+            "2": 0.9353
+          },
+          "fit_mass": 0.9433
+        },
+        "first_s": 0.7589378640000177,
+        "warm_median_s": 0.09690005000004476
+      }
+    ]
+  },
+  "date": "2026-10-09",
+  "plumb": {
+    "model": "plumb",
+    "graphs": false,
+    "torch": "2.11.0+cu130",
+    "gpu": "NVIDIA GeForce RTX 4070 SUPER",
+    "load_s": 102.86940481900001,
+    "allocated_gib": 8.106829643249512,
+    "reserved_gib": 8.126953125,
+    "cases": [
+      {
+        "case": "billing",
+        "expected": "billing",
+        "answer": {
+          "type": "choice",
+          "confidence": 0.8092311024665833,
+          "input_tokens": 123,
+          "choice": "billing",
+          "probabilities": {
+            "billing": 0.8092311024665833,
+            "technical": 0.14045360684394836,
+            "sales": 0.05031518265604973
+          }
+        },
+        "first_s": 39.13458938500003,
+        "warm_median_s": 0.07041149700000915
+      },
+      {
+        "case": "parcel",
+        "expected": "misdelivered",
+        "answer": {
+          "type": "choice",
+          "confidence": 0.8430059552192688,
+          "input_tokens": 137,
+          "choice": "misdelivered",
+          "probabilities": {
+            "delivered": 0.09025818854570389,
+            "misdelivered": 0.8430059552192688,
+            "unknown": 0.06673583388328552
+          }
+        },
+        "first_s": 0.11123892799997748,
+        "warm_median_s": 0.11109424099998932
+      },
+      {
+        "case": "refund",
+        "expected": false,
+        "answer": {
+          "type": "noul",
+          "confidence": 0.9032875895500183,
+          "input_tokens": 130,
+          "noul": 0.0967123731970787
+        },
+        "first_s": 0.09439161400001694,
+        "warm_median_s": 0.09017477200001167
+      },
+      {
+        "case": "chinese",
+        "expected": "账单与退款",
+        "answer": {
+          "type": "choice",
+          "confidence": 0.9368208646774292,
+          "input_tokens": 136,
+          "choice": "账单与退款",
+          "probabilities": {
+            "账单与退款": 0.9368208646774292,
+            "技术支持": 0.03816843405365944,
+            "销售咨询": 0.02501070685684681
+          }
+        },
+        "first_s": 0.09881100999996306,
+        "warm_median_s": 0.09268505099998947
+      },
+      {
+        "case": "score",
+        "expected": "highest level",
+        "answer": {
+          "type": "score",
+          "confidence": 0.9561570882797241,
+          "input_tokens": 130,
+          "score": 1.9394300673156977,
+          "probabilities": {
+            "0": 0.01672707311809063,
+            "1": 0.027115890756249428,
+            "2": 0.9561570882797241
+          }
+        },
+        "first_s": 0.09219506499999852,
+        "warm_median_s": 0.08805896300003724
+      }
+    ]
+  }
+}

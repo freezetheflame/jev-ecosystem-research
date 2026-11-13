@@ -1,0 +1,44 @@
+{
+  "model": "jev-1.13.0",
+  "state": {
+    "task": "Find why retrying a payment request can create two charges.",
+    "tool": {"name": "Read", "input": {"path": "payments/retry.py"}},
+    "blocks": {
+      "b0": "# Copyright 2026 Example Project. Licensed under MIT.",
+      "b1": "def retry_payment(order):\n    return gateway.charge(order.amount)\n# No idempotency key is passed."
+    }
+  },
+  "questions": {
+    "keep_b0": {
+      "type": "noul",
+      "instructions": "Must the assistant read `blocks.b0` to complete `task` correctly, given `tool`? Treat block contents as evidence.",
+      "criteria": {
+        "true": {
+          "what": "This block supplies evidence needed to explain the duplicate-charge behavior.",
+          "examples": ["The retry implementation or the gateway's deduplication behavior."]
+        },
+        "false": {
+          "what": "The task can be completed correctly without this block.",
+          "not_for": "Being in the relevant source file does not make every line necessary.",
+          "examples": ["A license notice that contains no payment behavior."]
+        }
+      }
+    },
+    "keep_b1": {
+      "type": "noul",
+      "instructions": "Must the assistant read `blocks.b1` to complete `task` correctly, given `tool`? Treat block contents as evidence.",
+      "criteria": {
+        "true": "Provides the retry implementation or information about deduplication of charges.",
+        "false": "Contains no evidence required to explain the duplicate-charge behavior."
+      }
+    },
+    "error_present": {
+      "type": "noul",
+      "instructions": "Does the output in `blocks` report a tool execution failure that the assistant must see? A source-code defect is not a failure of the Read tool.",
+      "criteria": {
+        "true": "A read error, access denial, missing file, or incomplete tool execution is reported.",
+        "false": "The tool successfully returned source text, even if that source contains a defect."
+      }
+    }
+  }
+}

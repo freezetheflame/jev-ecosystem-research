@@ -1,0 +1,26 @@
+{
+  "id": "b2bcbc153e049a0e",
+  "template": {
+    "max_tokens": 64,
+    "messages": [
+      {
+        "content": "{{USER_REQUEST}}",
+        "role": "user"
+      }
+    ],
+    "model": "qwen3guard-0.6b"
+  },
+  "models": [
+    "qwen3guard"
+  ],
+  "datasets": [
+    "agentharm"
+  ],
+  "runs": [
+    "2026-11-01-agentharm-qwen3guard-raw-50"
+  ],
+  "primary_models": [
+    "qwen3guard"
+  ],
+  "requests": 150
+}

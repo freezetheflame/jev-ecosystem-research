@@ -1,0 +1,760 @@
+{
+  "sha": "78910f045e935e73829b4629baefc8efc7ae9879",
+  "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/78910f045e935e73829b4629baefc8efc7ae9879",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11dcdba3324ea85249425c3fe9c1b6a6b1a5e4f4",
+      "size": 161,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/11dcdba3324ea85249425c3fe9c1b6a6b1a5e4f4"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2b302cdbd579c436d514d78c80f1bd213feb808",
+      "size": 7637,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/c2b302cdbd579c436d514d78c80f1bd213feb808"
+    },
+    {
+      "path": "analysis",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "57f46e8d60a8b80caacd1c760b8746c31c6b1cf0",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/57f46e8d60a8b80caacd1c760b8746c31c6b1cf0"
+    },
+    {
+      "path": "analysis/additional_judges",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "36d80ffe09f8f9defc31344f77bfff77bdc7b617",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/36d80ffe09f8f9defc31344f77bfff77bdc7b617"
+    },
+    {
+      "path": "analysis/additional_judges/analyze.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c8f6ca8a9a5284f6c8e4fd2ecde8d29d9892fcad",
+      "size": 5232,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/c8f6ca8a9a5284f6c8e4fd2ecde8d29d9892fcad"
+    },
+    {
+      "path": "analysis/calibration_sensitivity",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "476c5f20f4c27cfdbd3e148d82c3bd44815cd04f",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/476c5f20f4c27cfdbd3e148d82c3bd44815cd04f"
+    },
+    {
+      "path": "analysis/calibration_sensitivity/analyze.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "117bb088a805d73f607bca6a00df96e77c68497b",
+      "size": 6151,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/117bb088a805d73f607bca6a00df96e77c68497b"
+    },
+    {
+      "path": "analysis/completed_probabilities",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "17508d0a839dd9a99cf9b89a367fcbaf4324f430",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/17508d0a839dd9a99cf9b89a367fcbaf4324f430"
+    },
+    {
+      "path": "analysis/completed_probabilities/analyze.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1f4d9b61f647faae0889e35101e79cd302c5e47e",
+      "size": 2334,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/1f4d9b61f647faae0889e35101e79cd302c5e47e"
+    },
+    {
+      "path": "analysis/error_complementarity",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7c73fcd5972762ff4e7d98b717b1d7841264dc4d",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/7c73fcd5972762ff4e7d98b717b1d7841264dc4d"
+    },
+    {
+      "path": "analysis/error_complementarity/analyze.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07e31bffe13fdbe567393bd4b120be8a1ac290b4",
+      "size": 6473,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/07e31bffe13fdbe567393bd4b120be8a1ac290b4"
+    },
+    {
+      "path": "analysis/error_complementarity/verify.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3bd3f92962adffc2b038b1308117049c001530ae",
+      "size": 3466,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/3bd3f92962adffc2b038b1308117049c001530ae"
+    },
+    {
+      "path": "analysis/laya_configuration",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fdcabc63e18adf7f424d0b7438acf68209b4cfbd",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/fdcabc63e18adf7f424d0b7438acf68209b4cfbd"
+    },
+    {
+      "path": "analysis/laya_configuration/verify.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28fb1316feb8036207405ef0f465a4751d6f8c70",
+      "size": 2615,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/28fb1316feb8036207405ef0f465a4751d6f8c70"
+    },
+    {
+      "path": "analysis/threshold_sensitivity",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f7725bd0a4cac08a57a2010969e655d357586354",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/f7725bd0a4cac08a57a2010969e655d357586354"
+    },
+    {
+      "path": "analysis/threshold_sensitivity/analyze.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa7b9adb7df4826be9575d97f516c98d1e3627a3",
+      "size": 9684,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/fa7b9adb7df4826be9575d97f516c98d1e3627a3"
+    },
+    {
+      "path": "analysis/threshold_sensitivity/plot.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c92d09e695a43b473a94bcda085fe1a8495ced5",
+      "size": 3437,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/8c92d09e695a43b473a94bcda085fe1a8495ced5"
+    },
+    {
+      "path": "analysis/threshold_sensitivity/verify.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65b18db0bcad07eb294d10be8b58ed9284d158d1",
+      "size": 2993,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/65b18db0bcad07eb294d10be8b58ed9284d158d1"
+    },
+    {
+      "path": "data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f758731f49b72e92b529a978d01c5deb1abd8501",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/f758731f49b72e92b529a978d01c5deb1abd8501"
+    },
+    {
+      "path": "data/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "522d8318c53785d1490cf1479a7d1559cc1bf95b",
+      "size": 5681,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/522d8318c53785d1490cf1479a7d1559cc1bf95b"
+    },
+    {
+      "path": "data/partitions.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44ed245f36a6936f1422419c161562ae965a2229",
+      "size": 197580,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/44ed245f36a6936f1422419c161562ae965a2229"
+    },
+    {
+      "path": "data/predictions",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f9cc18e06d4da657803b28b5883db0aba7581345",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/f9cc18e06d4da657803b28b5883db0aba7581345"
+    },
+    {
+      "path": "data/predictions/additional_judges.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b3dd2449922325eda5e3b0f25ef4873a7cd1708",
+      "size": 1815200,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/2b3dd2449922325eda5e3b0f25ef4873a7cd1708"
+    },
+    {
+      "path": "data/predictions/completed_probabilities.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "32cb4ac59ecb93f27174e335d187b7fe1fe603a3",
+      "size": 986078,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/32cb4ac59ecb93f27174e335d187b7fe1fe603a3"
+    },
+    {
+      "path": "data/predictions/final_scoring_all_partitions.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7909cce4f18497dd1dc4f180c73db689344db155",
+      "size": 2214119,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/7909cce4f18497dd1dc4f180c73db689344db155"
+    },
+    {
+      "path": "data/predictions/frozen_policy_judges.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ec57d4bfb65bf40f279b83e2426811ae21f68b2",
+      "size": 377447,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/3ec57d4bfb65bf40f279b83e2426811ae21f68b2"
+    },
+    {
+      "path": "data/predictions/glm_completed.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ab7e8db88a4b83bf19a65e2de2d82f335a3d80d",
+      "size": 390893,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/7ab7e8db88a4b83bf19a65e2de2d82f335a3d80d"
+    },
+    {
+      "path": "data/predictions/laya_all_partitions.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc8414091ec4053f1b24357ab3d1f421803d3ae1",
+      "size": 379860,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/dc8414091ec4053f1b24357ab3d1f421803d3ae1"
+    },
+    {
+      "path": "data/predictions/nimble_all_partitions.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "85d023930eb3f110be7d213d0dea562ddefa949c",
+      "size": 964710,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/85d023930eb3f110be7d213d0dea562ddefa949c"
+    },
+    {
+      "path": "data/predictions/primary_classification.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0094c8149ffe22823871ccf776b35c0ae0b96562",
+      "size": 2160545,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/0094c8149ffe22823871ccf776b35c0ae0b96562"
+    },
+    {
+      "path": "data/predictions/threshold_sensitivity.jsonl.gz",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "70c758a94bed040982ba2c0052b8f3c34bee2c79",
+      "size": 1894399,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/70c758a94bed040982ba2c0052b8f3c34bee2c79"
+    },
+    {
+      "path": "manifest.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7fdf6987a93ee294a4aff4728befc61c64579f9f",
+      "size": 9896,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/7fdf6987a93ee294a4aff4728befc61c64579f9f"
+    },
+    {
+      "path": "protocol",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2e4d029dc232b40620b563db196f34262d73a6d7",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/2e4d029dc232b40620b563db196f34262d73a6d7"
+    },
+    {
+      "path": "protocol/analysis_plan.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ee9eebbd7b312447e5ec6bf41d04a10340f2958",
+      "size": 3141,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/4ee9eebbd7b312447e5ec6bf41d04a10340f2958"
+    },
+    {
+      "path": "protocol/final_scoring.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "68fe0a1158d2729edee78c7d1cced413bdf00190",
+      "size": 2813,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/68fe0a1158d2729edee78c7d1cced413bdf00190"
+    },
+    {
+      "path": "protocol/formal_model_matrix.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5653aa557dc73b7f3f34039107254983c362290d",
+      "size": 5988,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/5653aa557dc73b7f3f34039107254983c362290d"
+    },
+    {
+      "path": "protocol/gpt41_logprobs_source_policy.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3c8a883cb08df2ab65e6c5f14cb9f78d714d18d",
+      "size": 16181,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/a3c8a883cb08df2ab65e6c5f14cb9f78d714d18d"
+    },
+    {
+      "path": "protocol/model_lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c27035cd194f01ceed970531164036b443635b38",
+      "size": 2751,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/c27035cd194f01ceed970531164036b443635b38"
+    },
+    {
+      "path": "protocol/models.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c99e8598be1bb15dd27874089da8eca91b51dee",
+      "size": 5712,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/7c99e8598be1bb15dd27874089da8eca91b51dee"
+    },
+    {
+      "path": "protocol/offline_policies.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "684692135118ddaaacbe87ec0080e8cfef45bcc8",
+      "size": 132632,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/684692135118ddaaacbe87ec0080e8cfef45bcc8"
+    },
+    {
+      "path": "protocol/partitions.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eec334dd7c9e8536678d52db0d2e9e8080405061",
+      "size": 769,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/eec334dd7c9e8536678d52db0d2e9e8080405061"
+    },
+    {
+      "path": "protocol/qwen_native_source_policy.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "48d3a606c503bdcb8d8bac8440cd89b81eafb931",
+      "size": 15690,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/48d3a606c503bdcb8d8bac8440cd89b81eafb931"
+    },
+    {
+      "path": "protocol/source_lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6b122ece4fd63b882bc1a788df80bdb6c9c81a0d",
+      "size": 284,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/6b122ece4fd63b882bc1a788df80bdb6c9c81a0d"
+    },
+    {
+      "path": "protocol/threshold_sensitivity.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2e6cbaec2362578192aed10358a827e675224737",
+      "size": 97737,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/2e6cbaec2362578192aed10358a827e675224737"
+    },
+    {
+      "path": "pyproject.toml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6a75481623ef4fb5b269012edd4a93a48044b818",
+      "size": 1015,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/6a75481623ef4fb5b269012edd4a93a48044b818"
+    },
+    {
+      "path": "reproduce_intervals.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f29a5bfd103a09f8deb054cf6225cc18e48f8466",
+      "size": 3481,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/f29a5bfd103a09f8deb054cf6225cc18e48f8466"
+    },
+    {
+      "path": "reproduce_results.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbc7dfcf6b2b761638386e0d537efa35e084f917",
+      "size": 12582,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/cbc7dfcf6b2b761638386e0d537efa35e084f917"
+    },
+    {
+      "path": "requirements-analysis.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd1d0c75b8ca7d401f11385a9c1354dac689f6be",
+      "size": 66,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/cd1d0c75b8ca7d401f11385a9c1354dac689f6be"
+    },
+    {
+      "path": "results",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "af10c46850ad31b239755d8e687f4677b0073deb",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/af10c46850ad31b239755d8e687f4677b0073deb"
+    },
+    {
+      "path": "results/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e1254159c3dbb4ddbde88a15419609ce3860e23",
+      "size": 4393,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/1e1254159c3dbb4ddbde88a15419609ce3860e23"
+    },
+    {
+      "path": "results/T12_paired_effects.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "20582f8781e7bf21b070034ea6987fac11fa1839",
+      "size": 33981,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/20582f8781e7bf21b070034ea6987fac11fa1839"
+    },
+    {
+      "path": "results/T14_source_sensitivity.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4907fa5c933ca3457f741b5c640ea302daac335e",
+      "size": 15731,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/4907fa5c933ca3457f741b5c640ea302daac335e"
+    },
+    {
+      "path": "results/T15_parent_controls.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12887f8fe30be1bb34210832d34b63aa7048ebb1",
+      "size": 3464,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/12887f8fe30be1bb34210832d34b63aa7048ebb1"
+    },
+    {
+      "path": "results/added_models.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f29a1cc9b1b034bf56637b39f024f7ef6b12efa1",
+      "size": 250390,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/f29a1cc9b1b034bf56637b39f024f7ef6b12efa1"
+    },
+    {
+      "path": "results/calibration_sensitivity.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89fbd30d4b6b8baeb5d4ab179e0eccd101d7e1ea",
+      "size": 2776,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/89fbd30d4b6b8baeb5d4ab179e0eccd101d7e1ea"
+    },
+    {
+      "path": "results/calibration_sensitivity.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0315cfafbd1a1699a2b6151a547764829f7a963",
+      "size": 86296,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/c0315cfafbd1a1699a2b6151a547764829f7a963"
+    },
+    {
+      "path": "results/completed_probability.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9272edaffd26f978fad1d03335f366a751695c32",
+      "size": 339306,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/9272edaffd26f978fad1d03335f366a751695c32"
+    },
+    {
+      "path": "results/confidence_diagnostics.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f50a96ed1be6bb7bcec4669ba44ff591dcf5b89",
+      "size": 1028837,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/7f50a96ed1be6bb7bcec4669ba44ff591dcf5b89"
+    },
+    {
+      "path": "results/error_complementarity.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72fc2f506c919c9e1d9b29699013daf1c77d37b9",
+      "size": 378358,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/72fc2f506c919c9e1d9b29699013daf1c77d37b9"
+    },
+    {
+      "path": "results/error_transitions.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb5adb02e0c208a8a0337ba95f6ea4c8f94cbcbb",
+      "size": 37230,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/fb5adb02e0c208a8a0337ba95f6ea4c8f94cbcbb"
+    },
+    {
+      "path": "results/heldout_current.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "818f3afc12588c293d6bb5bd5126e26c8c8cb877",
+      "size": 1894024,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/818f3afc12588c293d6bb5bd5126e26c8c8cb877"
+    },
+    {
+      "path": "results/interpretation_sensitivity.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "43d9174989830a2a278ba938849015a3556608eb",
+      "size": 115261,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/43d9174989830a2a278ba938849015a3556608eb"
+    },
+    {
+      "path": "results/policy_budget_resolution.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6939f5924c5b72941705c010d90d1d2bfe88452",
+      "size": 2599,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/f6939f5924c5b72941705c010d90d1d2bfe88452"
+    },
+    {
+      "path": "results/probability_followup.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d7f9efb86425a899974ba8503cdfea42394c6d34",
+      "size": 589717,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/d7f9efb86425a899974ba8503cdfea42394c6d34"
+    },
+    {
+      "path": "results/score_tie_diagnostics.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cba717cf5890e58a73f3611d53daa266ad18c5eb",
+      "size": 1285,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/cba717cf5890e58a73f3611d53daa266ad18c5eb"
+    },
+    {
+      "path": "results/threshold_policies.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "535d65753d473c14bedb7f11d7df17067532230b",
+      "size": 97318,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/535d65753d473c14bedb7f11d7df17067532230b"
+    },
+    {
+      "path": "results/threshold_sensitivity.csv",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a9b4cc27ec8632deba262f49846621670d5e9e19",
+      "size": 61509,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/a9b4cc27ec8632deba262f49846621670d5e9e19"
+    },
+    {
+      "path": "results/threshold_sensitivity.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d581203e8e0a7776fb995380ed8bbb64738a3c5",
+      "size": 259464,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/2d581203e8e0a7776fb995380ed8bbb64738a3c5"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c19ebdea7c83aebc789fa5a0f476fe5f77743376",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/c19ebdea7c83aebc789fa5a0f476fe5f77743376"
+    },
+    {
+      "path": "scripts/bootstrap_sources.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2eedbdb7f7b13487ada4c0707535ec10467ce0e0",
+      "size": 1255,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/2eedbdb7f7b13487ada4c0707535ec10467ce0e0"
+    },
+    {
+      "path": "scripts/fetch_agentharm.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a0cebe0fcd0f190765ecb3077f5e0cfc013932e",
+      "size": 1074,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/7a0cebe0fcd0f190765ecb3077f5e0cfc013932e"
+    },
+    {
+      "path": "scripts/merge_nimble.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c9d6c54c23d5dcd5ed2778d09a64126cdb91a4d",
+      "size": 1157,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/1c9d6c54c23d5dcd5ed2778d09a64126cdb91a4d"
+    },
+    {
+      "path": "scripts/prepare_decider_parent.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65c94229d6abece6887b480b1042c55a8a019a33",
+      "size": 2441,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/65c94229d6abece6887b480b1042c55a8a019a33"
+    },
+    {
+      "path": "scripts/prepare_inputs.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4506503549e3db264626f1793f43e5850dc0681c",
+      "size": 1717,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/4506503549e3db264626f1793f43e5850dc0681c"
+    },
+    {
+      "path": "scripts/prepare_models.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3cf4e8dc65d9ad722556d38dd6227e44d44c9d58",
+      "size": 3555,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/3cf4e8dc65d9ad722556d38dd6227e44d44c9d58"
+    },
+    {
+      "path": "scripts/summarize_run.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8e443dbc6449ab777bbe795067a312c642c74686",
+      "size": 1658,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/8e443dbc6449ab777bbe795067a312c642c74686"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4aad31d5388b3e9f1c7a20fea6afcf28359fe1e6",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/4aad31d5388b3e9f1c7a20fea6afcf28359fe1e6"
+    },
+    {
+      "path": "src/security_eval",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0bb3bcd65ef53416110149aaffa81cea170f32aa",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/0bb3bcd65ef53416110149aaffa81cea170f32aa"
+    },
+    {
+      "path": "src/security_eval/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d07a10b51685abe678ce2a7b346d6335bf8377de",
+      "size": 112,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/d07a10b51685abe678ce2a7b346d6335bf8377de"
+    },
+    {
+      "path": "src/security_eval/adapters.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93c5ba96ea3a788a086f0c9265ae0d097c4abcc8",
+      "size": 16160,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/93c5ba96ea3a788a086f0c9265ae0d097c4abcc8"
+    },
+    {
+      "path": "src/security_eval/common.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1daa5813977633cb19a8a4e9638038d79562d02c",
+      "size": 2399,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/1daa5813977633cb19a8a4e9638038d79562d02c"
+    },
+    {
+      "path": "src/security_eval/data.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a9fa12424875317eb3014a7ce4bbe5b75c2b3cda",
+      "size": 3628,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/a9fa12424875317eb3014a7ce4bbe5b75c2b3cda"
+    },
+    {
+      "path": "src/security_eval/experiment.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77618d812636651ec7e039643e461a2c21922424",
+      "size": 7553,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/77618d812636651ec7e039643e461a2c21922424"
+    },
+    {
+      "path": "src/security_eval/local_decisions.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6405ca36250ec55a14df86c1fe0c194e721fbaa",
+      "size": 7964,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/f6405ca36250ec55a14df86c1fe0c194e721fbaa"
+    },
+    {
+      "path": "src/security_eval/metrics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2122165c6dee1e583ba71de3a3691250df241e19",
+      "size": 12022,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/2122165c6dee1e583ba71de3a3691250df241e19"
+    },
+    {
+      "path": "src/security_eval/paper_analysis.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1932d203afd3059dedb423d1b706196eeb13aaaa",
+      "size": 13213,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/1932d203afd3059dedb423d1b706196eeb13aaaa"
+    },
+    {
+      "path": "src/security_eval/safety_baselines.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de1060a650187fe141889fdf0ee4f648a7185a4c",
+      "size": 4446,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/de1060a650187fe141889fdf0ee4f648a7185a4c"
+    },
+    {
+      "path": "src/security_eval/score_alignment.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92144e908da162a01f78b33de4784ba22fb083c3",
+      "size": 2114,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/92144e908da162a01f78b33de4784ba22fb083c3"
+    },
+    {
+      "path": "src/security_eval/score_normalization.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "52543ee2a8944773604843370629066019ba2b72",
+      "size": 1193,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/52543ee2a8944773604843370629066019ba2b72"
+    },
+    {
+      "path": "src/security_eval/score_whitespace.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb578e3bb9b35e8297170858d19be057ad4c7668",
+      "size": 971,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/cb578e3bb9b35e8297170858d19be057ad4c7668"
+    },
+    {
+      "path": "src/security_eval/structured_scores.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e6b82491c907b8e0e8edefd90a815836147cff6",
+      "size": 3437,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/1e6b82491c907b8e0e8edefd90a815836147cff6"
+    },
+    {
+      "path": "src/security_eval/tracing.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c80c3cc0a70b135e62f3fc07fdd5774d21c1b5c8",
+      "size": 9248,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/c80c3cc0a70b135e62f3fc07fdd5774d21c1b5c8"
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d2d7c3917a0467015f42f2a39cef992053d021a2",
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/trees/d2d7c3917a0467015f42f2a39cef992053d021a2"
+    },
+    {
+      "path": "tests/test_label_scores.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eeb2e6c9fe0729c441208537fcc10da474f25c8e",
+      "size": 3746,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/eeb2e6c9fe0729c441208537fcc10da474f25c8e"
+    },
+    {
+      "path": "tests/test_structured_scores.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "230df8aebcab0361f9bd58e18cddaceb72e8adcd",
+      "size": 2543,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/230df8aebcab0361f9bd58e18cddaceb72e8adcd"
+    },
+    {
+      "path": "tests/test_thresholds.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b590fbf94cb3f9c314bbdd77cfff89197addfe5",
+      "size": 2948,
+      "url": "https://api.github.com/repos/yxsec/system-one-security-eval/git/blobs/2b590fbf94cb3f9c314bbdd77cfff89197addfe5"
+    }
+  ],
+  "truncated": false
+}

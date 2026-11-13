@@ -1,0 +1,12 @@
+﻿model,parameter_size,nominal_parameters_billions,basis,execution_status
+jev,未知,,API 未提供参数量；不推断为 Jev-Guard 的 2B,executed
+d3mini,约 4.54B,4.539265536,发布快照 hf-api.json safetensors.total=4539265536；含完整 checkpoint，不是活跃参数量,executed
+laya,421M,0.421,实际运行 Laya-421M 的名义规模，effective-config.json,executed
+secjev,0.8B + 适配器/分类头,0.8,SecJev-0.8B 基座名义规模；LoRA 和分类头另加，非精确总数,executed
+jevguard,2B + 适配器/分类头,2,Qwen3.5-2B 基座名义规模，尚未执行；不是 Jev API 的参数量,not_executed
+gliguard,300M,0.3,实际运行 GLiGuard-300M 的名义规模，effective-config.json,executed
+shieldstral,3B,3,mistralai/Shieldstral-1.0-3B 名义规模，发布制品名,executed
+qwen3guard,0.6B,0.6,实际运行 Qwen3Guard-Gen-0.6B 名义规模，effective-config.json,executed
+qwen35,4B,4,Qwen/Qwen3.5-4B 名义规模，固定制品 manifest,executed
+gpt6luna,未知,,中转 API 未提供参数量；不按名称推断,executed
+claudehaiku,未知,,中转 API 未提供参数量；不按名称推断,executed

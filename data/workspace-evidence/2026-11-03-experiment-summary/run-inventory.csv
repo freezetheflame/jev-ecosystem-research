@@ -1,0 +1,25 @@
+﻿run,phase,datasets,planned,recorded,statuses,primary_for
+2026-10-30-agentharm-pilot-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""jev""]"
+2026-10-30-agentharm-relay-50,pilot,"[""agentharm""]",300,13,"{""ok"": 12, ""failed"": 1}",[]
+2026-10-30-agentharm-relay-50-v2,pilot,"[""agentharm""]",300,300,"{""ok"": 288, ""provider_policy_refusal"": 11, ""failed"": 1}","[""gpt6luna"", ""claudehaiku""]"
+2026-10-30-agentharm-relay-smoke,pilot,"[""agentharm""]",4,1,"{""failed"": 1}",[]
+2026-10-30-agentharm-relay-smoke-02,pilot,"[""agentharm""]",4,4,"{""ok"": 4}",[]
+2026-10-30-agentharm-relay-smoke-03,pilot,"[""agentharm""]",4,4,"{""ok"": 3, ""provider_policy_refusal"": 1}",[]
+2026-10-30-smoke-01,pilot,"[""injecagent"", ""tsbench"", ""agentharm"", ""atbench""]",8,1,"{""failed"": 1}",[]
+2026-10-30-smoke-02,pilot,"[""injecagent"", ""tsbench"", ""agentharm"", ""atbench""]",8,8,"{""ok"": 8}",[]
+2026-11-01-agentharm-gliguard-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""gliguard""]"
+2026-11-01-agentharm-gliguard-smoke-02,pilot,"[""agentharm""]",2,2,"{""ok"": 2}",[]
+2026-11-01-agentharm-laya-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""laya""]"
+2026-11-01-agentharm-laya-smoke,pilot,"[""agentharm""]",2,2,"{""ok"": 2}",[]
+2026-11-01-agentharm-qwen3guard-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}",[]
+2026-11-01-agentharm-qwen3guard-raw-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""qwen3guard""]"
+2026-11-01-agentharm-qwen3guard-smoke,pilot,"[""agentharm""]",2,2,"{""failed"": 1, ""ok"": 1}",[]
+2026-11-01-agentharm-qwen3guard-smoke-02,pilot,"[""agentharm""]",2,2,"{""ok"": 2}",[]
+2026-11-02-agentharm-d3mini-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""d3mini""]"
+2026-11-02-agentharm-d3mini-smoke,pilot,"[""agentharm""]",2,2,"{""ok"": 2}",[]
+2026-11-02-agentharm-qwen35-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""qwen35""]"
+2026-11-02-agentharm-qwen35-smoke,pilot,"[""agentharm""]",2,2,"{""ok"": 2}",[]
+2026-11-02-agentharm-secjev-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""secjev""]"
+2026-11-02-agentharm-secjev-smoke,pilot,"[""agentharm""]",2,2,"{""ok"": 2}",[]
+2026-11-02-agentharm-shieldstral-50,pilot,"[""agentharm""]",150,150,"{""ok"": 150}","[""shieldstral""]"
+2026-11-02-agentharm-shieldstral-smoke,pilot,"[""agentharm""]",2,2,"{""ok"": 2}",[]

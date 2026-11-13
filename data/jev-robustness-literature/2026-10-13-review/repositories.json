@@ -1,0 +1,82 @@
+[
+  {
+    "id": "city-jev",
+    "repository": "JiaQiSJTU/CanITrustU-Jev",
+    "retrieved_at_utc": "2026-10-12T19:18:53.397727+00:00",
+    "commit": "cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "url": "https://api.github.com/repos/JiaQiSJTU/CanITrustU-Jev/contents/README.md?ref=cf5951b1d51b28913eb9b32fdc43c9767e78b3d7",
+    "file": "city-jev/README.md",
+    "bytes": 34269,
+    "sha256": "1efd91840bbeae8e74d9bf20c08a582745fadf54242953173641cb054878cc82",
+    "tree_truncated": false,
+    "candidates": [
+      "docs/test-v1-results.json",
+      "src/eval/final_metrics.py",
+      "src/eval/metrics.py",
+      "tests/runtime/test_metrics.py"
+    ]
+  },
+  {
+    "id": "calibration-audit",
+    "repository": "jujumilk3/jev-calibration-audit",
+    "retrieved_at_utc": "2026-10-12T19:18:53.397727+00:00",
+    "commit": "daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "url": "https://api.github.com/repos/jujumilk3/jev-calibration-audit/contents/README.md?ref=daab9e2c2d5d5683bf07f3482deb653c26856219",
+    "file": "calibration-audit/README.md",
+    "bytes": 6184,
+    "sha256": "61d4efbe26860a05a8d1eaf908ef857fe6e5d327250f47a68a27f67e6226a402",
+    "tree_truncated": false,
+    "candidates": [
+      "FINDINGS.md",
+      "results/abstention.json",
+      "results/coherence.json",
+      "results/interference.json",
+      "results/parallel_ko_en.json",
+      "results/preflight.json",
+      "results/preflight_n50.json",
+      "src/jev_audit/experiments/abstention.py",
+      "src/jev_audit/experiments/coherence.py",
+      "src/jev_audit/metrics.py"
+    ]
+  },
+  {
+    "id": "security-eval",
+    "repository": "yxsec/system-one-security-eval",
+    "retrieved_at_utc": "2026-10-12T19:18:53.397727+00:00",
+    "commit": "78910f045e935e73829b4629baefc8efc7ae9879",
+    "url": "https://api.github.com/repos/yxsec/system-one-security-eval/contents/README.md?ref=78910f045e935e73829b4629baefc8efc7ae9879",
+    "file": "security-eval/README.md",
+    "bytes": 7637,
+    "sha256": "8006bbcf86f24a673ef8dce91cf0e34ef52fe4aa6374f594084b7a0efb722b5b",
+    "tree_truncated": false,
+    "candidates": [
+      "analysis/threshold_sensitivity/analyze.py",
+      "analysis/threshold_sensitivity/plot.py",
+      "analysis/threshold_sensitivity/verify.py",
+      "data/predictions/frozen_policy_judges.jsonl.gz",
+      "data/predictions/threshold_sensitivity.jsonl.gz",
+      "protocol/gpt41_logprobs_source_policy.json",
+      "protocol/qwen_native_source_policy.json",
+      "protocol/threshold_sensitivity.json",
+      "reproduce_results.py",
+      "results/README.md",
+      "results/T12_paired_effects.json",
+      "results/T14_source_sensitivity.json",
+      "results/T15_parent_controls.json",
+      "results/added_models.json",
+      "results/calibration_sensitivity.json",
+      "results/completed_probability.json",
+      "results/confidence_diagnostics.json",
+      "results/error_complementarity.json",
+      "results/heldout_current.json",
+      "results/interpretation_sensitivity.json",
+      "results/policy_budget_resolution.json",
+      "results/probability_followup.json",
+      "results/score_tie_diagnostics.json",
+      "results/threshold_policies.json",
+      "results/threshold_sensitivity.json",
+      "src/security_eval/metrics.py",
+      "tests/test_thresholds.py"
+    ]
+  }
+]

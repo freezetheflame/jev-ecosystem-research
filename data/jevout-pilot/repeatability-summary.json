@@ -1,0 +1,14 @@
+{
+  "cases": 1,
+  "repetitions": 10,
+  "minimum_hits": 8,
+  "clean_gold_hits": {
+    "mmlu-pro-test-71": 10
+  },
+  "target_hits": {
+    "mmlu-pro-test-71": 10
+  },
+  "target_calls": 20,
+  "local_cache_bypassed": true,
+  "note": "repeatability is not proof of gold-answer preservation"
+}

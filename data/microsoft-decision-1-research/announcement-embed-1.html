@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob: https://commandline.microsoft.com/wp-content/uploads/; font-src data: https://commandline.microsoft.com; media-src data: blob: https://commandline.microsoft.com/wp-content/uploads/;">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accuracy, latency and calibration</title>
+<style>
+@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Book.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:500;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Medium.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Bold.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Italic.otf") format("opentype");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCode.woff2") format("woff2");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCodeItalic.woff2") format("woff2");}
+:root {
+  --bg: #fff;
+  --ink: #000;
+  --muted: #555;
+  --faint: #c9c9c9;        /* secondary series */
+  --good: #E3F671;         /* primary model (site accent lime) */
+  --bad: #FFA037;          /* primary model behind (site accent orange) */
+  --rule: #000;
+  --rule-soft: #e6e6e6;
+  --hover: #f3f3f3;
+  --badge-bg: #000;
+  --badge-fg: #fff;
+  --tip-bg: #000;
+  --tip-fg: #fff;
+  --sans: "PP Neue Montreal", sans-serif;
+  --mono: "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+html[data-theme="dark"] {
+  --bg: #111;
+  --ink: #fff;
+  --muted: #999;
+  --faint: #444;
+  --rule: #fff;
+  --rule-soft: #2a2a2a;
+  --hover: #1f1f1f;
+  --badge-bg: #fff;
+  --badge-fg: #111;
+  --tip-bg: #fff;
+  --tip-fg: #111;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { position: relative; padding: 2px 0 6px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ================= Header ================= */
+.head { margin-bottom: 28px; text-align: center; }
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 18px 0 8px;
+  font-size: clamp(24px, 4.2vw, 32px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+}
+.sub { margin: 0 auto; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 62ch; }
+.sub .dir { color: var(--ink); font-weight: 500; }
+
+/* ================= Legend / toggles ================= */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: 18px;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.legend button, .toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px;
+  font-size: 13px;
+  border: 1px solid var(--rule-soft);
+  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.2s ease;
+}
+.legend button:hover, .toggle button:hover { border-color: var(--ink); }
+.legend button[aria-pressed="true"] { border-color: var(--ink); font-weight: 500; }
+.legend .sw { width: 10px; height: 10px; flex: 0 0 10px; }
+.legend .sw.pri { background: var(--good); }
+.legend .sw.ref { background: var(--ink); }
+.legend .sw.oth { background: var(--faint); }
+.legend.iso button:not([aria-pressed="true"]) { opacity: 0.45; }
+.legend button[aria-pressed="true"]::after { content: "· click to clear"; font-weight: 400; color: var(--muted); }
+.toggle { display: flex; align-items: center; gap: 4px; }
+.toggle .k { margin-right: 8px; }
+.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ================= Notes / source ================= */
+.note { margin: 16px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.note .num { color: var(--ink); }
+.source { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-size: 13px; line-height: 1.55; color: var(--muted); }
+.source p { margin: 0 0 4px; }
+
+/* ================= Tooltip ================= */
+.tip {
+  position: absolute;
+  z-index: 2;
+  max-width: 300px;
+  padding: 10px 12px;
+  background: var(--tip-bg);
+  color: var(--tip-fg);
+  font-size: 13px;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.tip.show { opacity: 1; }
+.tip .t { font-weight: 500; margin-bottom: 6px; }
+.tip .r { display: flex; justify-content: space-between; gap: 16px; }
+.tip .r + .r { margin-top: 2px; }
+.tip .r.hi { font-weight: 700; }
+.tip .r.hi > span:first-child::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; vertical-align: 1px; background: var(--good); }
+.tip .r.hi.b > span:first-child::before { background: var(--bad); }
+.tip .s { margin-top: 8px; padding-top: 6px; border-top: 1px solid color-mix(in srgb, var(--tip-fg) 25%, transparent); font-size: 12px; opacity: 0.85; }
+
+/* ================= Motion (shared) ================= */
+@media (prefers-reduced-motion: no-preference) {
+  .head { opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .head.in { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+@media (max-width: 560px) {
+  .head { margin-bottom: 22px; }
+  .sub { font-size: 15px; }
+  .legend button[aria-pressed="true"]::after { content: "· tap to clear"; }
+}
+
+.source strong { color: var(--ink); font-weight: 700; }
+.bf { --name-w: 200px; --cal-w: 150px; --gap: 16px; position: relative; }
+.cols { display: grid; grid-template-columns: minmax(0, 1fr) var(--name-w) minmax(0, 1fr) var(--cal-w); gap: 0 var(--gap); }
+.hdr { margin-bottom: 10px; align-items: end; }
+.hdr .k { line-height: 1.35; }
+.hdr .l { text-align: right; }
+.hdr .c { text-align: center; }
+.hdr .dir { display: block; text-transform: none; letter-spacing: 0; color: var(--muted); font-size: 11px; }
+
+.lines, .bases { position: absolute; left: 0; right: 0; top: 0; bottom: 0; pointer-events: none; }
+.lines { z-index: 0; } .bases { z-index: 2; }
+.lines .side, .bases .side { position: relative; }
+.gl { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--rule-soft); }
+.gl.base { background: var(--rule); }
+.side.l .gl { right: var(--p); }
+.side.r .gl, .side.c .gl { left: var(--p); }
+
+.rows { position: relative; z-index: 1; display: flex; flex-direction: column; }
+.row { align-items: center; padding: 8px 0; border-top: 1px solid var(--rule-soft); cursor: pointer; transition: background 0.15s ease; }
+.row:last-child { border-bottom: 1px solid var(--rule-soft); }
+.row:hover, .row.hot { background: var(--hover); }
+.row:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.name { text-align: center; font-weight: 500; font-size: 14px; line-height: 1.2; }
+.name small { display: block; margin-top: 2px; font: 10.5px var(--mono); color: var(--muted); letter-spacing: 0.02em; }
+
+.cell { position: relative; height: 22px; --c: var(--faint); }
+.row.pri .cell { --c: var(--good); }
+.row.ref .cell.r { --c: var(--ink); }
+.track { position: absolute; top: 0; bottom: 0; width: var(--w); background: var(--c); }
+.cell.l .track { right: 0; transform-origin: 100% 50%; }
+.cell.r .track { left: 0; transform-origin: 0 50%; }
+.row.pri .cell.r .track.p95 { left: var(--w0); width: calc(var(--w) - var(--w0)); background: repeating-linear-gradient(135deg, var(--good) 0 3px, transparent 3px 6px); }
+.val { position: absolute; top: 50%; transform: translateY(-50%); font: 12.5px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
+.cell.l .val { right: calc(var(--w) + 8px); }
+.cell.r .val { left: calc(var(--w) + 8px); }
+.val .pre { color: var(--muted); }
+/* label moves inside the bar when it would spill past the edge (measured at runtime) */
+.cell.l .val.in { right: auto; left: calc(100% - var(--w) + 8px); color: var(--ink); }
+.cell.r .val.in { left: auto; right: calc(100% - var(--w) + 8px); color: var(--ink); }
+.row.ref .cell.r .val.in { color: var(--bg); }
+.row.ref .cell.r .val.in .pre { color: var(--bg); opacity: 0.7; }
+.none { position: absolute; top: 50%; transform: translateY(-50%); font: 11.5px var(--mono); letter-spacing: 0.02em; color: var(--muted); white-space: nowrap; }
+.cell.l .none { right: 8px; }
+.cell.r .none, .cell.c .none { left: 8px; }
+
+/* calibration: dot on an 80-100 track */
+.cell.c .stem { position: absolute; left: 0; top: 50%; width: var(--w); height: 2px; margin-top: -1px; background: var(--rule-soft); transform-origin: 0 50%; }
+.row.pri .cell.c .stem { background: var(--good); }
+.cell.c .dot { position: absolute; left: var(--w); top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--c); }
+.row.pri .cell.c .dot { box-shadow: 0 0 0 2px var(--ink); }
+.cell.c .val { left: calc(var(--w) + 12px); }
+.cell.c .val.in { left: auto; right: calc(100% - var(--w) + 10px); padding: 0 3px; background: var(--bg); }
+.row:hover .cell.c .val.in, .row.hot .cell.c .val.in { background: var(--hover); }
+
+.axis { margin-top: 8px; }
+.axis .side { position: relative; height: 16px; }
+.tk { position: absolute; top: 0; font: 11px var(--mono); color: var(--muted); white-space: nowrap; transform: translateX(-50%); }
+.side.l .tk { right: var(--p); transform: translateX(50%); }
+.side.r .tk, .side.c .tk { left: var(--p); }
+.side.l .tk.edge { right: auto; left: 0; transform: none; }
+.side.r .tk.edge { transform: none; }
+.side.c .tk.edge { left: auto; right: 0; transform: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal .track, .reveal .stem { transform: scaleX(0); transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); transition-delay: calc(var(--i) * 45ms + 150ms); }
+  .reveal.in .track, .reveal.in .stem { transform: none; }
+  .reveal .dot { transform: scale(0); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1.3); transition-delay: calc(var(--i) * 45ms + 650ms); }
+  .reveal.in .dot { transform: none; }
+  .reveal .val { opacity: 0; transition: opacity 0.4s ease; transition-delay: calc(var(--i) * 45ms + 600ms); }
+  .reveal.in .val { opacity: 1; }
+  .reveal.settled .track, .reveal.settled .stem, .reveal.settled .dot, .reveal.settled .val { transition-delay: 0s; }
+  .row.flip { transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.15s ease; }
+}
+@media (max-width: 1000px) { .bf { --name-w: 170px; --cal-w: 120px; } .name { font-size: 13.5px; } }
+@media (max-width: 760px) { .bf { --name-w: 140px; --cal-w: 96px; --gap: 12px; } .val { font-size: 12px; } .val .pre { display: none; } .none { font-size: 10.5px; } .tk.m { display: none; } }
+@media (max-width: 600px) {
+  .cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 14px; }
+  .hdr .c, .hdr .cc, .axis .side.c, .lines > div:nth-child(2), .bases > div:nth-child(2), .axis > div:nth-child(2) { display: none; }
+  .hdr .l, .hdr .r { font-size: 10px; }
+  .row { padding: 10px 0; }
+  .name { grid-column: 1 / -1; order: -1; text-align: left; margin-bottom: 6px; }
+  .name small { display: inline; margin-left: 8px; }
+  .cell { height: 18px; }
+  .cell.c { grid-column: 1 / -1; margin-top: 8px; height: 16px; --ins: 96px; }
+  .cell.c::before { content: "calibration"; position: absolute; left: 0; top: 50%; transform: translateY(-50%); font: 10px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .cell.c .stem { left: var(--ins); width: calc((100% - var(--ins)) * var(--f)); }
+  .cell.c .dot { left: calc(var(--ins) + (100% - var(--ins)) * var(--f)); }
+  .cell.c .val, .cell.c .val.in { right: auto; left: calc(var(--ins) + (100% - var(--ins)) * var(--f) + 12px); }
+  .cell.c .none { left: var(--ins); }
+  .lines, .bases .side.c { display: none; }
+  .val { font-size: 11.5px; }
+  .none { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+  <header class="head">
+    
+    <h1>Accuracy, latency and calibration, side by side</h1>
+    
+  </header>
+
+  <div class="controls">
+    <div class="legend" role="list" aria-label="Key">
+      <span class="btn" role="listitem" style="display:inline-flex;align-items:center;gap:8px;padding:5px 0;margin-right:10px;font-size:13px"><span class="sw pri"></span>Microsoft-Decision-1</span>
+      <span class="btn" role="listitem" style="display:inline-flex;align-items:center;gap:8px;padding:5px 0;margin-right:10px;font-size:13px"><span class="sw ref"></span>GPT-6 Sol (reference)</span>
+      <span class="btn" role="listitem" style="display:inline-flex;align-items:center;gap:8px;padding:5px 0;font-size:13px"><span class="sw oth"></span>Other models</span>
+    </div>
+    <div class="toggle" role="group" aria-label="Sort rows" id="sort">
+      <span class="k">Sort by</span>
+      <button type="button" data-s="acc" aria-pressed="true">Accuracy</button>
+      <button type="button" data-s="lat" aria-pressed="false">Latency</button>
+      <button type="button" data-s="cal" aria-pressed="false">Calibration</button>
+    </div>
+  </div>
+  <div class="bf reveal" id="chart">
+    <div class="cols hdr">
+      <div class="k l">Average accuracy<span class="dir">Higher is better &middot; 36 benchmarks</span></div>
+      <div class="k c">Model</div>
+      <div class="k r">Median latency<span class="dir">Lower is better &middot; per request</span></div>
+      <div class="k cc">Calibration<span class="dir">100 = perfect</span></div>
+    </div>
+    <div style="position:relative">
+      <div class="cols lines" id="lines" aria-hidden="true"><div class="side l"></div><div></div><div class="side r"></div><div class="side c"></div></div>
+      <div class="cols bases" id="bases" aria-hidden="true"><div class="side l"></div><div></div><div class="side r"></div><div class="side c"></div></div>
+      <div class="rows" id="rows"></div>
+    </div>
+    <div class="cols axis" id="axis" aria-hidden="true"><div class="side l"></div><div></div><div class="side r"></div><div class="side c"></div></div>
+  </div>
+  <p class="note">Microsoft-Decision-1 is first on accuracy and the fastest measured: <span class="num">2.5&times;</span> quicker than H2O-Lightning-4B v1.1, the runner-up, and <span class="num">35&times;</span> quicker than GPT-6 Sol. Third on calibration, <span class="num">1.5</span> behind Jev. Hover or tap a row for the detail.</p>
+  <div class="source">
+    <p><strong>Accuracy:</strong> mean score across 36 benchmarks (147,137 questions); #n is the JevBench leaderboard position on 8 October 2026. ** Strands-Decider 2B: average of the 23 of 36 benchmarks it could answer.</p>
+    <p><strong>Latency:</strong> JevBench v1.6.1 adjusted median (p50), checked Oct 7, 2026. * Microsoft-Decision-1 measured through Foundry in the same region.</p>
+    <p><strong>Calibration:</strong> 100 means a model's confidence exactly matches how often it is right. &ldquo;Not ranked&rdquo;, &ldquo;not measured&rdquo; and &ldquo;not scored&rdquo; mark models absent from a dataset.</p>
+  </div>
+
+  <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+</div>
+<script>
+(function () {
+  var motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  var root = document.getElementById('root');
+  var tip = document.getElementById('tip');
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+  function setVar(n, k, v) { n.style.setProperty(k, v); }
+  function fmtN(n, d) { return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+  // ---- Tooltip (hover, keyboard focus and tap) ---------------------------
+  var hot = null;
+  function renderTip(spec) {
+    tip.innerHTML = '';
+    if (spec.title) tip.appendChild(el('div', 't', spec.title));
+    (spec.rows || []).forEach(function (r) {
+      var row = el('div', 'r' + (r[2] ? ' ' + r[2] : ''));
+      row.appendChild(el('span', null, r[0]));
+      row.appendChild(el('span', 'num', r[1]));
+      tip.appendChild(row);
+    });
+    if (spec.note) tip.appendChild(el('div', 's', spec.note));
+  }
+  function placeTip(node, prefer) {
+    var rr = root.getBoundingClientRect();
+    var nr = node.getBoundingClientRect();
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var left = nr.left - rr.left + (prefer === 'above' ? nr.width / 2 - tw / 2 : 0);
+    left = Math.max(0, Math.min(left, rr.width - tw));
+    var below = nr.bottom - rr.top + 6;
+    var above = nr.top - rr.top - th - (prefer === 'above' ? 26 : 6);
+    var top;
+    if (prefer === 'above') top = above >= 0 ? above : Math.min(below, rr.height - th);
+    else top = (below + th <= rr.height) ? below : Math.max(0, above);
+    // Stay inside the widget so the auto-sized frame never clips the tip.
+    tip.style.left = left + 'px';
+    tip.style.top = Math.max(0, top) + 'px';
+  }
+  function showTip(node, build, prefer) {
+    if (hot === node) return;
+    hideTip();
+    hot = node;
+    node.classList.add('hot');
+    renderTip(build(node));
+    tip.classList.add('show');
+    tip.setAttribute('aria-hidden', 'false');
+    placeTip(node, prefer);
+  }
+  function hideTip() {
+    if (hot) hot.classList.remove('hot');
+    hot = null;
+    tip.classList.remove('show');
+    tip.setAttribute('aria-hidden', 'true');
+  }
+  function bindTips(selector, build, prefer) {
+    function find(t) {
+      var n = t;
+      while (n && n !== root) {
+        if (n.matches && n.matches(selector)) return n;
+        n = n.parentNode;
+      }
+      return null;
+    }
+    root.addEventListener('mouseover', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('mouseout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('focusin', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('focusout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideTip(); });
+  }
+
+  // ---- Count-up (visibility-triggered via reveal) -------------------------
+  var EASE = function (t) { return 1 - Math.pow(1 - t, 3); };
+  function countUp(node, to, fmt, ms, delay) {
+    if (!motion) { node.textContent = fmt(to); return; }
+    var start = null;
+    node.textContent = fmt(0);
+    function frame(now) {
+      if (start === null) start = now + (delay || 0);
+      var t = Math.min(1, Math.max(0, (now - start) / ms));
+      node.textContent = fmt(to * EASE(t));
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---- Reveal (IntersectionObserver only; no timers start anything) ------
+  // `settled` removes stagger delays once the entrance has played so hover,
+  // toggles and filters respond immediately afterwards.
+  function reveal(group, count, cb) {
+    group.classList.add('in');
+    if (cb) cb();
+    if (!motion) { group.classList.add('settled'); return; }
+    var wait = Math.min(count, 30) * 45 + 700;
+    var t0 = performance.now();
+    (function tick(now) { if (now - t0 >= wait) group.classList.add('settled'); else requestAnimationFrame(tick); })(t0);
+  }
+  function observe(items) { // items: [[node, fn]]
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          items.forEach(function (it) { if (it[0] === e.target) it[1](); });
+        });
+      }, { threshold: 0.05 });
+      items.forEach(function (it) { io.observe(it[0]); });
+    } else {
+      items.forEach(function (it) { it[1](); });
+    }
+  }
+  var head = document.querySelector('.head');
+
+  var DATA = {
+    // name, kind, accuracy % (null = not ranked), accuracy sublabel, latency p50 ms (null = not measured), p95 ms, calibration (null = not scored)
+    rows: [
+      ['Microsoft-Decision-1', 'pri', 83.5, '', 85, 125, 92.2],
+      ['Jev 1.13.0', 'oth', 82.3, '', 240, null, 93.7],
+      ['Quyet-1.0-Large', 'oth', 81.9, '#1 on JevBench', 380, null, 93.1],
+      ['Surogate Rune 26B-A4B', 'oth', 79.7, '#8 on JevBench', 380, null, 91.8],
+      ['GPT-6 Luna Decisions', 'oth', 79.4, '#7 on JevBench', 300, null, 89.9],
+      ['deck-31B', 'oth', 77.8, '#3 on JevBench', 400, null, 83.5],
+      ['H2O-Lightning-4B v1.1', 'oth', 77.2, '#5 on JevBench', 210, null, 91.8],
+      ['Strands-Decider 2B', 'oth', 54.8, 'AWS · 23 of 36 benchmarks**', null, null, null],
+      ['GPT-6 Sol', 'ref', null, '', 3010, null, null]
+    ],
+    acc: { max: 100, ticks: [[0, '0%', 1], [25, '25%', 1], [50, '50%'], [75, '75%', 1], [100, '100%']] },
+    lat: { max: 3100, ticks: [[0, '0'], [1000, '1 s'], [2000, '2 s'], [3000, '3 s']] },
+    cal: { min: 80, max: 100, ticks: [[80, '80'], [90, '90', 1], [100, '100']] }
+  };
+  function ap(v) { return v / DATA.acc.max * 100; }
+  function lp(v) { return v / DATA.lat.max * 100; }
+  function cp(v) { return (v - DATA.cal.min) / (DATA.cal.max - DATA.cal.min) * 100; }
+  function ms(v) { return v >= 1000 ? fmtN(v / 1000, 2) + ' s' : fmtN(v, 0) + ' ms'; }
+  function pc(v) { return fmtN(v, 1) + '%'; }
+  function f1(v) { return fmtN(v, 1); }
+
+  var pri = DATA.rows[0];
+  var rowsEl = document.getElementById('rows');
+  var counters = [];
+  var rowNodes = [];
+
+  function side(id, which) { return document.querySelector('#' + id + ' .side.' + which); }
+  function axisSide(which, ticks, fn, edgeIs) {
+    ticks.forEach(function (t) {
+      var isBase = (which === 'l' && t[0] === 0) || (which === 'r' && t[0] === 0) || (which === 'c' && t[0] === DATA.cal.min);
+      var g = el('span', 'gl' + (isBase ? ' base' : '')); setVar(g, '--p', fn(t[0]) + '%');
+      (isBase ? side('bases', which) : side('lines', which)).appendChild(g);
+      var k = el('span', 'tk' + (t[2] ? ' m' : '') + (edgeIs(t[0]) ? ' edge' : ''), t[1]); setVar(k, '--p', fn(t[0]) + '%');
+      side('axis', which).appendChild(k);
+    });
+  }
+  axisSide('l', DATA.acc.ticks, ap, function (v) { return v === DATA.acc.max; });
+  axisSide('r', DATA.lat.ticks, lp, function (v) { return v === 0; });
+  axisSide('c', DATA.cal.ticks, cp, function (v) { return v === DATA.cal.max; });
+
+  DATA.rows.forEach(function (r, i) {
+    var row = el('div', 'cols row ' + r[1]); row.tabIndex = 0; row.dataset.i = String(i);
+    row.setAttribute('role', 'group');
+    var acc = r[2] === null ? 'not in the accuracy ranking' : pc(r[2]) + ' average accuracy';
+    var lat = r[4] === null ? 'latency not measured' : ms(r[4]) + ' median latency';
+    var cal = r[6] === null ? 'calibration not scored' : 'calibration score ' + f1(r[6]);
+    row.setAttribute('aria-label', r[0] + ': ' + acc + ', ' + lat + ', ' + cal);
+
+    var cl = el('div', 'cell l');
+    if (r[2] === null) cl.appendChild(el('span', 'none', 'not ranked'));
+    else {
+      setVar(cl, '--w', ap(r[2]) + '%');
+      var t = el('span', 'track'); setVar(t, '--i', String(i)); cl.appendChild(t);
+      var v = el('span', 'val', pc(r[2])); setVar(v, '--i', String(i)); counters.push([v, r[2], pc]); cl.appendChild(v);
+    }
+    var nm = el('div', 'name', r[0]);
+    if (r[3]) nm.appendChild(el('small', null, r[3]));
+    var cr = el('div', 'cell r');
+    if (r[4] === null) cr.appendChild(el('span', 'none', 'not measured'));
+    else {
+      setVar(cr, '--w', lp(r[4]) + '%');
+      var t2 = el('span', 'track'); setVar(t2, '--i', String(i)); cr.appendChild(t2);
+      if (r[5]) { var p95 = el('span', 'track p95'); setVar(p95, '--i', String(i)); setVar(cr, '--w0', lp(r[4]) + '%'); setVar(cr, '--w', lp(r[5]) + '%'); t2.style.width = lp(r[4]) + '%'; cr.appendChild(p95); }
+      var v2 = el('span', 'val'); setVar(v2, '--i', String(i));
+      if (r[5]) { v2.appendChild(el('span', 'pre', 'p50 ')); var n = el('span', null, ms(r[4])); counters.push([n, r[4], ms]); v2.appendChild(n); v2.appendChild(el('span', 'pre', ' · p95 ' + ms(r[5]))); v2.appendChild(el('span', null, '*')); }
+      else { v2.textContent = ms(r[4]); counters.push([v2, r[4], ms]); }
+      cr.appendChild(v2);
+    }
+    var cc = el('div', 'cell c');
+    if (r[6] === null) cc.appendChild(el('span', 'none', 'not scored'));
+    else {
+      setVar(cc, '--w', cp(r[6]) + '%'); setVar(cc, '--f', String(cp(r[6]) / 100));
+      var st = el('span', 'stem'); setVar(st, '--i', String(i)); cc.appendChild(st);
+      var dt = el('span', 'dot'); setVar(dt, '--i', String(i)); cc.appendChild(dt);
+      var v3 = el('span', 'val', f1(r[6])); setVar(v3, '--i', String(i)); counters.push([v3, r[6], f1]); cc.appendChild(v3);
+    }
+    row.appendChild(cl); row.appendChild(nm); row.appendChild(cr); row.appendChild(cc);
+    rowsEl.appendChild(row); rowNodes.push(row);
+  });
+
+  // sorting: the chosen metric first (models without it last, by accuracy)
+  function sortRows(mode, animate) {
+    var before = animate && motion ? rowNodes.map(function (n) { return n.getBoundingClientRect().top; }) : null;
+    var key = mode === 'acc' ? 2 : mode === 'lat' ? 4 : 6;
+    var dir = mode === 'lat' ? 1 : -1;
+    var idx = DATA.rows.map(function (r, i) { return i; });
+    idx.sort(function (a, b) {
+      var A = DATA.rows[a], Bb = DATA.rows[b];
+      if (A[key] !== null && Bb[key] !== null) return (A[key] - Bb[key]) * dir;
+      if (A[key] !== null) return -1; if (Bb[key] !== null) return 1;
+      if (A[2] !== null && Bb[2] !== null) return Bb[2] - A[2];
+      if (A[2] !== null) return -1; if (Bb[2] !== null) return 1;
+      return (A[4] || 0) - (Bb[4] || 0);
+    });
+    idx.forEach(function (i, pos) { rowNodes[i].style.order = String(pos); });
+    if (!before) return;
+    // FLIP: start each row where it was, then let it slide to its new slot
+    rowNodes.forEach(function (n, i) {
+      var d = before[i] - n.getBoundingClientRect().top;
+      n.classList.remove('flip'); n.style.transform = d ? 'translateY(' + d + 'px)' : '';
+    });
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      rowNodes.forEach(function (n) { n.classList.add('flip'); n.style.transform = ''; });
+    }); });
+  }
+  sortRows('acc');
+  var sortEl = document.getElementById('sort');
+  sortEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    Array.prototype.forEach.call(sortEl.querySelectorAll('button'), function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    sortRows(b.dataset.s, true);
+  });
+
+  bindTips('.row', function (row) {
+    var r = DATA.rows[+row.dataset.i];
+    var rows = [];
+    rows.push(['Average accuracy', r[2] === null ? 'not ranked' : pc(r[2]), r === pri ? 'hi' : '']);
+    if (r[5]) rows.push(['Latency p50 / p95', ms(r[4]) + ' / ' + ms(r[5]), 'hi']);
+    else rows.push(['Median latency', r[4] === null ? 'not measured' : ms(r[4])]);
+    rows.push(['Calibration score', r[6] === null ? 'not scored' : f1(r[6]), r === pri ? 'hi' : '']);
+    var note;
+    if (r === pri) note = 'First on accuracy, fastest measured, third on calibration (1.5 behind Jev 1.13.0, 0.9 behind Quyet-1.0-Large).';
+    else {
+      var parts = [];
+      if (r[2] !== null) parts.push((r[2] - pri[2] >= 0 ? '+' : '−') + f1(Math.abs(r[2] - pri[2])) + ' pts accuracy');
+      if (r[4] !== null) parts.push(f1(r[4] / pri[4]).replace(/\.0$/, '') + '× slower');
+      if (r[6] !== null) parts.push((r[6] - pri[6] >= 0 ? '+' : '−') + f1(Math.abs(r[6] - pri[6])) + ' calibration');
+      note = 'vs Microsoft-Decision-1: ' + parts.join(' · ') + '.';
+      if (r[2] === null) note += ' Not part of the 36-benchmark accuracy ranking.';
+      if (r[4] === null) note += ' No latency measurement in JevBench v1.6.1.';
+    }
+    return { title: r[0] + (r[3] ? ' · ' + r[3] : ''), rows: rows, note: note };
+  }, 'below');
+
+  // Keep value labels inside the widget: flip any label that would spill
+  // past its side's outer edge to sit inside the bar instead.
+  function fitLabels() {
+    Array.prototype.forEach.call(document.querySelectorAll('.cell'), function (c) {
+      var v = c.querySelector('.val'); if (!v) return;
+      v.classList.remove('in');
+      var cr = c.getBoundingClientRect(), vr = v.getBoundingClientRect();
+      if (c.classList.contains('l') ? vr.left < cr.left - 0.5 : vr.right > cr.right + 0.5) v.classList.add('in');
+    });
+  }
+  fitLabels();
+  if ('ResizeObserver' in window) new ResizeObserver(fitLabels).observe(document.getElementById('chart'));
+
+  var chart = document.getElementById('chart');
+  observe([
+    [head, function () { head.classList.add('in'); }],
+    [chart, function () {
+      reveal(chart, DATA.rows.length, function () {
+        counters.forEach(function (c, i) { countUp(c[0], c[1], c[2], 900, 200 + i * 30); });
+      });
+    }]
+  ]);
+
+})();
+</script>
+</body>
+</html>

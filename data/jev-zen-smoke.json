@@ -1,0 +1,46 @@
+{
+  "endpoint": "https://opencode.ai/zen/v1/systemone",
+  "requested_model": "jev-1.13-free",
+  "source_model": null,
+  "request_sha256": "d22e798a371d50e5c549342043898e5db6520dbcd60cd790629af62002c29369",
+  "http_status": 200,
+  "elapsed_s": 2.9918,
+  "response": {
+    "model": "jev-1.13-free",
+    "answers": {
+      "department": {
+        "type": "choice",
+        "choice": "billing",
+        "confidence": 1,
+        "probabilities": {
+          "billing": 1,
+          "technical": 0,
+          "sales": 0
+        }
+      },
+      "refund": {
+        "type": "noul",
+        "noul": 0.99
+      },
+      "severity": {
+        "type": "score",
+        "score": 1,
+        "confidence": 1,
+        "legend": {
+          "0": "No issue",
+          "1": "One customer's payment issue",
+          "2": "A service-wide outage"
+        },
+        "probabilities": {
+          "0": 0,
+          "1": 1,
+          "2": 0
+        }
+      }
+    },
+    "usage": {
+      "input_tokens": 391,
+      "output_tokens": 68
+    }
+  }
+}

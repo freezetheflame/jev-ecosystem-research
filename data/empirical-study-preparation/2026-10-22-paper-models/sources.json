@@ -1,0 +1,72 @@
+{
+  "checked_date": "2026-10-22",
+  "scope": "Targeted reading of model setup and relevant methods, not complete paper reproduction",
+  "papers": [
+    {
+      "arxiv_version": "2610.17820v1",
+      "url": "https://arxiv.org/html/2610.17820v1",
+      "sha256": "98ba0b03f57883b96afa82fbcd073c319a4b35ce2c6ce80049e702f3860254e3",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.17820"
+    },
+    {
+      "arxiv_version": "2609.33401v3",
+      "url": "https://arxiv.org/html/2609.33401v3",
+      "sha256": "e47375484bc35643174e1301eda72ce276fde254d082ade094912aa57c40eb30",
+      "bibtex_url": "https://arxiv.org/bibtex/2609.33401"
+    },
+    {
+      "arxiv_version": "2610.03073v2",
+      "url": "https://arxiv.org/html/2610.03073v2",
+      "sha256": "d0c27f27e404735be5da3eb00042dd6b1ebc18430110aff1f89d26171ed87a5e",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.03073"
+    },
+    {
+      "arxiv_version": "2610.04985v1",
+      "url": "https://arxiv.org/html/2610.04985v1",
+      "sha256": "ac5174d89c25309951a66d2706d5aa549f1ee4b359564ae8a04763befa4172c6",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.04985"
+    },
+    {
+      "arxiv_version": "2609.37647v1",
+      "url": "https://arxiv.org/html/2609.37647v1",
+      "sha256": "e48bea6e69158cb870fe8217781ca104751165dd2fedd1e8b03f27be162ed5b8",
+      "bibtex_url": "https://arxiv.org/bibtex/2609.37647"
+    },
+    {
+      "arxiv_version": "2609.30243v2",
+      "url": "https://arxiv.org/html/2609.30243v2",
+      "sha256": "0692d296604763c810a57101379ae72cca2ee68f8996b43ab5240599ae25a0ed",
+      "bibtex_url": "https://arxiv.org/bibtex/2609.30243"
+    },
+    {
+      "arxiv_version": "2610.12292v1",
+      "url": "https://arxiv.org/html/2610.12292v1",
+      "sha256": "2de920b3df5bf5c2236db2ab0033ca1a91156aed764b617407654d1538ac95c7",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.12292"
+    },
+    {
+      "arxiv_version": "2610.11978v1",
+      "url": "https://arxiv.org/html/2610.11978v1",
+      "sha256": "695135e5023a90604501ae30c58d9aeacfdf422ab5affafeb8aa8305cb597629",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.11978"
+    },
+    {
+      "arxiv_version": "2610.20907v1",
+      "url": "https://arxiv.org/html/2610.20907v1",
+      "sha256": "324c9240f8ee090d445bf5fdd63a0c113b3cd37db5ce22f15761b0ce3b0823c6",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.20907"
+    },
+    {
+      "arxiv_version": "2610.19118v1",
+      "url": "https://arxiv.org/html/2610.19118v1",
+      "sha256": "a7d7eb86ca5a97226695e68ef504ffcad048208d2f3e621fdc302fa011fcea41",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.19118"
+    },
+    {
+      "arxiv_version": "2610.18326v1",
+      "url": "https://arxiv.org/html/2610.18326v1",
+      "sha256": "ece97b867e41cb688d03ac14f88ee0d1099031e65d6f3711e48a8005937ccbb0",
+      "bibtex_url": "https://arxiv.org/bibtex/2610.18326"
+    }
+  ]
+}

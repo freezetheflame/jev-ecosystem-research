@@ -1,0 +1,30 @@
+[
+  {
+    "model": "d3mini",
+    "source": "local-models\\nov02\\d3mini\\tokenizer_config.json",
+    "source_sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "export_path": "native-chat-templates\\d3mini.jinja",
+    "note": "本地固定制品中的模板；这是内部序列化来源，HTTP实际调用以raw请求为准，不声称API服务端模板已知。"
+  },
+  {
+    "model": "qwen35",
+    "source": "local-models\\nov02\\qwen35\\tokenizer_config.json",
+    "source_sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+    "export_path": "native-chat-templates\\qwen35.jinja",
+    "note": "本地固定制品中的模板；这是内部序列化来源，HTTP实际调用以raw请求为准，不声称API服务端模板已知。"
+  },
+  {
+    "model": "shieldstral",
+    "source": "local-models\\nov02\\shieldstral\\chat_template.jinja",
+    "source_sha256": "df026d5384cfbb925dd35ff96b9c55ce7257ec8d47d5fa73757673bd4c98ce53",
+    "export_path": "native-chat-templates\\shieldstral.jinja",
+    "note": "本地固定制品中的模板；这是内部序列化来源，HTTP实际调用以raw请求为准，不声称API服务端模板已知。"
+  },
+  {
+    "model": "jevguard",
+    "source": "local-models\\nov02\\jevguardbase\\tokenizer_config.json",
+    "source_sha256": "49e2b6e395f959f077f1e992b338919c0d4a9732fc6e613995e06557f843500c",
+    "export_path": "native-chat-templates\\jevguard.jinja",
+    "note": "本地固定制品中的模板；这是内部序列化来源，HTTP实际调用以raw请求为准，不声称API服务端模板已知。"
+  }
+]

@@ -1,0 +1,95 @@
+{
+  "evidence": "Microsoft announcement embedded chart; vendor-reported, not local evaluation",
+  "columns": [
+    "model",
+    "chart_kind",
+    "mean_accuracy_percent",
+    "label",
+    "p50_ms",
+    "p95_ms",
+    "calibration_score"
+  ],
+  "rows": [
+    [
+      "Microsoft-Decision-1",
+      "pri",
+      83.5,
+      "",
+      85,
+      125,
+      92.2
+    ],
+    [
+      "Jev 1.13.0",
+      "oth",
+      82.3,
+      "",
+      240,
+      null,
+      93.7
+    ],
+    [
+      "Quyet-1.0-Large",
+      "oth",
+      81.9,
+      "#1 on JevBench",
+      380,
+      null,
+      93.1
+    ],
+    [
+      "Surogate Rune 26B-A4B",
+      "oth",
+      79.7,
+      "#8 on JevBench",
+      380,
+      null,
+      91.8
+    ],
+    [
+      "GPT-6 Luna Decisions",
+      "oth",
+      79.4,
+      "#7 on JevBench",
+      300,
+      null,
+      89.9
+    ],
+    [
+      "deck-31B",
+      "oth",
+      77.8,
+      "#3 on JevBench",
+      400,
+      null,
+      83.5
+    ],
+    [
+      "H2O-Lightning-4B v1.1",
+      "oth",
+      77.2,
+      "#5 on JevBench",
+      210,
+      null,
+      91.8
+    ],
+    [
+      "Strands-Decider 2B",
+      "oth",
+      54.8,
+      "AWS · 23 of 36 benchmarks**",
+      null,
+      null,
+      null
+    ],
+    [
+      "GPT-6 Sol",
+      "ref",
+      null,
+      "",
+      3010,
+      null,
+      null
+    ]
+  ]
+}

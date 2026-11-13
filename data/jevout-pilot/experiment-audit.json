@@ -1,0 +1,84 @@
+{
+  "arms": {
+    "targeted_one_shot": {
+      "attempts": {
+        "proposals": 6,
+        "accepted": 5,
+        "rejected": 1,
+        "retry_http_calls": 0,
+        "chat_http_calls": 12
+      },
+      "rejections": {
+        "unspecified": 1
+      },
+      "chat_calls_by_schema": {
+        "background_addition": 6,
+        "semantic_check": 6
+      },
+      "finish_reasons": {
+        "stop": 12
+      },
+      "usage": {
+        "prompt_tokens": 10038,
+        "completion_tokens": 628,
+        "total_tokens": 10666
+      }
+    },
+    "neutral_one_shot": {
+      "attempts": {
+        "proposals": 6,
+        "accepted": 6,
+        "rejected": 0,
+        "retry_http_calls": 0,
+        "chat_http_calls": 12
+      },
+      "rejections": {},
+      "chat_calls_by_schema": {
+        "background_addition": 6,
+        "semantic_check": 6
+      },
+      "finish_reasons": {
+        "stop": 12
+      },
+      "usage": {
+        "prompt_tokens": 9326,
+        "completion_tokens": 618,
+        "total_tokens": 9944
+      }
+    },
+    "adaptive": {
+      "attempts": {
+        "proposals": 51,
+        "accepted": 47,
+        "rejected": 4,
+        "retry_http_calls": 0,
+        "chat_http_calls": 102
+      },
+      "rejections": {
+        "unspecified": 4
+      },
+      "chat_calls_by_schema": {
+        "background_addition": 51,
+        "semantic_check": 51
+      },
+      "finish_reasons": {
+        "stop": 102
+      },
+      "usage": {
+        "prompt_tokens": 90289,
+        "completion_tokens": 5453,
+        "total_tokens": 95742
+      }
+    }
+  },
+  "total_final_run_tokens": {
+    "prompt_tokens": 109653,
+    "completion_tokens": 6699,
+    "total_tokens": 116352
+  },
+  "compatibility": {
+    "thinking_disabled": true,
+    "schema_mirrored_in_system_prompt": true
+  },
+  "semantic_caution": "mmlu-pro-test-71 successful additions may change answer basis; automated checker only, not independently validated"
+}

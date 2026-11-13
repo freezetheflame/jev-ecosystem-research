@@ -1,0 +1,924 @@
+{
+  "dataset_url": "https://huggingface.co/datasets/TIGER-Lab/MMLU-Pro/resolve/refs%2Fconvert%2Fparquet/default/test/0000.parquet",
+  "parquet_sha256": "0e24a191921c2f453518a537a8b2117bd137e7714d4ef1565e9ba06c1ecb9ad8",
+  "source_rows": 12032,
+  "seed": 20260921,
+  "selection": "Retain 8 pilot questions; add 32 via seeded category-round-robin and SHA256(seed:question_id) ranks in the other 13 categories; frozen before outcomes",
+  "category_counts": {
+    "business": 8,
+    "biology": 3,
+    "history": 3,
+    "law": 3,
+    "psychology": 3,
+    "engineering": 3,
+    "other": 3,
+    "physics": 2,
+    "math": 2,
+    "economics": 2,
+    "health": 2,
+    "philosophy": 2,
+    "chemistry": 2,
+    "computer science": 2
+  },
+  "rows": [
+    {
+      "row": {
+        "question_id": 78,
+        "question": "Where the price is set low relative to the competition to gain market share, this strategy is known as:",
+        "options": [
+          "Captive product pricing.",
+          "High-low pricing.",
+          "Price skimming.",
+          "Value added pricing.",
+          "Penetration pricing.",
+          "Premium pricing.",
+          "Cost-plus pricing.",
+          "Economy pricing.",
+          "Psychological pricing.",
+          "Competitive pricing."
+        ],
+        "answer": "E",
+        "answer_index": 4,
+        "cot_content": "",
+        "category": "business",
+        "src": "ori_mmlu-marketing"
+      }
+    },
+    {
+      "row": {
+        "question_id": 71,
+        "question": "Managers are entrusted to run the company in the best interest of ________. Specifically, they have a duty to act for the benefit of the company, as well as a duty of ________ and of _______.",
+        "options": [
+          "Shareholders, Diligence, Self-interest",
+          "Shareholders, Self-interest, Care and Skill",
+          "Stakeholders, Care and skill, Self-interest",
+          "Stakeholders, Diligence, Care and Skill",
+          "Customers, Care and Skill, Diligence",
+          "Shareholders, Care and Skill, Diligence",
+          "Shareholders, Self-interest, Diligence",
+          "Employees, Care and Skill, Diligence",
+          "Stakeholders, Self-interest, Diligence",
+          "Stakeholder, Care and Skill, Diligence"
+        ],
+        "answer": "F",
+        "answer_index": 5,
+        "cot_content": "",
+        "category": "business",
+        "src": "ori_mmlu-business_ethics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 77,
+        "question": " Which type of research methods are designed to elicit responses to predetermined, standardized questions from many respondents?",
+        "options": [
+          "Non-probability.",
+          "Cross-sectional.",
+          "Qualitative.",
+          "Ethnographic.",
+          "Longitudinal.",
+          "Experimental.",
+          "Probability.",
+          "Observational.",
+          "Case Study.",
+          "Quantitative."
+        ],
+        "answer": "J",
+        "answer_index": 9,
+        "cot_content": "",
+        "category": "business",
+        "src": "ori_mmlu-marketing"
+      }
+    },
+    {
+      "row": {
+        "question_id": 93,
+        "question": "Janet Firestone purchased an option on a stock for $175 giving her the right to buy 100 shares at 14(1/2) within 90 days. One month later, she exercised her option and then sold the stock on the same day for 17. What was her profit on the stock?",
+        "options": [
+          "$200",
+          "$50",
+          "$250",
+          "$65",
+          "$125",
+          "$95",
+          "$150",
+          "$75",
+          "$85",
+          "$100"
+        ],
+        "answer": "H",
+        "answer_index": 7,
+        "cot_content": "",
+        "category": "business",
+        "src": "stemez-Business"
+      }
+    },
+    {
+      "row": {
+        "question_id": 90,
+        "question": "(a) Given the two discount series of 30-10-2(1/2) % and 25-15-2%, which is better? (b) Given the discount series 15-15% and the single rate of 30%, which is better?",
+        "options": [
+          "The series 30-10-2(1/2)% and the single rate of 25% are better",
+          "The single rate of 25% and the series 15-15% are better",
+          "The series 30-10-2(1/2) % and the series 15-15% are better",
+          "The series 25-15-2% and the single rate of 30% are better",
+          "The series 30-10-2(1/2)% is better, but there is no difference between the series 15-15% and the single rate of 30%",
+          "Both discount series are equally beneficial",
+          "The series 25-15-2% is better, and the series 15-15% and the single rate of 30% are equally beneficial",
+          "The series 25-15-2% and the series 15-15% are better",
+          "The series 25-15-2% and the single rate of 25% are better",
+          "The series 30-10-2(1/2) % and the single rate of 30% are better"
+        ],
+        "answer": "J",
+        "answer_index": 9,
+        "cot_content": "",
+        "category": "business",
+        "src": "stemez-Business"
+      }
+    },
+    {
+      "row": {
+        "question_id": 80,
+        "question": "A marketing research firm contracts with clients to conduct a complete marketing research project from data collection, analysis, and reporting. It is a__________ firm.",
+        "options": [
+          "Data collection firm.",
+          "Freelance agency.",
+          "Data analysis firm.",
+          "Survey firm.",
+          "Full-service agency.",
+          "Tabulation agency.",
+          "Marketing agency.",
+          "Research firm.",
+          "Consultant.",
+          "Field agency."
+        ],
+        "answer": "E",
+        "answer_index": 4,
+        "cot_content": "",
+        "category": "business",
+        "src": "ori_mmlu-marketing"
+      }
+    },
+    {
+      "row": {
+        "question_id": 74,
+        "question": " Some of key differences between Islamic finance and conventional finance include - prohibition of charging and paying _______, prohibition on ______ and ______ transactions, prohibition of sinful investment and requirement for all financial products to be backed by __________.",
+        "options": [
+          "Interest, Certain, Assured, Both tangible and intangible assets",
+          "Interest, Uncertain, Assured, Both tangible and intangible assets",
+          "Interest, Uncertain, Speculative, Intangible assets",
+          "Interest, Certain, Assured, Tangible assets",
+          "Interest, Uncertain, Assured, Intangible assets",
+          "Profit, Uncertain, Speculative, Tangible assets",
+          "Interest, Uncertain, Speculative, Tangible assets",
+          "Interest, Certain, Speculative, Intangible assets",
+          "Profit, Certain, Assured, Tangible assets",
+          "Interest, Certain, Speculative, Both tangible and intangible assets"
+        ],
+        "answer": "G",
+        "answer_index": 6,
+        "cot_content": "",
+        "category": "business",
+        "src": "ori_mmlu-business_ethics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 96,
+        "question": "Prepare a balance sheet for Silvertown Office Supplies, C.H. Walters, owner, as of April 30 of the current year, based on the following information: Cash, $3,390; Notes Receivable, $2,905; Accounts Receivable, $8,215; Merchandise Inventory, $23,600; Store Supplies, $720; Store Fixtures, $2,895; Furniture and Equipment, $5,600; Notes Payable, $5,250; Accounts Payable, $4,800.",
+        "options": [
+          "Total assets 49,000",
+          "Total assets 46,800",
+          "Total assets 48,500",
+          "Total assets 45,000",
+          "Total assets 44,500",
+          "Total assets 43,250",
+          "Total assets 51,500",
+          "Total assets 47,325",
+          "Total assets 50,000",
+          "Total assets 52,325"
+        ],
+        "answer": "H",
+        "answer_index": 7,
+        "cot_content": "",
+        "category": "business",
+        "src": "stemez-Business"
+      }
+    },
+    {
+      "row": {
+        "question_id": 2889,
+        "question": "Consider that in horses a single pair of genes controls gait. Some horses can only exhibit a trotting gait, while others exhibit only a pacing gait. In an attempt to determine the pattern of inheritance displayed by this trait, a horse breeder crossed a stallion (\\male) that came from a long line of pacers to several mares (\\venus) that were trotters. All of the foals were trotters. Which gait is under the control of the dominant gene? Using the letters T and t to represent the dominant and recessive genes, respectively, identify the genotypes of the stallion, the mares and the foals.",
+        "options": [
+          "Trotting gait is controlled by the recessive gene, t. The genotype of the stallion is TT, that of the mares is tt, and the genotypes of the foals is Tt.",
+          "Pacing gait is controlled by the recessive gene, t. The genotype of the stallion is tt, that of the mares is TT, and the genotypes of the foals is tt.",
+          "Pacing gait is controlled by the dominant gene, T. The genotype of the stallion is Tt, that of the mares is tt, and the genotypes of the foals is Tt.",
+          "Trotting gait is controlled by the recessive gene, t. The genotype of the stallion is TT, that of the mares is Tt, and the genotypes of the foals is tt.",
+          "Trotting gait is controlled by the dominant gene, T. The genotype of the stallion is Tt, that of the mares is TT, and the genotypes of the foals is TT.",
+          "Trotting gait is controlled by the dominant gene, T. The genotype of the stallion is tt, that of the mares is TT, and the genotypes of the foals is Tt.",
+          "Trotting gait is controlled by the recessive gene, t. The genotype of the stallion is tt, that of the mares is Tt, and the genotypes of the foals is tt.",
+          "Pacing gait is controlled by the dominant gene, T. The genotype of the stallion is tt, that of the mares is Tt, and the genotypes of the foals is Tt.",
+          "Pacing gait is controlled by the recessive gene, t. The genotype of the stallion is Tt, that of the mares is TT, and the genotypes of the foals is Tt.",
+          "Pacing gait is controlled by the dominant gene, T. The genotype of the stallion is TT, that of the mares is tt, and the genotypes of the foals is Tt."
+        ],
+        "answer": "F",
+        "answer_index": 5,
+        "cot_content": "",
+        "category": "biology",
+        "src": "stemez-Genetics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 4786,
+        "question": "Which is true of the origins of Minoan civilization?",
+        "options": [
+          "Minoan civilization was the result of a merger between ancient Greek and Persian cultures.",
+          "Crete was colonized by the Egyptians, who called the island \"Minoa.\"",
+          "Minoan culture was a direct offshoot of the ancient Sumerian civilization.",
+          "The Minoans were a splinter group of the ancient Indus Valley Civilization.",
+          "Early humans crossed a land bridge to Crete around 150,000 B.P. and gradually became Minoans.",
+          "The Minoans were descendants of the ancient Chinese who migrated to Crete.",
+          "Crete was originally populated by the Romans, who then developed into the Minoans.",
+          "Cretan culture was a mix of Egyptian and Mesopotamian elements.",
+          "Crete was populated by Greeks and others, but Minoan culture was a local development.",
+          "Minoan civilization was brought to Crete by the Phoenicians."
+        ],
+        "answer": "I",
+        "answer_index": 8,
+        "cot_content": "",
+        "category": "history",
+        "src": "ori_mmlu-prehistory"
+      }
+    },
+    {
+      "row": {
+        "question_id": 1483,
+        "question": "Catharine MacKinnon argues that since men dominate women, the question is ultimately one of power. Which proposition below is the most inconsistent with this argument?",
+        "options": [
+          "The power dynamic is determined by individual strength and not gender.",
+          "The idea of 'woman' needs to be redefined.",
+          "Women inherently possess more power than men.",
+          "Gender-based inequality is a myth.",
+          "Men and women share equal power in society.",
+          "Equality is impossible because men define women as different.",
+          "Women can achieve equality through political pressure.",
+          "Men and women are inherently equal in all aspects.",
+          "The concept of power is subjective and varies from person to person.",
+          "The world is phallocentric and oppressive."
+        ],
+        "answer": "G",
+        "answer_index": 6,
+        "cot_content": "",
+        "category": "law",
+        "src": "ori_mmlu-jurisprudence"
+      }
+    },
+    {
+      "row": {
+        "question_id": 2740,
+        "question": "A common criticism of social psychological research is that it isnot externally valid. Explain.",
+        "options": [
+          "It is suggested that social psychological findings are not externally valid because they rely on outdated theoretical frameworks",
+          "The criticism stems from the belief that social psychological research is overly deterministic, ignoring the role of free will",
+          "The issue is that social psychological studies often have small sample sizes that are not representative of the population",
+          "Social psychological research lacks external validity due to its heavy reliance on statistical analysis",
+          "Critics argue that social psychological research overemphasizes the role of social influence and underestimates biological factors",
+          "The criticism is due to the lack of internal validity in social psychological research",
+          "Social psychology is criticized for focusing too much on cultural specificity, neglecting universal aspects of human behavior",
+          "Many social psychological experiments are not externally valid because they are often conducted in artificial settings, which may not accurately represent 'natural' human behavior.",
+          "Social psychological research is criticized because it often fails to consider individual differences"
+        ],
+        "answer": "H",
+        "answer_index": 7,
+        "cot_content": "",
+        "category": "psychology",
+        "src": "stemez-Psychology"
+      }
+    },
+    {
+      "row": {
+        "question_id": 11437,
+        "question": "A 0.1 m diameter, 0.1 m high solid copper cylinder is initially at 180°C. It is then placed in a room and is allowed to cool to a final temperature of 30°C. Assuming copper to have a density of 8954 kJ/kg - °K, calculate the heat transfer and the irreversibility of the process if the temperature of the surroundings (T_0) is 25°C.",
+        "options": [
+          "Heat Transfer: - 421.74 kJ, Irreversibility: 84.79 kJ",
+          "Heat Transfer: - 440 kJ, Irreversibility: 88 kJ",
+          "Heat Transfer: - 480 kJ, Irreversibility: 96 kJ",
+          "Heat Transfer: - 400 kJ, Irreversibility: 85 kJ",
+          "Heat Transfer: - 390 kJ, Irreversibility: 78 kJ",
+          "Heat Transfer: - 350 kJ, Irreversibility: 70 kJ",
+          "Heat Transfer: - 500 kJ, Irreversibility: 80 kJ",
+          "Heat Transfer: - 375 kJ, Irreversibility: 75 kJ",
+          "Heat Transfer: - 450 kJ, Irreversibility: 90 kJ",
+          "Heat Transfer: - 410 kJ, Irreversibility: 82 kJ"
+        ],
+        "answer": "A",
+        "answer_index": 0,
+        "cot_content": "",
+        "category": "engineering",
+        "src": "stemez-Thermodynamics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 5670,
+        "question": "Which of the following is not a 'research purpose'?",
+        "options": [
+          "argumentation",
+          "exploration",
+          "description",
+          "justification",
+          "comprehension",
+          "interpretation",
+          "persuasion",
+          "prediction",
+          "triangulation",
+          "explanation"
+        ],
+        "answer": "I",
+        "answer_index": 8,
+        "cot_content": "",
+        "category": "other",
+        "src": "ori_mmlu-sociology"
+      }
+    },
+    {
+      "row": {
+        "question_id": 9134,
+        "question": "Find the fraction of 7.7-MeV alpha particles that is deflected at an angle of 90° or more from a gold foil of 10^-6 m thickness.",
+        "options": [
+          "5e-05",
+          "4e-05",
+          "7e-05",
+          "8e-05",
+          "9e-05",
+          "1e-04",
+          "3e-05",
+          "6e-05",
+          "1.5e-05",
+          "2e-05"
+        ],
+        "answer": "B",
+        "answer_index": 1,
+        "cot_content": "",
+        "category": "physics",
+        "src": "theoremQA-Physics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 8551,
+        "question": "Suppose that 60% of a particular electronic part last over 3 years, while 70% last less than 6 years. Assuming a normal distribution, what are the mean and standard deviation with regard to length of life of these parts?",
+        "options": [
+          "μ = 3.677, σ = 3.661",
+          "μ = 4.177, σ = 3.561",
+          "μ = 3.677, σ = 3.561",
+          "μ = 4.377, σ = 3.261",
+          "μ = 4.277, σ = 3.861",
+          "μ = 3.277, σ = 3.461",
+          "μ = 3.877, σ = 3.961",
+          "μ = 3.977, σ = 3.861",
+          "μ = 3.977, σ = 3.761",
+          "μ = 4.077, σ = 3.661"
+        ],
+        "answer": "H",
+        "answer_index": 7,
+        "cot_content": "",
+        "category": "math",
+        "src": "ori_mmlu-high_school_statistics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 6860,
+        "question": "What is the Quantity Equation of Exchange?",
+        "options": [
+          "M = PQ/V",
+          "PQ = MV",
+          "PQ \\equiv M/V",
+          "PQ = M + V",
+          "V = PQ/M",
+          "P/Q = MV",
+          "QV = PM",
+          "PM/Q = V",
+          "P + Q = MV",
+          "PQ \\equiv MV"
+        ],
+        "answer": "J",
+        "answer_index": 9,
+        "cot_content": "",
+        "category": "economics",
+        "src": "stemez-Economics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 6047,
+        "question": "A 65-year-old woman presents with progressive muscle weakness that worsens throughout the day. She reports difficulty climbing stairs, brushing her hair, and speaking for extended periods. Symptoms improve with rest. She has recently experienced double vision and drooping eyelids, especially in the evening. Physical examination shows fatigable weakness of proximal muscles and ptosis. She has no sensory deficits. CT scan of the chest reveals a mass in the anterior mediastinum. Which of the following is the most likely anatomical site of the underlying pathology?",
+        "options": [
+          "Presynaptic neuromuscular junction",
+          "Postsynaptic neuromuscular junction",
+          "Motor cortex",
+          "Peripheral nerves",
+          "Muscle fibers",
+          "Spinal cord",
+          "Basal ganglia"
+        ],
+        "answer": "B",
+        "answer_index": 1,
+        "cot_content": "",
+        "category": "health",
+        "src": "ori_mmlu-professional_medicine"
+      }
+    },
+    {
+      "row": {
+        "question_id": 10858,
+        "question": "Use indirect truth tables to determine whether the following argument is valid. If the argument is invalid, choose an option which presents a counterexample. (There may be other counterexamples as well.)\n(T · ~U) ⊃ ~W\n~W ⊃ X\n~Z ⊃ W\n~(X · Z) / T ⊃ U",
+        "options": [
+          "Valid",
+          "Invalid. Counterexample when T and X are true and U, W, and Z are false",
+          "Invalid. Counterexample when W, X, and Z are true and T and U are false",
+          "Invalid. Counterexample when T, U, and X are true and W and Z are false",
+          "Invalid. Counterexample when T, U, and W are true and X and Z are false",
+          "Invalid. Counterexample when T, W, and Z are true and U and X are false",
+          "Invalid. Counterexample when T, U, and Z are true and W and X are false",
+          "Invalid. Counterexample when T, W, and X are true and U and Z are false",
+          "Invalid. Counterexample when U, W, and Z are true and T and X are false",
+          "Invalid. Counterexample when T, X, and Z are true and U and W are false"
+        ],
+        "answer": "A",
+        "answer_index": 0,
+        "cot_content": "",
+        "category": "philosophy",
+        "src": "ori_mmlu-formal_logic"
+      }
+    },
+    {
+      "row": {
+        "question_id": 4467,
+        "question": "To 1.0 liter of a 1.0M solution of glycine at the iso-electric pH is added 0.3 mole of HCl. What will be the pH of the resultant solution? What would be the pH if 0.3 mole of NaOH were added instead?",
+        "options": [
+          "2.3 and 10.1",
+          "1.6 and 8.7",
+          "1.8 and 9.0",
+          "3.2 and 8.9",
+          "3.5 and 9.2",
+          "2.71 and 9.23",
+          "2.5 and 9.5",
+          "2.0 and 10.0",
+          "2.9 and 9.7",
+          "3.0 and 8.3"
+        ],
+        "answer": "F",
+        "answer_index": 5,
+        "cot_content": "",
+        "category": "chemistry",
+        "src": "stemez-Chemistry"
+      }
+    },
+    {
+      "row": {
+        "question_id": 10691,
+        "question": "Statement 1| In AdaBoost weights of the misclassified examples go up by the same multiplicative factor. Statement 2| In AdaBoost, weighted training error e_t of the tth weak classifier on training data with weights D_t tends to increase as a function of t.",
+        "options": [
+          "True, Partially True",
+          "Partially True, True",
+          "Partially False, False",
+          "Partially False, True",
+          "False, Partially False",
+          "Partially True, Partially True",
+          "False, False",
+          "True, True",
+          "True, False",
+          "False, True"
+        ],
+        "answer": "H",
+        "answer_index": 7,
+        "cot_content": "",
+        "category": "computer science",
+        "src": "ori_mmlu-machine_learning"
+      }
+    },
+    {
+      "row": {
+        "question_id": 3353,
+        "question": "Referring to the independent random mating scheme of the previous problem, find the offspring genotype probabilities of the following two populations: (a) AA Aa aa Males 600 0 400 Females 400 400 200 (b) AA Aa aa Males 400 400 200 Females 200 800 0",
+        "options": [
+          "P( AA) = (7 / 25), P(Aa) = (13 / 25), P(aa) = (5 / 25)",
+          "P(AA) = (12 / 25), P(Aa) = (8 / 25), P(aa) = (5 / 25)",
+          "P( AA) = (10 / 25), P(Aa) = (10 / 25), P(aa) = (5 / 25)",
+          "P(AA) = (6 / 25), P(Aa) = (14 / 25), P(aa) = (5 / 25)",
+          "P(AA) = (11 / 25), P(Aa) = (9 / 25), P(aa) = (5 / 25)",
+          "P(AA) = (8 / 25), P(Aa) = (14 / 25), P(aa) = (3 / 25)",
+          "P( AA) = (8 / 25), P(Aa) = (12 / 25), P(aa) = (5 / 25)",
+          "P( AA) = (9 / 25), P(Aa) = (12 / 25), P(aa) = (4 / 25)",
+          "P(AA) = (7 / 25), P(Aa) = (11 / 25), P(aa) = (7 / 25)",
+          "P(AA) = (10 / 25), P(Aa) = (9 / 25), P(aa) = (6 / 25)"
+        ],
+        "answer": "H",
+        "answer_index": 7,
+        "cot_content": "",
+        "category": "biology",
+        "src": "stemez-Genetics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 5032,
+        "question": "What is the name of the lithic technology seen in the Arctic and consisting of wedge-shaped cores, micro-blades, bifacial knives, and burins?",
+        "options": [
+          "Ahrensburg Complex",
+          "Solutrean Complex",
+          "Aurignacian Complex",
+          "Nenana Complex",
+          "Gravettian Complex",
+          "Clovis Complex",
+          "Denali Complex",
+          "Mousterian Complex",
+          "Magdalenian Complex",
+          "Folsom Complex"
+        ],
+        "answer": "G",
+        "answer_index": 6,
+        "cot_content": "",
+        "category": "history",
+        "src": "ori_mmlu-prehistory"
+      }
+    },
+    {
+      "row": {
+        "question_id": 1051,
+        "question": "What was the outcome before the European Court of Human Rights in the Al-Adsani case?",
+        "options": [
+          "The Court held that the right to a fair trial trumped the privilege of immunity",
+          "The Court held that the privilege of immunity was not applicable in this case",
+          "The Court held that the right to a fair trial was not applicable in this case",
+          "The Court held that immunities were not in conflict with the right to a fair trial",
+          "The Court held that the case was admissible due to overriding human rights considerations",
+          "The Court held that immunity trumped the right to a fair trial",
+          "The Court held that the case was inadmissible due to lack of jurisdiction",
+          "The Court held that the case was inadmissible due to the defendant's diplomatic status",
+          "The Court held that human rights considerations prevailed over all other contrary rules of international law, including most immunities",
+          "The Court held that both immunity and the right to a fair trial were in conflict with each other"
+        ],
+        "answer": "D",
+        "answer_index": 3,
+        "cot_content": "",
+        "category": "law",
+        "src": "ori_mmlu-international_law"
+      }
+    },
+    {
+      "row": {
+        "question_id": 2558,
+        "question": "According toJellinek(1952) what progression does thelife ofan alcoholic usually follow ?",
+        "options": [
+          "Onset phase, abuse phase, dependency phase, abstinence phase",
+          "Prealcoholic phase, alcoholic phase, recovery phase, relapse phase",
+          "Initial phase, adaptive phase, dependent phase, deteriorative phase",
+          "Experimental phase, social use phase, intensive use phase, compulsive use phase",
+          "Initial phase, middle phase, crucial phase, termination phase",
+          "Experimental phase, regular use phase, risky use phase, dependence phase",
+          "Early stage, middle stage, late stage, recovery stage",
+          "Prodromal phase, crucial phase, chronic stage, recovery phase",
+          "Induction phase, maintenance phase, deterioration phase, rehabilitation phase",
+          "Prealcoholic phase, prodromal phase, crucial phase, chronic stage"
+        ],
+        "answer": "J",
+        "answer_index": 9,
+        "cot_content": "",
+        "category": "psychology",
+        "src": "stemez-Psychology"
+      }
+    },
+    {
+      "row": {
+        "question_id": 12115,
+        "question": "A mixture of N_2 and O_2 gases contains equal weight of each gas. The absolute velocities are given as: v_(N)2^\\ding{217} = - 7i^\\ding{217} m/sec v_(O)2^\\ding{217} = + 7i^\\ding{217} m/sec wherei^\\ding{217} is a unit vector in the x direction. Obtain the mass and molar average velocities.",
+        "options": [
+          "Average mass velocity is 3.5i m/sec and molar average velocity is -3.5i m/sec",
+          "Average mass velocity is 0 and molar average velocity is - 0.42i m/sec",
+          "Average mass velocity is 7i m/sec and molar average velocity is - 7i m/sec",
+          "Average mass velocity is -7i m/sec and molar average velocity is 7i m/sec",
+          "Average mass velocity is -3.5i m/sec and molar average velocity is 3.5i m/sec",
+          "Average mass velocity is - 0.42i m/sec and molar average velocity is 0",
+          "Average mass velocity is 0 and molar average velocity is 7i m/sec",
+          "Average mass velocity is -0.42i m/sec and molar average velocity is 0.42i m/sec",
+          "Average mass velocity is 0.42i m/sec and molar average velocity is 0",
+          "Average mass velocity is 0.42i m/sec and molar average velocity is - 0.42i m/sec"
+        ],
+        "answer": "B",
+        "answer_index": 1,
+        "cot_content": "",
+        "category": "engineering",
+        "src": "stemez-TransportPhenomena"
+      }
+    },
+    {
+      "row": {
+        "question_id": 5836,
+        "question": "Which of the following statements about audit sampling risks is correct for a nonissuer?",
+        "options": [
+          "Nonsampling risk can be completely eliminated with careful planning.",
+          "Sampling risk is derived from the uncertainty in applying audit procedures to specific risks.",
+          "Sampling risk is only applicable when the auditor tests each item in the population.",
+          "Sampling risk includes the possibility of selecting audit procedures that are not appropriate to achieve the specific objective.",
+          "Nonsampling risk is eliminated when a substantive test is restricted to a sample.",
+          "Nonsampling risk arises from the possibility that, when a substantive test is restricted to a sample, conclusions might be different than if the auditor had tested each item in the population.",
+          "Nonsampling risk can arise because an auditor failed to recognize misstatements."
+        ],
+        "answer": "G",
+        "answer_index": 6,
+        "cot_content": "",
+        "category": "other",
+        "src": "ori_mmlu-professional_accounting"
+      }
+    },
+    {
+      "row": {
+        "question_id": 9509,
+        "question": "What is the energy of a photon of green light (frequency = 6 × 10^14vps)?",
+        "options": [
+          "7.5 x 10^-20 joules",
+          "4.8 x 10^-19 joules",
+          "8.0 x 10^-19 joules",
+          "2.0 x 10^-18 joules",
+          "3.98 x 10^-19 joules",
+          "2.5 x 10^-19 joules",
+          "6 x 10^14vps",
+          "1.2 x 10^-19 joules",
+          "5.5 x 10^-34 joule-sec",
+          "6.63 x 10^-34 joule-sec"
+        ],
+        "answer": "E",
+        "answer_index": 4,
+        "cot_content": "",
+        "category": "physics",
+        "src": "stemez-Physics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 7771,
+        "question": " A patient takes $150 \\mathrm{mg}$ of a drug at the same time every day. Just before each tablet is taken, 5$\\%$ of the drug remains in the body. What quantity of the drug is in the body after the third tablet? ",
+        "options": [
+          "145.5 $\\mathrm{mg}$",
+          "162.75 $\\mathrm{mg}$",
+          "165.375 $\\mathrm{mg}$",
+          "160.5 $\\mathrm{mg}$",
+          "155 $\\mathrm{mg}$",
+          "152.25 $\\mathrm{mg}$",
+          "150 $\\mathrm{mg}$",
+          "170 $\\mathrm{mg}$",
+          "157.875 $\\mathrm{mg}$",
+          "142.75 $\\mathrm{mg}$"
+        ],
+        "answer": "I",
+        "answer_index": 8,
+        "cot_content": "",
+        "category": "math",
+        "src": "scibench-calculus"
+      }
+    },
+    {
+      "row": {
+        "question_id": 7617,
+        "question": "\\textquotedblleftNew business firms can under price older firms, because thenewer firms can buy the latest equipment and are not bur-denedwith the older, less economical equipment which olderfirms must retire before they can economically adopt thenew. This is why continued technological progress contributesto maintaining a competitive economic system.\" Explain the er-rors in both sentences.",
+        "options": [
+          "Older firms have the advantage as they can use their established reputation to outcompete new firms",
+          "Technological progress always promotes competition",
+          "New and old firms both benefit equally from technological progress, maintaining a balanced competition",
+          "Old firms can switch to new goods and continued technological progress can create barriers to entry",
+          "The cost of new technology is always low enough for new firms to afford it without financial strain",
+          "Technological progress ensures that all firms have equal access to new equipment",
+          "New firms have a disadvantage due to lack of experience, regardless of equipment",
+          "Old firms can't retire old equipment",
+          "New firms can't buy the latest equipment",
+          "Old firms are more adaptable to technological changes than new firms due to their extensive industry knowledge"
+        ],
+        "answer": "D",
+        "answer_index": 3,
+        "cot_content": "",
+        "category": "economics",
+        "src": "stemez-Economics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 6636,
+        "question": "For Binge Eating Disorder it is incorrect that:\n",
+        "options": [
+          "BED patients have higher odds of developing obesity",
+          "Binge Eating episodes in BED are usually richer in calories than those of BN, leading patients to obesity",
+          "Spontaneous remission is a possible outcome"
+        ],
+        "answer": "B",
+        "answer_index": 1,
+        "cot_content": "",
+        "category": "health",
+        "src": "ori_mmlu-nutrition"
+      }
+    },
+    {
+      "row": {
+        "question_id": 10970,
+        "question": "What does \"Mahavira\" mean?",
+        "options": [
+          "\"Peaceful Warrior\"",
+          "\"Great Hero\"",
+          "\"The Ascetic\"",
+          "\"The Lesser One\"",
+          "\"Mendicant\"",
+          "\"Great Sage\"",
+          "\"The Enlightened One\"",
+          "\"Supreme Being\"",
+          "\"The Victorious One\"",
+          "\"Master\""
+        ],
+        "answer": "B",
+        "answer_index": 1,
+        "cot_content": "",
+        "category": "philosophy",
+        "src": "ori_mmlu-world_religions"
+      }
+    },
+    {
+      "row": {
+        "question_id": 4215,
+        "question": "The following equation is given for 1 mole of a gas V = f (P, T)(1) Derive the ideal gas equation.",
+        "options": [
+          "(PV) / (RT) = 1",
+          "(V/T) = (P/R)",
+          "(VT) / (P) = R",
+          "(VP) / (T) = R",
+          "(PT) / (V) = R",
+          "P = (RT) / V",
+          "V = PT/R",
+          "(VP) / (T) = k",
+          "V = (RP) / T",
+          "(P + V) / (T + R) = constant"
+        ],
+        "answer": "D",
+        "answer_index": 3,
+        "cot_content": "",
+        "category": "chemistry",
+        "src": "stemez-PhysicalChemistry"
+      }
+    },
+    {
+      "row": {
+        "question_id": 10766,
+        "question": "Consider a 26-key typewriter. Suppose that pushing a key results in printing that letter or the next (with equal probability). Thus A results in A or B, ..., Z results in Z or A. What is the capacity of this channel in bits?",
+        "options": [
+          "2.0",
+          "2.5",
+          "4.7",
+          "4.5",
+          "1.8",
+          "4.1",
+          "5.0",
+          "3.0",
+          "6.0",
+          "3.7"
+        ],
+        "answer": "J",
+        "answer_index": 9,
+        "cot_content": "",
+        "category": "computer science",
+        "src": "theoremQA-EECS"
+      }
+    },
+    {
+      "row": {
+        "question_id": 3180,
+        "question": "Assuming that a 1:1 sex ratio exists for humans, what is the probability that a newly married couple, who plan to have a family of four children, will have three daughters and one son ?",
+        "options": [
+          "2/5",
+          "3/16",
+          "3/8",
+          "1/6",
+          "1/4",
+          "1/8",
+          "1/5",
+          "1/3",
+          "1/2",
+          "1/16"
+        ],
+        "answer": "E",
+        "answer_index": 4,
+        "cot_content": "",
+        "category": "biology",
+        "src": "stemez-Genetics"
+      }
+    },
+    {
+      "row": {
+        "question_id": 4735,
+        "question": "Clovis points are NOT found in:",
+        "options": [
+          "Canada.",
+          "Mexico.",
+          "the continental United States.",
+          "Alaska."
+        ],
+        "answer": "D",
+        "answer_index": 3,
+        "cot_content": "",
+        "category": "history",
+        "src": "ori_mmlu-prehistory"
+      }
+    },
+    {
+      "row": {
+        "question_id": 1277,
+        "question": "A preacher and his posse make a habit of showing up at funerals of soldiers suspected to be gay, carrying obnoxious signs and yelling out hurtful epithets. Finally, the parents of one dead soldier has enough and sues the preacher, and the case goes all the way to the Supreme Court. Would the Court likely find in favor of the preacher or the father?",
+        "options": [
+          "The father, because the preacher's actions disturbed the peace of a private event.",
+          "The preacher, because it involves a matter of public interest.",
+          "The preacher, because the First Amendment protects even offensive or hateful speech.",
+          "The father, as a funeral is a private affair.",
+          "The preacher, because his actions are protected under freedom of speech and religion.",
+          "The father, because the preacher's actions were intentionally disruptive and disrespectful.",
+          "The preacher, because he has a right to express his religious views regardless of the context.",
+          "The father, because the First Amendment does not include protection for vicious verbal assaults such as this.",
+          "The father, because the preacher's actions constitute harassment and are therefore not protected by the First Amendment."
+        ],
+        "answer": "B",
+        "answer_index": 1,
+        "cot_content": "",
+        "category": "law",
+        "src": "ori_mmlu-professional_law"
+      }
+    },
+    {
+      "row": {
+        "question_id": 2661,
+        "question": "Loss of the ability to understand language results from loss of tissue in which of the following lobes?",
+        "options": [
+          "left occipital",
+          "left temporal",
+          "both frontal lobes",
+          "right occipital",
+          "left parietal",
+          "right temporal",
+          "right parietal",
+          "right frontal",
+          "both parietal lobes",
+          "left frontal"
+        ],
+        "answer": "B",
+        "answer_index": 1,
+        "cot_content": "",
+        "category": "psychology",
+        "src": "ori_mmlu-high_school_psychology"
+      }
+    },
+    {
+      "row": {
+        "question_id": 11385,
+        "question": "A six-pole generator has a lap winding. If there are 300 inductorson the surface of the armature, and if the flux is 900,000 lines per pole, what will be the voltage between the brushesat a speed of 1,500 revolutions per minute? (b) What voltage will the generator in part (a) develop ifthe windingbe wave connected, other conditions remaining as before?",
+        "options": [
+          "70.5 volts and 200.5 volts",
+          "67.5 volts and 205.5 volts",
+          "62.5 volts and 207.5 volts",
+          "80.5 volts and 210.5 volts",
+          "77.5 volts and 197.5 volts",
+          "67.5 volts and 202.5 volts",
+          "65.5 volts and 195.5 volts",
+          "72.5 volts and 215.5 volts",
+          "69.5 volts and 220.5 volts",
+          "75.5 volts and 202.5 volts"
+        ],
+        "answer": "F",
+        "answer_index": 5,
+        "cot_content": "",
+        "category": "engineering",
+        "src": "stemez-ElectricalMachines"
+      }
+    },
+    {
+      "row": {
+        "question_id": 5480,
+        "question": "During the current year Cooley Co. had an unrealized gain of $100000 on a debt investment classified as available-for-sale. Cooley's corporate tax rate is 25%. What amount of the gain should be included in Cooley's net income and other comprehensive income at the end of the current year? Net income Other comprehensive income",
+        "options": [
+          "$25000 $50000",
+          "$50000 $25000",
+          "$75000 $50000",
+          "$50000 $50000",
+          "$25000 $75000",
+          "$100000 $25000",
+          "$75000 $25000",
+          "$0 $75000",
+          "$0 $100000",
+          "$100000 $0"
+        ],
+        "answer": "H",
+        "answer_index": 7,
+        "cot_content": "",
+        "category": "other",
+        "src": "ori_mmlu-professional_accounting"
+      }
+    }
+  ]
+}

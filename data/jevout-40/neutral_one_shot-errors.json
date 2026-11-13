@@ -1,0 +1,7 @@
+[
+  {
+    "item_id": "mmlu-pro-test-96",
+    "error_type": "HTTPStatusError",
+    "http_status": 429
+  }
+]

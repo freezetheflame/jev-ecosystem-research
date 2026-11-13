@@ -1,0 +1,166 @@
+{
+  "wsl_distribution": "Ubuntu",
+  "python": "/home/hectum/.cache/jev-research-env/bin/python",
+  "models": {
+    "gliguard": {
+      "key": "gliguard",
+      "weights": "local-models/nov04/restored/gliguard",
+      "script": "scripts/local_gliguard_server.py",
+      "args": [
+        "--model-path",
+        "{weights}",
+        "--served-name",
+        "gliguard-300m",
+        "--port",
+        "8001"
+      ],
+      "port": 8001,
+      "route": "/classify",
+      "model_id": "gliguard-300m"
+    },
+    "laya": {
+      "key": "laya",
+      "weights": "local-models/nov04/restored/laya",
+      "script": "scripts/local_laya_server.py",
+      "args": [
+        "--model-path",
+        "{weights}",
+        "--served-name",
+        "laya-421m",
+        "--device",
+        "cuda",
+        "--port",
+        "8002"
+      ],
+      "port": 8002,
+      "route": "/v1/systemone",
+      "model_id": "laya-421m",
+      "environment": {
+        "LAYA_CUDA_AMP": "fp32"
+      }
+    },
+    "qwen3guard": {
+      "key": "qwen3guard",
+      "weights": "local-models/nov04/restored/qwen3guard",
+      "script": "scripts/local_guard_server.py",
+      "args": [
+        "--model-path",
+        "{weights}",
+        "--served-name",
+        "qwen3guard-0.6b",
+        "--port",
+        "8000"
+      ],
+      "port": 8000,
+      "route": "/v1/chat/completions",
+      "model_id": "qwen3guard-0.6b"
+    },
+    "d3mini": {
+      "key": "d3mini",
+      "weights": "local-models/nov02/d3mini",
+      "script": "local-models/nov02/d3mini/d3_server.py",
+      "args": [
+        "--model",
+        "{weights}",
+        "--name",
+        "d3mini-local",
+        "--device",
+        "cuda:0",
+        "--batch-size",
+        "1",
+        "--no-warmup",
+        "--verify",
+        "full",
+        "--port",
+        "8014"
+      ],
+      "port": 8014,
+      "route": "/v1/systemone",
+      "model_id": "d3mini-local"
+    },
+    "shieldstral": {
+      "key": "shieldstral",
+      "weights": "local-models/nov02/shieldstral",
+      "script": "scripts/local_remaining_server.py",
+      "args": [
+        "--model-path",
+        "{weights}",
+        "--served-name",
+        "shieldstral-local",
+        "--port",
+        "8013"
+      ],
+      "port": 8013,
+      "route": "/v1/chat/completions",
+      "model_id": "shieldstral-local"
+    },
+    "qwen35": {
+      "key": "qwen35",
+      "weights": "local-models/nov02/qwen35",
+      "script": "scripts/local_remaining_server.py",
+      "args": [
+        "--model-path",
+        "{weights}",
+        "--served-name",
+        "qwen35-local",
+        "--port",
+        "8015"
+      ],
+      "port": 8015,
+      "route": "/v1/chat/completions",
+      "model_id": "qwen35-local"
+    },
+    "secjev": {
+      "key": "secjev",
+      "weights": "local-models/nov02/secjev/SecJev-0.8B",
+      "script": "scripts/local_secjev_server.py",
+      "args": [
+        "--model-path",
+        "{weights}",
+        "--base-path",
+        "{root}/local-models/nov02/secjevbase",
+        "--kev-source",
+        "{root}/local-models/nov02/secjev/source/kev",
+        "--port",
+        "8026"
+      ],
+      "port": 8026,
+      "route": "/v1/systemone",
+      "model_id": "secjev08-local"
+    },
+    "jevguard": {
+      "key": "jevguard",
+      "weights": "local-models/nov02/jevguard",
+      "script": "scripts/local_jevguard_server.py",
+      "args": [
+        "--release-path",
+        "{weights}",
+        "--base-path",
+        "{root}/local-models/nov02/jevguardbase",
+        "--port",
+        "8027"
+      ],
+      "port": 8027,
+      "route": "/predict",
+      "model_id": "jev-v3.2-2b"
+    },
+    "kev": {
+      "key": "kev",
+      "weights": "local-models/nov04/kev4b",
+      "script": "scripts/local_kev_server.py",
+      "args": [
+        "--model-path",
+        "{weights}",
+        "--base-path",
+        "{root}/local-models/nov04/kev4b/base",
+        "--kev-source",
+        "{root}/local-models/nov04/kev4b/source",
+        "--port",
+        "8028"
+      ],
+      "port": 8028,
+      "route": "/v1/systemone",
+      "model_id": "kev-4b-local"
+    }
+  }
+}

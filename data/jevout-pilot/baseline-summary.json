@@ -1,0 +1,42 @@
+{
+  "items": 8,
+  "initially_correct": 6,
+  "accuracy": 0.75,
+  "eligible": [
+    {
+      "item_id": "mmlu-pro-test-78",
+      "gold": "E",
+      "fixed_wrong_target": "A"
+    },
+    {
+      "item_id": "mmlu-pro-test-71",
+      "gold": "F",
+      "fixed_wrong_target": "D"
+    },
+    {
+      "item_id": "mmlu-pro-test-77",
+      "gold": "J",
+      "fixed_wrong_target": "A"
+    },
+    {
+      "item_id": "mmlu-pro-test-80",
+      "gold": "E",
+      "fixed_wrong_target": "A"
+    },
+    {
+      "item_id": "mmlu-pro-test-74",
+      "gold": "G",
+      "fixed_wrong_target": "D"
+    },
+    {
+      "item_id": "mmlu-pro-test-96",
+      "gold": "H",
+      "fixed_wrong_target": "A"
+    }
+  ],
+  "response_models": [
+    "jev-1.13-free"
+  ],
+  "cache": "D:\\projects\\jev_research\\data\\jevout-pilot\\.cache\\a624aa3831ea6fbf",
+  "note": "clean eligibility only; no attack TFR measured; reruns may reuse cached responses"
+}

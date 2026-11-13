@@ -1,0 +1,120 @@
+{
+  "date": "2026-11-04",
+  "selected_local_models": [
+    {
+      "key": "gliguard",
+      "label": "GLiGuard",
+      "parameter_size": "300M",
+      "weights_path": "local-models/nov04/restored/gliguard",
+      "weights_directory_exists": true,
+      "model_id": "gliguard-300m",
+      "endpoint": "http://127.0.0.1:8001/classify",
+      "validation": "two_item_inference_smoke_success",
+      "smoke_run": "data/agent-security-study/runs/2026-11-04-machine-gliguard-smoke"
+    },
+    {
+      "key": "laya",
+      "label": "Laya",
+      "parameter_size": "421M",
+      "weights_path": "local-models/nov04/restored/laya",
+      "weights_directory_exists": true,
+      "model_id": "laya-421m",
+      "endpoint": "http://127.0.0.1:8002/v1/systemone",
+      "validation": "two_item_inference_smoke_success",
+      "smoke_run": "data/agent-security-study/runs/2026-11-04-machine-laya-smoke"
+    },
+    {
+      "key": "qwen3guard",
+      "label": "Qwen3Guard-Gen",
+      "parameter_size": "0.6B",
+      "weights_path": "local-models/nov04/restored/qwen3guard",
+      "weights_directory_exists": true,
+      "model_id": "qwen3guard-0.6b",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+      "validation": "two_item_inference_smoke_success",
+      "smoke_run": "data/agent-security-study/runs/2026-11-04-machine-qwen3guard-smoke"
+    },
+    {
+      "key": "d3mini",
+      "label": "D3-Mini",
+      "parameter_size": "~4.54B",
+      "weights_path": "local-models/nov02/d3mini",
+      "weights_directory_exists": true,
+      "model_id": "d3mini-local",
+      "endpoint": "http://127.0.0.1:8014/v1/systemone",
+      "validation": "health_load_success_and_prior_full_pilot",
+      "smoke_run": null
+    },
+    {
+      "key": "shieldstral",
+      "label": "Shieldstral-1.0",
+      "parameter_size": "3B",
+      "weights_path": "local-models/nov02/shieldstral",
+      "weights_directory_exists": true,
+      "model_id": "shieldstral-local",
+      "endpoint": "http://127.0.0.1:8013/v1/chat/completions",
+      "validation": "health_load_success_and_prior_full_pilot",
+      "smoke_run": null
+    },
+    {
+      "key": "qwen35",
+      "label": "Qwen3.5",
+      "parameter_size": "4B",
+      "weights_path": "local-models/nov02/qwen35",
+      "weights_directory_exists": true,
+      "model_id": "qwen35-local",
+      "endpoint": "http://127.0.0.1:8015/v1/chat/completions",
+      "validation": "health_load_success_and_prior_full_pilot",
+      "smoke_run": null
+    },
+    {
+      "key": "secjev",
+      "label": "SecJev",
+      "parameter_size": "0.8B+adapter/head",
+      "weights_path": "local-models/nov02/secjev/SecJev-0.8B",
+      "weights_directory_exists": true,
+      "model_id": "secjev08-local",
+      "endpoint": "http://127.0.0.1:8026/v1/systemone",
+      "validation": "health_load_success_and_prior_full_pilot",
+      "smoke_run": null
+    },
+    {
+      "key": "jevguard",
+      "label": "Jev-Guard v3.2",
+      "parameter_size": "2B+adapter/heads",
+      "weights_path": "local-models/nov02/jevguard",
+      "weights_directory_exists": true,
+      "model_id": "jev-v3.2-2b",
+      "endpoint": "http://127.0.0.1:8027/predict",
+      "validation": "health_load_success_and_prior_full_pilot",
+      "smoke_run": null
+    },
+    {
+      "key": "kev",
+      "label": "Kev",
+      "parameter_size": "4B+adapter/head",
+      "weights_path": "local-models/nov04/kev4b",
+      "weights_directory_exists": true,
+      "model_id": "kev-4b-local",
+      "endpoint": "http://127.0.0.1:8028/v1/systemone",
+      "validation": "health_load_success_and_prior_full_pilot",
+      "smoke_run": null
+    }
+  ],
+  "api_models": [
+    "jev",
+    "gpt6luna",
+    "claudehaiku"
+  ],
+  "api_provider": "OpenLux",
+  "historical_optional_weights": [
+    "local-models/weights/decider-4b",
+    "local-models/weights/plumb-4b",
+    "local-models/weights/h2o-lightning-4b-v1.1"
+  ],
+  "base_dependencies": [
+    "local-models/nov02/secjevbase",
+    "local-models/nov02/jevguardbase",
+    "local-models/nov04/kev4b/base"
+  ]
+}

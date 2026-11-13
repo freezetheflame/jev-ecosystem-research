@@ -1,0 +1,28 @@
+{
+  "status": "not_ready",
+  "issues": [
+    "phase must be explicitly pilot or confirmatory",
+    "repeats must be an explicit positive integer",
+    "schedule_seed must be explicit (local scheduling only, not a model seed)",
+    "budget.max_calls must be an explicit positive value",
+    "budget.max_wall_seconds must be an explicit positive value",
+    "budget.max_api_usd must be an explicit positive value",
+    "budget.reserve_usd_per_call must be an explicit positive value",
+    "models.jev.timeout_seconds is unresolved",
+    "models.jev.parameter_status is unresolved",
+    "jev.timeout_seconds must be positive",
+    "models.gpt6luna.model_id is unresolved",
+    "models.gpt6luna.timeout_seconds is unresolved",
+    "models.gpt6luna.parameter_status is unresolved",
+    "gpt6luna.timeout_seconds must be positive",
+    "jev needs explicit USD token rates and dated pricing basis; missing is not zero",
+    "gpt6luna needs explicit USD token rates and dated pricing basis; missing is not zero",
+    "datasets.agentharm.exposure_status is unresolved",
+    "AgentHarm needs distinct explicit validation/test_public splits; private/chat are not this contract"
+  ],
+  "local_sources_available": {
+    "preserved_monitor": true,
+    "agentharm": true
+  },
+  "network_calls": 0
+}

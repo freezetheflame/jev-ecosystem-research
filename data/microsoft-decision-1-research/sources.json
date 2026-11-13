@@ -1,0 +1,37 @@
+[
+  {
+    "id": "announcement",
+    "url": "https://commandline.microsoft.com/microsoft-decision-1-model-foundry/",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "id": "foundry-announcement",
+    "url": "https://techcommunity.microsoft.com/blog/azure-ai-foundry-blog/introducing-microsoft-decision-1-in-microsoft-foundry-for-decision-and-classific/4562742",
+    "retrieved_at_utc": "2026-10-12T07:58:06.632394+00:00",
+    "sha256": "d7a061b676371f9ededa30d058b9ac4aa3901cda2810e444481621ce4a19221e",
+    "bytes": 323286,
+    "raw_file": "foundry-announcement.html",
+    "text_file": "foundry-announcement.txt",
+    "note": "HTTP 200 but challenge page only; not usable article evidence."
+  },
+  {
+    "id": "deployment-guide",
+    "url": "https://learn.microsoft.com/en-us/azure/foundry/foundry-models/how-to/use-foundry-models-microsoft-decision",
+    "retrieved_at_utc": "2026-10-12T07:58:08.145188+00:00",
+    "sha256": "8e868afb1832ca9d1f46b5c1a23b0e79dd5929e7f166d0104b9ba04aba876467",
+    "bytes": 71194,
+    "raw_file": "deployment-guide.html",
+    "text_file": "deployment-guide.txt"
+  },
+  {
+    "id": "announcement-via-jina",
+    "url": "https://commandline.microsoft.com/microsoft-decision-1-model-foundry/",
+    "transport_url": "https://r.jina.ai/https://commandline.microsoft.com/microsoft-decision-1-model-foundry/",
+    "retrieved_at_utc": "2026-10-12T07:59:32.251264+00:00",
+    "sha256": "8c3cd69d0de5002ffdfbdfdfc68e722f94f17b2d681ae0cb8cb3b27a4590860a",
+    "bytes": 198812,
+    "raw_file": "announcement-via-jina.txt",
+    "text_file": "announcement-readable.md",
+    "note": "Direct origin returned 403; public reader proxy used. Embedded base64 HTML decoded, not executed."
+  }
+]

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob: https://commandline.microsoft.com/wp-content/uploads/; font-src data: https://commandline.microsoft.com; media-src data: blob: https://commandline.microsoft.com/wp-content/uploads/;">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calibration score</title>
+<style>
+@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Book.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:500;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Medium.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Bold.otf") format("opentype");}@font-face{font-family:"PP Neue Montreal";font-weight:400;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/PPNeueMontreal-Italic.otf") format("opentype");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:normal;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCode.woff2") format("woff2");}@font-face{font-family:"Cascadia Code";font-weight:200 700;font-style:italic;font-display:swap;src:url("https://commandline.microsoft.com/wp-content/themes/command-line/assets/fonts/CascadiaCodeItalic.woff2") format("woff2");}
+:root {
+  --bg: #fff;
+  --ink: #000;
+  --muted: #555;
+  --faint: #c9c9c9;        /* secondary series */
+  --good: #E3F671;         /* primary model (site accent lime) */
+  --bad: #FFA037;          /* primary model behind (site accent orange) */
+  --rule: #000;
+  --rule-soft: #e6e6e6;
+  --hover: #f3f3f3;
+  --badge-bg: #000;
+  --badge-fg: #fff;
+  --tip-bg: #000;
+  --tip-fg: #fff;
+  --sans: "PP Neue Montreal", sans-serif;
+  --mono: "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+html[data-theme="dark"] {
+  --bg: #111;
+  --ink: #fff;
+  --muted: #999;
+  --faint: #444;
+  --rule: #fff;
+  --rule-soft: #2a2a2a;
+  --hover: #1f1f1f;
+  --badge-bg: #fff;
+  --badge-fg: #111;
+  --tip-bg: #fff;
+  --tip-fg: #111;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { position: relative; padding: 2px 0 6px; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.k {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* ================= Header ================= */
+.head { margin-bottom: 28px; text-align: center; }
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+h1 {
+  margin: 18px 0 8px;
+  font-size: clamp(24px, 4.2vw, 32px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+}
+.sub { margin: 0 auto; font-size: 16px; line-height: 1.5; color: var(--muted); max-width: 62ch; }
+.sub .dir { color: var(--ink); font-weight: 500; }
+
+/* ================= Legend / toggles ================= */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  margin-bottom: 18px;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+.legend button, .toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px;
+  font-size: 13px;
+  border: 1px solid var(--rule-soft);
+  transition: border-color 0.15s ease, background 0.15s ease, opacity 0.2s ease;
+}
+.legend button:hover, .toggle button:hover { border-color: var(--ink); }
+.legend button[aria-pressed="true"] { border-color: var(--ink); font-weight: 500; }
+.legend .sw { width: 10px; height: 10px; flex: 0 0 10px; }
+.legend .sw.pri { background: var(--good); }
+.legend .sw.ref { background: var(--ink); }
+.legend .sw.oth { background: var(--faint); }
+.legend.iso button:not([aria-pressed="true"]) { opacity: 0.45; }
+.legend button[aria-pressed="true"]::after { content: "· click to clear"; font-weight: 400; color: var(--muted); }
+.toggle { display: flex; align-items: center; gap: 4px; }
+.toggle .k { margin-right: 8px; }
+.toggle button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* ================= Notes / source ================= */
+.note { margin: 16px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.note .num { color: var(--ink); }
+.source { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--rule-soft); font-size: 13px; line-height: 1.55; color: var(--muted); }
+.source p { margin: 0 0 4px; }
+
+/* ================= Tooltip ================= */
+.tip {
+  position: absolute;
+  z-index: 2;
+  max-width: 300px;
+  padding: 10px 12px;
+  background: var(--tip-bg);
+  color: var(--tip-fg);
+  font-size: 13px;
+  line-height: 1.4;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.tip.show { opacity: 1; }
+.tip .t { font-weight: 500; margin-bottom: 6px; }
+.tip .r { display: flex; justify-content: space-between; gap: 16px; }
+.tip .r + .r { margin-top: 2px; }
+.tip .r.hi { font-weight: 700; }
+.tip .r.hi > span:first-child::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 8px; vertical-align: 1px; background: var(--good); }
+.tip .r.hi.b > span:first-child::before { background: var(--bad); }
+.tip .s { margin-top: 8px; padding-top: 6px; border-top: 1px solid color-mix(in srgb, var(--tip-fg) 25%, transparent); font-size: 12px; opacity: 0.85; }
+
+/* ================= Motion (shared) ================= */
+@media (prefers-reduced-motion: no-preference) {
+  .head { opacity: 0; transform: translateY(8px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .head.in { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+@media (max-width: 560px) {
+  .head { margin-bottom: 22px; }
+  .sub { font-size: 15px; }
+  .legend button[aria-pressed="true"]::after { content: "· tap to clear"; }
+}
+
+/* ================= Horizontal bars ================= */
+.hbar { --name-w: 220px; --gutter: 72px; --gap: 16px; }
+.rows { position: relative; }
+.gridlines, .axis {
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr);
+  gap: 0 var(--gap);
+}
+.gridlines { position: absolute; inset: 0; pointer-events: none; }
+.gcell, .ticks { grid-column: 2; position: relative; margin-right: var(--gutter); }
+.gl { position: absolute; top: 0; bottom: 0; left: var(--p); width: 1px; background: var(--rule-soft); }
+.gl:first-child { background: var(--rule); z-index: 1; } /* baseline sits above the fills so it reads as one line */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--name-w) minmax(0, 1fr);
+  gap: 0 var(--gap);
+  align-items: center;
+  padding: 6px 0;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.row:hover, .row:focus-within, .row.hot { background: var(--hover); }
+.row:hover .name, .row.hot .name { color: var(--ink); }
+.name { text-align: right; font-size: 14.5px; line-height: 1.3; color: var(--muted); overflow-wrap: anywhere; }
+.row.pri .name, .row.ref .name { color: var(--ink); }
+.row.pri .name { font-weight: 700; }
+.row.ref .name { font-weight: 500; }
+.name .subl { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.02em; color: var(--muted); }
+.area { position: relative; padding-right: var(--gutter); }
+.track { position: relative; height: 22px; }
+.fill { position: absolute; left: 0; top: 0; bottom: 0; width: var(--w); background: var(--faint); transition: width 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); }
+.row.pri .fill { background: var(--good); }
+.row.ref .fill { background: var(--ink); }
+.row.pri .fill.p95 {
+  left: var(--w0);
+  width: calc(var(--w) - var(--w0));
+  background: repeating-linear-gradient(135deg, var(--good) 0 3px, transparent 3px 6px);
+}
+.val {
+  position: absolute;
+  left: calc(var(--w) + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--muted);
+  transition: left 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.row.pri .val, .row.ref .val { color: var(--ink); font-weight: 700; }
+.val .sep { margin: 0 6px; color: var(--muted); font-weight: 400; }
+.ticks { height: 20px; margin-top: 6px; }
+.ticks span { position: absolute; left: var(--p); transform: translateX(-50%); font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--muted); white-space: nowrap; }
+.ticks span:first-child { transform: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal .fill { transform: scaleX(0); transform-origin: left center; transition: transform 0.55s cubic-bezier(0.215, 0.61, 0.355, 1), width 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); transition-delay: calc(var(--i, 0) * 45ms); }
+  .reveal.in .fill { transform: none; }
+  .reveal .val { opacity: 0; transition: opacity 0.4s ease, left 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); transition-delay: calc(var(--i, 0) * 45ms + 250ms); }
+  .reveal.in .val { opacity: 1; }
+  .reveal .row { opacity: 0; transform: translateX(-6px); transition: opacity 0.35s ease, transform 0.35s ease, background 0.12s ease; transition-delay: calc(var(--i, 0) * 45ms); }
+  .reveal.in .row { opacity: 1; transform: none; }
+  .reveal.in.settled .fill, .reveal.in.settled .val, .reveal.in.settled .row { transition-delay: 0s; }
+  .reveal.in.settled .row { transition: background 0.12s ease; }
+}
+
+@media (max-width: 900px) { .hbar { --name-w: 170px; } }
+@media (max-width: 700px) { .hbar { --name-w: 140px; --gap: 12px; } .name { font-size: 13.5px; } .val { font-size: 12px; } }
+@media (max-width: 480px) {
+  .hbar { --name-w: 104px; --gutter: 56px; --gap: 10px; }
+  .val .pre { display: none; }
+  .name { font-size: 12.5px; }
+  .name .subl { font-size: 10px; }
+  .val { font-size: 11px; }
+  .val .sep { margin: 0 4px; }
+  .track { height: 18px; }
+  .ticks span { font-size: 10px; }
+  .ticks span.hide-sm { display: none; }
+}
+
+.hbar { --gutter: 64px; }
+.name .rk { display: inline-block; min-width: 1.6em; margin-right: 8px; font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
+.track { height: 24px; }
+.stem { position: absolute; left: 0; top: 50%; width: var(--w); height: 2px; margin-top: -1px; background: var(--rule-soft); }
+.dot { position: absolute; left: var(--w); top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: var(--faint); }
+.row.pri .dot { background: var(--good); box-shadow: 0 0 0 2px var(--ink); }
+.row.pri .stem { background: var(--good); }
+.val { left: calc(var(--w) + 14px); }
+.gl.perfect { background: var(--rule); }
+.ticks span.perfect { color: var(--ink); font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) {
+  .reveal .stem { transform: scaleX(0); transform-origin: left center; transition: transform 0.55s cubic-bezier(0.215, 0.61, 0.355, 1); transition-delay: calc(var(--i, 0) * 45ms); }
+  .reveal.in .stem { transform: none; }
+  .reveal .dot { transform: scale(0); transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1.3); transition-delay: calc(var(--i, 0) * 45ms + 380ms); }
+  .reveal.in .dot { transform: none; }
+  .reveal.in.settled .stem, .reveal.in.settled .dot { transition-delay: 0s; }
+}
+@media (max-width: 480px) { .hbar { --gutter: 48px; --name-w: 118px; } .name .rk { min-width: 1.2em; margin-right: 5px; font-size: 11px; } }
+</style>
+</head>
+<body>
+<div class="wrap" id="root">
+  <header class="head">
+    <span class="badge">Calibration</span>
+    <h1>Calibration score over 36 benchmarks</h1>
+    <p class="sub"><span class="dir">Higher is better.</span> 100 means a model’s confidence exactly matches how often it is right.</p>
+  </header>
+
+  <div class="hbar reveal" id="chart">
+    <div class="rows" id="rows">
+      <div class="gridlines" aria-hidden="true"><div></div><div class="gcell" id="gcell"></div></div>
+    </div>
+    <div class="axis" aria-hidden="true"><div></div><div class="ticks" id="ticks"></div></div>
+  </div>
+  <p class="note">Microsoft-Decision-1 ranks third, <span class="num">1.5</span> behind Jev 1.13.0 and <span class="num">0.9</span> behind Quyet-1.0-Large, ahead of the other four models scored. The axis starts at 80: every model here is within 17 points of perfect.</p>
+  <div class="source">
+    <p>Same 36 benchmarks as the accuracy ranking.</p>
+  </div>
+
+  <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+</div>
+<script>
+(function () {
+  var motion = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  var root = document.getElementById('root');
+  var tip = document.getElementById('tip');
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null) n.textContent = text;
+    return n;
+  }
+  function setVar(n, k, v) { n.style.setProperty(k, v); }
+  function fmtN(n, d) { return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+  // ---- Tooltip (hover, keyboard focus and tap) ---------------------------
+  var hot = null;
+  function renderTip(spec) {
+    tip.innerHTML = '';
+    if (spec.title) tip.appendChild(el('div', 't', spec.title));
+    (spec.rows || []).forEach(function (r) {
+      var row = el('div', 'r' + (r[2] ? ' ' + r[2] : ''));
+      row.appendChild(el('span', null, r[0]));
+      row.appendChild(el('span', 'num', r[1]));
+      tip.appendChild(row);
+    });
+    if (spec.note) tip.appendChild(el('div', 's', spec.note));
+  }
+  function placeTip(node, prefer) {
+    var rr = root.getBoundingClientRect();
+    var nr = node.getBoundingClientRect();
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var left = nr.left - rr.left + (prefer === 'above' ? nr.width / 2 - tw / 2 : 0);
+    left = Math.max(0, Math.min(left, rr.width - tw));
+    var below = nr.bottom - rr.top + 6;
+    var above = nr.top - rr.top - th - (prefer === 'above' ? 26 : 6);
+    var top;
+    if (prefer === 'above') top = above >= 0 ? above : Math.min(below, rr.height - th);
+    else top = (below + th <= rr.height) ? below : Math.max(0, above);
+    // Stay inside the widget so the auto-sized frame never clips the tip.
+    tip.style.left = left + 'px';
+    tip.style.top = Math.max(0, top) + 'px';
+  }
+  function showTip(node, build, prefer) {
+    if (hot === node) return;
+    hideTip();
+    hot = node;
+    node.classList.add('hot');
+    renderTip(build(node));
+    tip.classList.add('show');
+    tip.setAttribute('aria-hidden', 'false');
+    placeTip(node, prefer);
+  }
+  function hideTip() {
+    if (hot) hot.classList.remove('hot');
+    hot = null;
+    tip.classList.remove('show');
+    tip.setAttribute('aria-hidden', 'true');
+  }
+  function bindTips(selector, build, prefer) {
+    function find(t) {
+      var n = t;
+      while (n && n !== root) {
+        if (n.matches && n.matches(selector)) return n;
+        n = n.parentNode;
+      }
+      return null;
+    }
+    root.addEventListener('mouseover', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('mouseout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('focusin', function (e) { var n = find(e.target); if (n) showTip(n, build, prefer); });
+    root.addEventListener('focusout', function (e) { var n = find(e.target); if (n && !n.contains(e.relatedTarget)) hideTip(); });
+    root.addEventListener('keydown', function (e) { if (e.key === 'Escape') hideTip(); });
+  }
+
+  // ---- Count-up (visibility-triggered via reveal) -------------------------
+  var EASE = function (t) { return 1 - Math.pow(1 - t, 3); };
+  function countUp(node, to, fmt, ms, delay) {
+    if (!motion) { node.textContent = fmt(to); return; }
+    var start = null;
+    node.textContent = fmt(0);
+    function frame(now) {
+      if (start === null) start = now + (delay || 0);
+      var t = Math.min(1, Math.max(0, (now - start) / ms));
+      node.textContent = fmt(to * EASE(t));
+      if (t < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---- Reveal (IntersectionObserver only; no timers start anything) ------
+  // `settled` removes stagger delays once the entrance has played so hover,
+  // toggles and filters respond immediately afterwards.
+  function reveal(group, count, cb) {
+    group.classList.add('in');
+    if (cb) cb();
+    if (!motion) { group.classList.add('settled'); return; }
+    var wait = Math.min(count, 30) * 45 + 700;
+    var t0 = performance.now();
+    (function tick(now) { if (now - t0 >= wait) group.classList.add('settled'); else requestAnimationFrame(tick); })(t0);
+  }
+  function observe(items) { // items: [[node, fn]]
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          io.unobserve(e.target);
+          items.forEach(function (it) { if (it[0] === e.target) it[1](); });
+        });
+      }, { threshold: 0.05 });
+      items.forEach(function (it) { io.observe(it[0]); });
+    } else {
+      items.forEach(function (it) { it[1](); });
+    }
+  }
+  var head = document.querySelector('.head');
+
+  var DATA = {
+    primary: 'Microsoft-Decision-1',
+    rows: [
+      // rank, name, score, kind
+      [1, 'Jev 1.13.0', 93.7, ''],
+      [2, 'Quyet-1.0-Large', 93.1, ''],
+      [3, 'Microsoft-Decision-1', 92.2, 'pri'],
+      [4, 'Surogate Rune 26B-A4B', 91.8, ''],
+      [5, 'H2O-Lightning-4B', 91.8, ''],
+      [6, 'GPT-6 Luna Decisions', 89.9, ''],
+      [7, 'deck-31B', 83.5, '']
+    ],
+    min: 80, max: 100,
+    ticks: [[80, '80'], [85, '85', 1], [90, '90'], [95, '95', 1], [100, '100 · perfect']]
+  };
+  function pct(v) { return (v - DATA.min) / (DATA.max - DATA.min) * 100; }
+  function f1(v) { return fmtN(v, 1); }
+
+  var rows = document.getElementById('rows');
+  var gcell = document.getElementById('gcell');
+  var ticks = document.getElementById('ticks');
+  var counters = [];
+
+  DATA.rows.forEach(function (r, i) {
+    var row = el('div', 'row' + (r[3] ? ' ' + r[3] : '')); row.tabIndex = 0;
+    setVar(row, '--i', String(i)); row.dataset.i = String(i);
+    var name = el('div', 'name'); name.appendChild(el('span', 'rk', String(r[0]))); name.appendChild(document.createTextNode(r[1]));
+    var area = el('div', 'area');
+    var track = el('div', 'track');
+    var stem = el('span', 'stem'); setVar(stem, '--w', pct(r[2]) + '%'); track.appendChild(stem);
+    var dot = el('span', 'dot'); setVar(dot, '--w', pct(r[2]) + '%'); track.appendChild(dot);
+    var val = el('span', 'val num', f1(r[2])); setVar(val, '--w', pct(r[2]) + '%'); counters.push([val, r[2]]); track.appendChild(val);
+    area.appendChild(track); row.appendChild(name); row.appendChild(area);
+    row.setAttribute('aria-label', 'Rank ' + r[0] + ', ' + r[1] + ': calibration score ' + f1(r[2]));
+    rows.appendChild(row);
+  });
+  DATA.ticks.forEach(function (t) {
+    var g = el('span', 'gl' + (t[0] === DATA.max ? ' perfect' : '')); setVar(g, '--p', pct(t[0]) + '%'); gcell.appendChild(g);
+    var l = el('span', (t[0] === DATA.max ? 'perfect' : '') + (t[2] ? ' hide-sm' : ''), t[1]); setVar(l, '--p', pct(t[0]) + '%'); ticks.appendChild(l);
+  });
+
+  bindTips('.row', function (row) {
+    var r = DATA.rows[+row.dataset.i];
+    var me = DATA.rows.filter(function (x) { return x[3] === 'pri'; })[0];
+    var spec = { title: r[1], rows: [['Calibration score', f1(r[2]), r[3] === 'pri' ? 'hi' : ''], ['Rank', r[0] + ' of ' + DATA.rows.length]] };
+    if (r[3] !== 'pri') { var d = r[2] - me[2]; spec.rows.push(['vs ' + DATA.primary, (d >= 0 ? '+' : '−') + f1(Math.abs(d)) + ' pts']); }
+    spec.note = r[3] === 'pri' ? '1.5 behind Jev 1.13.0 and 0.9 behind Quyet-1.0-Large, ahead of the other four. 100 would mean its confidence exactly matches how often it is right.'
+      : '100 means a model’s confidence exactly matches how often it is right.';
+    return spec;
+  });
+
+  var chart = document.getElementById('chart');
+  observe([
+    [head, function () { head.classList.add('in'); }],
+    [chart, function () { reveal(chart, DATA.rows.length, function () { counters.forEach(function (c) { countUp(c[0], c[1], f1, 800, 0); }); }); }]
+  ]);
+
+})();
+</script>
+</body>
+</html>

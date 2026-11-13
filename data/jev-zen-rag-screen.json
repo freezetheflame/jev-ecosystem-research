@@ -1,0 +1,42 @@
+{
+  "endpoint": "https://opencode.ai/zen/v1/systemone",
+  "requested_model": "jev-1.13-free",
+  "source_model": "jev-1.13.0",
+  "request_sha256": "b9d59c08d3972d393f3e68e64d6b28ffaa7bcbd15bda6d4065185191de432e25",
+  "http_status": 200,
+  "elapsed_s": 3.0139,
+  "response": {
+    "model": "jev-1.13-free",
+    "answers": {
+      "answers_query": {
+        "type": "noul",
+        "noul": 0.97
+      },
+      "relevance": {
+        "type": "score",
+        "score": 3,
+        "confidence": 1,
+        "legend": {
+          "0": "Contains no information about the requested attack.",
+          "1": "Gives relevant background but does not describe the attack.",
+          "2": "Describes part of the attack mechanism.",
+          "3": "Directly describes the attack mechanism and its routing consequence."
+        },
+        "probabilities": {
+          "0": 0,
+          "1": 0,
+          "2": 0,
+          "3": 1
+        }
+      },
+      "embedded_instruction": {
+        "type": "noul",
+        "noul": 0.04
+      }
+    },
+    "usage": {
+      "input_tokens": 555,
+      "output_tokens": 53
+    }
+  }
+}

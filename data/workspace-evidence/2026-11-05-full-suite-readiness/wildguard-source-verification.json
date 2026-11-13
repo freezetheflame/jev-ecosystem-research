@@ -1,0 +1,11 @@
+{
+  "source": "allenai/wildguardmix",
+  "revision": "d29c47f41c8b51348b5c8e8c81c039b3132b66d1",
+  "path": "test/wildguard_test.parquet",
+  "official_lfs_sha256": "6ccc2909c1ae6d41424fac69f1fc32535b1de39cb8f80407d81e8bc64a0bebca",
+  "local_sha256": "6ccc2909c1ae6d41424fac69f1fc32535b1de39cb8f80407d81e8bc64a0bebca",
+  "match": true,
+  "bytes": 2258878,
+  "model_calls": 0,
+  "credentials_saved": false
+}

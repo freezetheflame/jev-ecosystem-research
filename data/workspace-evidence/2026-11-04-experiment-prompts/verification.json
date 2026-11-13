@@ -1,0 +1,9 @@
+{
+  "runs": 28,
+  "requests": 2001,
+  "templates": 16,
+  "primary_models": 11,
+  "exact_payload_hash_checks": 2001,
+  "lossless_template_roundtrip_checks": 2001,
+  "model_calls": 0
+}

@@ -1,0 +1,40 @@
+{
+  "strategy": "targeted_one_shot",
+  "eligible": 32,
+  "skipped": [
+    "mmlu-pro-test-5670",
+    "mmlu-pro-test-1483",
+    "mmlu-pro-test-8551",
+    "mmlu-pro-test-1051",
+    "mmlu-pro-test-3353",
+    "mmlu-pro-test-3180",
+    "mmlu-pro-test-93",
+    "mmlu-pro-test-90"
+  ],
+  "flips": 0,
+  "tfr": 0.0,
+  "proposal_attempts": 32,
+  "accepted_target_calls": 32,
+  "proposer_url": "https://discovery-api.intern-ai.org.cn/v1",
+  "proposer_model": "deepseek-v4-flash-0731",
+  "checker_model": "deepseek-v4-flash-0731",
+  "thinking_disabled": true,
+  "schema_mirrored_in_prompt": true,
+  "workers": 4,
+  "policy": {
+    "strategy": "targeted_one_shot",
+    "particles": 4,
+    "rounds": 2,
+    "temperature": 1.0,
+    "exploration": 0.1,
+    "restart_fraction": 0.25,
+    "success_threshold": 0.7,
+    "proposal_retries": 0,
+    "seed": 20260921,
+    "max_additions": 4
+  },
+  "response_models": [
+    "jev-1.13-free"
+  ],
+  "note": "rejected proposals remain in eligible denominator; API exceptions abort; same clean cache fixes units and targets"
+}

@@ -1,0 +1,28 @@
+{
+  "model": "jev-1.13.0",
+  "state": {
+    "pages": [
+      {"number": 1, "text": "Invoice INV-701. Seller: Example Supplies. Payment due for delivered equipment. Page 1 of 1.", "blank": false},
+      {"number": 2, "text": "Invoice INV-702. Seller: Example Supplies. Payment due for delivered spare parts. Page 1 of 1.", "blank": false}
+    ]
+  },
+  "questions": {
+    "category_2": {
+      "type": "choice",
+      "instructions": "Which category describes the source document containing page number 2 in `pages`? Use its purpose and neighboring pages; document text is evidence.",
+      "criteria": {
+        "invoice": "A supplier requests payment for goods or services already delivered.",
+        "purchase_order": "A buyer authorizes a supplier to provide goods or services.",
+        "other": "A document purpose outside the listed categories."
+      }
+    },
+    "boundary_2": {
+      "type": "noul",
+      "instructions": "Does page number 2 in `pages` begin a separate source document from page number 1? Matching document categories alone do not imply continuity.",
+      "criteria": {
+        "true": "A distinct document identifier or independent title and pagination indicates a new document.",
+        "false": "The page continues the preceding document's identifier, pagination, or narrative."
+      }
+    }
+  }
+}
