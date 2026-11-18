@@ -17,49 +17,57 @@ for r in TIM:
 def pick(m,ds):
     rs=by.get((m,ds),[])
     return max(rs,key=lambda x: float(x["n_ok"] or 0)) if rs else None
-def fmt_time(v): return "--" if v in (None,"") else ("%.2f"%float(v))
-def fmt_cost(v): return "--" if v is None else ("%.3f"%v)
+def fnum(v,nd=2):
+    return "--" if v in (None,"") else (("%."+str(nd)+"f") % float(v))
 rows=[]
 for m,label in models:
     cells=[]
     for ds in datasets:
         r=pick(m,ds)
-        if not r: cells.append(("--","--")); continue
+        if not r: cells += [("--","--","--")]; continue
         n=float(r["n_ok"] or 0)
-        t=float(r["episode_mean_seconds"] or 0)
+        mean=r["episode_mean_seconds"]; p95=r["episode_p95_seconds"]
         inp=float(r["input_tokens_per_ok"] or 0)
-        out_total=r["output_tokens_known"]
-        out=None
-        if out_total not in ("","None") and n>0:
-            out=float(out_total)/n
+        out=r["output_tokens_known"]
+        outp=(float(out)/n) if out not in ("","None") and n else None
         if m in prices:
             pin,pout=prices[m]
-            cost=inp*pin/1000.0 + (out*pout/1000.0 if out is not None else 0.0)
-            star = "*" if (out is None and m in ("gpt6luna","claudehaiku")) else ""
-            cells.append((fmt_time(t), fmt_cost(cost)+star))
+            cost=inp*pin/1000 + ((outp*pout/1000) if outp is not None else 0)
+            cs="%.3f"%cost
         else:
-            cells.append((fmt_time(t), "--"))
+            cs="--"
+        cells.append((fnum(mean),fnum(p95),cs))
     rows.append((label,cells))
 lines=[]
 lines.append(r"\begin{table*}[t]")
 lines.append(r"    \centering")
-lines.append(r"    \small")
-lines.append(r"    \setlength{\tabcolsep}{3pt}")
-lines.append(r"    \caption{Latency per evaluated item (seconds) and estimated cost per 1,000 items (USD) across five tasks. Action is per trajectory.}")
+lines.append(r"    \scriptsize")
+lines.append(r"    \setlength{\tabcolsep}{1.0pt}")
+lines.append(r"    \caption{Latency and estimated cost across five tasks. Each task reports mean wall-clock time, 95th-percentile wall-clock time (seconds), and estimated cost per 1,000 items (USD). Action is per trajectory.}")
 lines.append(r"    \label{tab:rq2_cost_latency}")
-lines.append(r"    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}l*{5}{c}@{}}")
+lines.append(r"    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}l*{15}{c}@{}}")
 lines.append(r"        \toprule")
-lines.append(r"        \textbf{Model} & \textbf{User Request} & \textbf{External Content} & \textbf{Tool Call} & \textbf{Action} & \textbf{Response} \\")
+lines.append(r"        \multirow{2}{*}{\textbf{Model}}")
+lines.append(r"        & \multicolumn{3}{c}{\textbf{User Request}}")
+lines.append(r"        & \multicolumn{3}{c}{\textbf{External Content}}")
+lines.append(r"        & \multicolumn{3}{c}{\textbf{Tool Call}}")
+lines.append(r"        & \multicolumn{3}{c}{\textbf{Action}}")
+lines.append(r"        & \multicolumn{3}{c}{\textbf{Response}} \\")
+lines.append(r"        \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}")
+lines.append(r"        \cmidrule(lr){11-13} \cmidrule(lr){14-16}")
+lines.append(r"        & Mean$\downarrow$ & P95$\downarrow$ & Cost$\downarrow$ & Mean$\downarrow$ & P95$\downarrow$ & Cost$\downarrow$ & Mean$\downarrow$ & P95$\downarrow$ & Cost$\downarrow$ & Mean$\downarrow$ & P95$\downarrow$ & Cost$\downarrow$ & Mean$\downarrow$ & P95$\downarrow$ & Cost$\downarrow$ \\")
 lines.append(r"        \midrule")
 for label,cells in rows:
-    cs=["%s\\,s / %s"%(t, ("--" if c=="--" else "\\$"+c)) for t,c in cells]
+    cs=[]
+    for mean,p95,cost in cells:
+        cs += [mean, p95, ("--" if cost=="--" else "\\$"+cost)]
     lines.append("        %s & %s \\\\" % (label," & ".join(cs)))
 lines.append(r"        \bottomrule")
 lines.append(r"    \end{tabular*}")
 lines.append(r"    \vspace{3pt}")
 lines.append(r"    \begin{minipage}{\textwidth}")
 lines.append(r"        \footnotesize")
-lines.append(r"        \textit{Notes.} Time is the mean wall-clock time per evaluated item; for action inspection it is per trajectory, since StepShield invokes the judge once per visible prefix (5.9--10.1 calls per trajectory). Costs are list-price estimates, not invoices: Jev-1.14.0 at \$0.042/M input and \$0 output; GPT-6 Luna at \$0.044/M input and \$0.22/M output; Claude Haiku 5.5 at \$0.008824/M input and \$0.04412/M output. Local models are unpriced (local compute, not zero cost). No FNR/FPR columns are included; see Table~\ref{tab:rq1_effectiveness} for effectiveness. The action column uses StepShield test.")
+lines.append(r"        \textit{Notes.} Mean and P95 are episode-level wall-clock seconds per evaluated item; for action inspection they are per trajectory, since StepShield calls the judge once per visible prefix (5.9--10.1 calls per trajectory). Cost is an estimated USD per 1,000 evaluated items (per 1,000 trajectories for action), not an invoice: Jev-1.14.0 at \$0.042/M input and \$0 output; GPT-6 Luna at \$0.044/M input and \$0.22/M output; Claude Haiku 5.5 at \$0.008824/M input and \$0.04412/M output. Local models are unpriced (local compute, not zero cost). \texttt{--} marks unavailable or undefined values.")
 lines.append(r"    \end{minipage}")
 lines.append(r"\end{table*}")
 open(os.path.join(outdir,"rq2-cost-latency.tex"),"w",encoding="utf-8").write("\n".join(lines)+"\n")

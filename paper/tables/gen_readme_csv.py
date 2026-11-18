@@ -31,7 +31,7 @@ by=collections.defaultdict(list)
 for r in TIM:
     if r["dataset"] in datasets and r["model"] in dict(models): by[(r["model"],r["dataset"])].append(r)
 with open(os.path.join(outdir,"rq2-cost-latency.csv"),"w",newline="",encoding="utf-8") as f:
-    w=csv.writer(f); w.writerow(["model","task","episode_mean_s","call_mean_s","calls_per_item","input_tokens_per_item","cost_usd_per_1k_items"])
+    w=csv.writer(f); w.writerow(["model","task","episode_mean_s","episode_p95_s","call_mean_s","call_p95_s","calls_per_item","input_tokens_per_item","cost_usd_per_1k_items"])
     for m,label in models:
         for ds in datasets:
             rs=by.get((m,ds),[])
@@ -45,7 +45,8 @@ with open(os.path.join(outdir,"rq2-cost-latency.csv"),"w",newline="",encoding="u
                 cost=inp*pin/1000 + ((outp*pout/1000) if outp is not None else 0)
                 cs="%.3f"%cost
             else: cs=""
-            w.writerow([label,ds,"%.3f"%t,"%.3f"%calls,"%.2f"%calls,"%.1f"%inp,cs])
+            def _f(v): return "" if v in ("","None") else "%.3f"%float(v)
+            w.writerow([label,ds,"%.3f"%t,_f(r["episode_p95_seconds"]),_f(r["call_mean_seconds"]),_f(r["call_p95_seconds"]),"%.2f"%calls,"%.1f"%inp,cs])
 readme="""# RQ1/RQ2 tables
 
 Generated 2026-11-18 from rq1/summary/metrics_full.csv and rq1/summary/time_tokens.csv.
@@ -63,7 +64,7 @@ Generation scripts: gen_rq1_table.py, gen_rq2_table.py.
 
 ## RQ2 rq2-cost-latency.tex
 
-- Time = episode_mean_seconds per evaluated item; for Action it is per trajectory (the judge is called once per visible prefix, 5.9-10.1 calls/trajectory).
+- Time columns are episode_mean_seconds and episode_p95_seconds per evaluated item; for Action they are per trajectory (the judge is called once per visible prefix, 5.9-10.1 calls/trajectory).
 - Cost per 1,000 items = input tokens x input price + output tokens x output price.
 - Prices: Jev 0.042 USD/M input, 0 output; GPT-6 Luna 0.044/0.22; Claude Haiku 5.5 0.008824/0.04412.
 - Local models are unpriced (local compute is not zero cost).

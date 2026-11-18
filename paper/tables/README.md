@@ -15,7 +15,7 @@ Generation scripts: gen_rq1_table.py, gen_rq2_table.py.
 
 ## RQ2 rq2-cost-latency.tex
 
-- Time = episode_mean_seconds per evaluated item; for Action it is per trajectory (the judge is called once per visible prefix, 5.9-10.1 calls/trajectory).
+- Time columns are episode_mean_seconds and episode_p95_seconds per evaluated item; for Action they are per trajectory (the judge is called once per visible prefix, 5.9-10.1 calls/trajectory).
 - Cost per 1,000 items = input tokens x input price + output tokens x output price.
 - Prices: Jev 0.042 USD/M input, 0 output; GPT-6 Luna 0.044/0.22; Claude Haiku 5.5 0.008824/0.04412.
 - Local models are unpriced (local compute is not zero cost).

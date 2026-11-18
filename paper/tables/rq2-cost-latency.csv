@@ -1,61 +1,61 @@
-model,task,episode_mean_s,call_mean_s,calls_per_item,input_tokens_per_item,cost_usd_per_1k_items
-Jev-1.14.0,agentharm,0.667,1.000,1.00,430.0,0.018
-Jev-1.14.0,injecagent,0.712,1.000,1.00,532.4,0.022
-Jev-1.14.0,tsbench,0.748,1.000,1.00,1188.8,0.050
-Jev-1.14.0,stepshield_test,6.358,8.735,8.74,8116.8,0.341
-Jev-1.14.0,wildguard_response,0.656,1.000,1.00,858.0,0.036
-Laya,agentharm,0.059,1.000,1.00,148.3,
-Laya,injecagent,0.052,1.000,1.00,251.8,
-Laya,tsbench,0.172,1.477,1.48,2102.0,
-Laya,stepshield_test,1.774,9.322,9.32,0.0,
-Laya,wildguard_response,0.124,1.000,1.00,991.9,
-Kev,agentharm,0.112,1.000,1.00,141.8,
-Kev,injecagent,0.129,1.000,1.00,242.2,
-Kev,tsbench,0.483,1.017,1.02,876.4,
-Kev,stepshield_test,4.013,9.483,9.48,0.0,
-Kev,wildguard_response,0.375,1.000,1.00,551.4,
-D3-Mini,agentharm,0.100,1.000,1.00,212.8,
-D3-Mini,injecagent,0.102,1.000,1.00,313.2,
-D3-Mini,tsbench,0.460,1.000,1.00,947.4,
-D3-Mini,stepshield_test,3.807,9.380,9.38,0.0,
-D3-Mini,wildguard_response,0.383,1.000,1.00,622.4,
-SecJev,agentharm,0.088,1.000,1.00,141.8,
-SecJev,injecagent,0.097,1.000,1.00,242.2,
-SecJev,tsbench,0.309,1.018,1.02,694.7,
-SecJev,stepshield_test,2.887,9.312,9.31,0.0,
-SecJev,wildguard_response,0.278,1.000,1.00,551.4,
-Jev-Guard,agentharm,0.078,1.000,1.00,125.8,
-Jev-Guard,injecagent,0.087,1.000,1.00,226.2,
-Jev-Guard,tsbench,0.323,1.038,1.04,860.4,
-Jev-Guard,stepshield_test,1.607,5.860,5.86,0.0,
-Jev-Guard,wildguard_response,0.271,1.000,1.00,535.4,
-GLiGuard,agentharm,0.055,1.000,1.00,0.0,
-GLiGuard,injecagent,0.064,1.000,1.00,0.0,
-GLiGuard,tsbench,0.120,1.017,1.02,0.0,
-GLiGuard,stepshield_test,1.174,8.879,8.88,0.0,
-GLiGuard,wildguard_response,0.105,1.000,1.00,0.0,
-Shieldstral,agentharm,0.070,1.000,1.00,168.1,
-Shieldstral,injecagent,0.078,1.000,1.00,274.8,
-Shieldstral,tsbench,0.181,1.000,1.00,923.2,
-Shieldstral,stepshield_test,1.731,10.099,10.10,0.0,
-Shieldstral,wildguard_response,0.133,1.000,1.00,592.5,
-Qwen3Guard-Gen,agentharm,0.380,1.000,1.00,355.4,
-Qwen3Guard-Gen,injecagent,0.361,1.000,1.00,422.0,
-Qwen3Guard-Gen,tsbench,0.350,1.001,1.00,1048.7,
-Qwen3Guard-Gen,stepshield_test,3.417,10.017,10.02,0.0,
-Qwen3Guard-Gen,wildguard_response,0.395,1.000,1.00,758.8,
-Qwen3.5-4B,agentharm,0.405,1.000,1.00,155.8,
-Qwen3.5-4B,injecagent,0.451,1.000,1.00,256.2,
-Qwen3.5-4B,tsbench,0.796,1.000,1.00,890.4,
-Qwen3.5-4B,stepshield_test,7.260,9.746,9.75,0.0,
-Qwen3.5-4B,wildguard_response,0.716,1.000,1.00,565.4,
-GPT-6 Luna,agentharm,3.293,1.007,1.01,217.9,0.030
-GPT-6 Luna,injecagent,3.259,1.000,1.00,313.4,0.028
-GPT-6 Luna,tsbench,2.635,1.001,1.00,964.1,0.069
-GPT-6 Luna,stepshield_test,26.178,8.614,8.61,6392.5,0.421
-GPT-6 Luna,wildguard_response,5.849,1.005,1.00,3163.1,0.148
-Claude Haiku 5.5,agentharm,2.558,1.000,1.00,288.8,0.003
-Claude Haiku 5.5,injecagent,3.170,1.008,1.01,409.0,0.005
-Claude Haiku 5.5,tsbench,3.961,1.130,1.13,1400.9,0.015
-Claude Haiku 5.5,stepshield_test,25.008,7.614,7.61,7346.0,0.077
-Claude Haiku 5.5,wildguard_response,3.786,1.044,1.04,2201.6,0.023
+model,task,episode_mean_s,episode_p95_s,call_mean_s,call_p95_s,calls_per_item,input_tokens_per_item,cost_usd_per_1k_items
+Jev-1.14.0,agentharm,0.667,0.766,0.632,0.656,1.00,430.0,0.018
+Jev-1.14.0,injecagent,0.712,1.047,0.676,0.984,1.00,532.4,0.022
+Jev-1.14.0,tsbench,0.748,1.156,0.711,1.110,1.00,1188.8,0.050
+Jev-1.14.0,stepshield_test,6.358,12.468,0.683,1.219,8.74,8116.8,0.341
+Jev-1.14.0,wildguard_response,0.656,0.859,0.617,0.781,1.00,858.0,0.036
+Laya,agentharm,0.059,0.078,0.046,0.063,1.00,148.3,
+Laya,injecagent,0.052,0.078,0.044,0.063,1.00,251.8,
+Laya,tsbench,0.172,0.418,0.111,0.286,1.48,2102.0,
+Laya,stepshield_test,1.774,5.078,0.114,,9.32,0.0,
+Laya,wildguard_response,0.124,0.224,0.090,0.172,1.00,991.9,
+Kev,agentharm,0.112,0.141,0.104,0.140,1.00,141.8,
+Kev,injecagent,0.129,0.187,0.118,0.172,1.00,242.2,
+Kev,tsbench,0.483,0.884,0.446,0.849,1.02,876.4,
+Kev,stepshield_test,4.013,10.081,0.368,,9.48,0.0,
+Kev,wildguard_response,0.375,0.492,0.338,0.451,1.00,551.4,
+D3-Mini,agentharm,0.100,0.140,0.089,0.125,1.00,212.8,
+D3-Mini,injecagent,0.102,0.141,0.095,0.125,1.00,313.2,
+D3-Mini,tsbench,0.460,0.833,0.423,0.784,1.00,947.4,
+D3-Mini,stepshield_test,3.807,9.861,0.348,,9.38,0.0,
+D3-Mini,wildguard_response,0.383,0.549,0.324,0.446,1.00,622.4,
+SecJev,agentharm,0.088,0.110,0.080,0.109,1.00,141.8,
+SecJev,injecagent,0.097,0.141,0.090,0.140,1.00,242.2,
+SecJev,tsbench,0.309,0.536,0.270,0.484,1.02,694.7,
+SecJev,stepshield_test,2.887,6.752,0.255,,9.31,0.0,
+SecJev,wildguard_response,0.278,0.342,0.241,0.292,1.00,551.4,
+Jev-Guard,agentharm,0.078,0.094,0.068,0.079,1.00,125.8,
+Jev-Guard,injecagent,0.087,0.125,0.077,0.110,1.00,226.2,
+Jev-Guard,tsbench,0.323,0.515,0.286,0.458,1.04,860.4,
+Jev-Guard,stepshield_test,1.607,3.366,0.223,,5.86,0.0,
+Jev-Guard,wildguard_response,0.271,0.334,0.234,0.282,1.00,535.4,
+GLiGuard,agentharm,0.055,0.063,0.047,0.062,1.00,0.0,
+GLiGuard,injecagent,0.064,0.078,0.054,0.063,1.00,0.0,
+GLiGuard,tsbench,0.120,0.433,0.088,0.398,1.02,0.0,
+GLiGuard,stepshield_test,1.174,2.738,0.062,,8.88,0.0,
+GLiGuard,wildguard_response,0.105,0.161,0.072,0.122,1.00,0.0,
+Shieldstral,agentharm,0.070,0.079,0.059,0.078,1.00,168.1,
+Shieldstral,injecagent,0.078,0.094,0.070,0.093,1.00,274.8,
+Shieldstral,tsbench,0.181,0.388,0.144,0.292,1.00,923.2,
+Shieldstral,stepshield_test,1.731,4.429,0.116,,10.10,0.0,
+Shieldstral,wildguard_response,0.133,0.208,0.098,0.160,1.00,592.5,
+Qwen3Guard-Gen,agentharm,0.380,0.484,0.347,0.438,1.00,355.4,
+Qwen3Guard-Gen,injecagent,0.361,0.469,0.332,0.438,1.00,422.0,
+Qwen3Guard-Gen,tsbench,0.350,0.492,0.312,0.454,1.00,1048.7,
+Qwen3Guard-Gen,stepshield_test,3.417,6.419,0.276,,10.02,0.0,
+Qwen3Guard-Gen,wildguard_response,0.395,0.524,0.324,0.427,1.00,758.8,
+Qwen3.5-4B,agentharm,0.405,0.531,0.377,0.484,1.00,155.8,
+Qwen3.5-4B,injecagent,0.451,0.563,0.423,0.531,1.00,256.2,
+Qwen3.5-4B,tsbench,0.796,1.154,0.759,1.114,1.00,890.4,
+Qwen3.5-4B,stepshield_test,7.260,15.888,0.691,,9.75,0.0,
+Qwen3.5-4B,wildguard_response,0.716,0.850,0.678,0.802,1.00,565.4,
+GPT-6 Luna,agentharm,3.293,6.864,3.177,6.770,1.01,217.9,0.030
+GPT-6 Luna,injecagent,3.259,5.614,3.220,5.593,1.00,313.4,0.028
+GPT-6 Luna,tsbench,2.635,5.000,2.591,4.953,1.00,964.1,0.069
+GPT-6 Luna,stepshield_test,26.178,60.600,2.903,5.708,8.61,6392.5,0.421
+GPT-6 Luna,wildguard_response,5.849,10.713,5.729,10.543,1.00,3163.1,0.148
+Claude Haiku 5.5,agentharm,2.558,3.363,2.519,3.332,1.00,288.8,0.003
+Claude Haiku 5.5,injecagent,3.170,6.531,3.088,6.334,1.01,409.0,0.005
+Claude Haiku 5.5,tsbench,3.961,10.222,3.254,6.266,1.13,1400.9,0.015
+Claude Haiku 5.5,stepshield_test,25.008,58.234,3.018,5.564,7.61,7346.0,0.077
+Claude Haiku 5.5,wildguard_response,3.786,7.253,3.379,6.410,1.04,2201.6,0.023
