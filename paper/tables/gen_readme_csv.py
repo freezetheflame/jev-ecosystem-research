@@ -20,11 +20,12 @@ def mcc(tp,fp,tn,fn):
     den=(tp+fp)*(tp+fn)*(tn+fp)*(tn+fn)
     return (tp*tn-fp*fn)/den**0.5 if den else None
 with open(os.path.join(outdir,"rq1-effectiveness.csv"),"w",newline="",encoding="utf-8") as f:
-    w=csv.writer(f); w.writerow(["model","task","MF1_percent","MCC_percent","tp","fp","tn","fn"])
+    w=csv.writer(f); w.writerow(["model","task","MF1_percent","MCC_percent","FNR_percent","FPR_percent","tp","fp","tn","fn"])
     for m,label in models:
         for ds in datasets:
             r=get(m,ds); tp,fp,tn,fn=ints(r); mc=mcc(tp,fp,tn,fn)
-            w.writerow([label,ds,"%.2f"%(100*mf1(tp,fp,tn,fn)),"" if mc is None else "%.2f"%(100*mc),tp,fp,tn,fn])
+            fnrv=fn/(tp+fn) if (tp+fn)>0 else None; fprv=fp/(fp+tn) if (fp+tn)>0 else None
+            w.writerow([label,ds,"%.2f"%(100*mf1(tp,fp,tn,fn)),"" if mc is None else "%.2f"%(100*mc),"" if fnrv is None else "%.2f"%(100*fnrv),"" if fprv is None else "%.2f"%(100*fprv),tp,fp,tn,fn])
 prices={"jev-packy-1.14.0":(0.042,0.0),"gpt6luna":(0.044,0.22),"claudehaiku":(0.008824,0.04412)}
 by=collections.defaultdict(list)
 for r in TIM:
@@ -54,7 +55,7 @@ Generation scripts: gen_rq1_table.py, gen_rq2_table.py.
 
 - MF1 = macro-F1 computed from official TP/FP/TN/FN.
 - MCC = Matthews correlation coefficient, reported x100.
-- FNR/FPR columns removed per request.
+- FNR and FPR are included as requested.
 - InjecAgent (External Content) is positives-only: MCC undefined; MF1 is positive-class F1.
 - Shieldstral on StepShield test is a constant (all-safe) predictor: MCC undefined.
 - Action uses StepShield test (7,935); StepShield holdout (216) is not in this table.

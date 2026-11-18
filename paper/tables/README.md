@@ -7,7 +7,7 @@ Generation scripts: gen_rq1_table.py, gen_rq2_table.py.
 
 - MF1 = macro-F1 computed from official TP/FP/TN/FN.
 - MCC = Matthews correlation coefficient, reported x100.
-- FNR/FPR columns removed per request.
+- FNR and FPR are included as requested.
 - InjecAgent (External Content) is positives-only: MCC undefined; MF1 is positive-class F1.
 - Shieldstral on StepShield test is a constant (all-safe) predictor: MCC undefined.
 - Action uses StepShield test (7,935); StepShield holdout (216) is not in this table.
