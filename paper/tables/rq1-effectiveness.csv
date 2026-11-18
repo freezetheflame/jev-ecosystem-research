@@ -1,0 +1,61 @@
+model,task,MF1_percent,MCC_percent,tp,fp,tn,fn
+Jev-1.14.0,agentharm,88.46,76.94,186,26,182,22
+Jev-1.14.0,injecagent,97.67,,2012,0,0,96
+Jev-1.14.0,tsbench,74.77,56.49,742,63,3707,889
+Jev-1.14.0,stepshield_test,72.91,53.54,583,966,6328,56
+Jev-1.14.0,wildguard_response,87.27,74.62,215,48,1377,69
+Laya,agentharm,71.90,44.91,132,40,168,76
+Laya,injecagent,33.95,,431,0,0,1677
+Laya,tsbench,42.53,5.20,24,18,3752,1607
+Laya,stepshield_test,49.85,-0.11,67,774,6522,572
+Laya,wildguard_response,52.00,6.80,31,89,1336,253
+Kev,agentharm,84.07,68.81,188,46,162,20
+Kev,injecagent,95.46,,1925,0,0,183
+Kev,tsbench,60.27,31.51,395,140,3630,1236
+Kev,stepshield_test,78.98,58.06,371,203,7093,268
+Kev,wildguard_response,76.42,55.70,230,217,1208,54
+D3-Mini,agentharm,86.83,76.28,206,52,156,2
+D3-Mini,injecagent,96.97,,1984,0,0,124
+D3-Mini,tsbench,69.98,47.00,640,130,3640,991
+D3-Mini,stepshield_test,84.79,70.03,513,267,7029,126
+D3-Mini,wildguard_response,86.25,72.90,201,39,1386,83
+SecJev,agentharm,82.03,65.78,150,16,192,58
+SecJev,injecagent,83.41,,1508,0,0,600
+SecJev,tsbench,52.91,12.73,265,309,3409,1294
+SecJev,stepshield_test,63.52,27.06,203,398,6898,436
+SecJev,wildguard_response,53.09,13.94,155,517,908,129
+Jev-Guard,agentharm,75.06,57.98,203,94,114,5
+Jev-Guard,injecagent,85.34,,1569,0,0,539
+Jev-Guard,tsbench,60.85,25.21,1067,1434,2336,564
+Jev-Guard,stepshield_test,41.14,16.86,549,4035,3261,90
+Jev-Guard,wildguard_response,57.92,34.77,255,614,811,29
+GLiGuard,agentharm,77.31,58.81,195,79,129,13
+GLiGuard,injecagent,86.02,,1591,0,0,517
+GLiGuard,tsbench,61.46,23.20,836,1027,2743,795
+GLiGuard,stepshield_test,54.95,12.16,200,1083,6213,439
+GLiGuard,wildguard_response,59.51,38.92,269,605,820,15
+Shieldstral,agentharm,85.05,70.66,189,43,165,19
+Shieldstral,injecagent,65.17,,1019,0,0,1089
+Shieldstral,tsbench,59.60,30.75,377,133,3637,1254
+Shieldstral,stepshield_test,47.90,,0,0,7296,639
+Shieldstral,wildguard_response,73.12,51.80,241,291,1134,43
+Qwen3Guard-Gen,agentharm,62.58,42.30,204,136,72,4
+Qwen3Guard-Gen,injecagent,73.09,,1214,0,0,894
+Qwen3Guard-Gen,tsbench,67.25,36.28,708,424,3346,923
+Qwen3Guard-Gen,stepshield_test,54.75,20.98,48,22,7274,591
+Qwen3Guard-Gen,wildguard_response,65.62,43.64,255,456,969,29
+Qwen3.5-4B,agentharm,80.74,61.72,176,48,160,32
+Qwen3.5-4B,injecagent,93.67,,1857,0,0,251
+Qwen3.5-4B,tsbench,70.22,41.62,803,424,3346,828
+Qwen3.5-4B,stepshield_test,78.20,59.23,296,66,7230,343
+Qwen3.5-4B,wildguard_response,80.40,60.80,193,96,1329,91
+GPT-6 Luna,agentharm,84.12,68.42,182,40,168,26
+GPT-6 Luna,injecagent,99.81,,2100,0,0,8
+GPT-6 Luna,tsbench,84.55,69.87,1423,532,3238,208
+GPT-6 Luna,stepshield_test,74.79,58.05,627,949,6347,12
+GPT-6 Luna,wildguard_response,86.16,72.32,216,62,1362,68
+Claude Haiku 5.5,agentharm,83.06,67.25,190,52,156,18
+Claude Haiku 5.5,injecagent,97.74,,2015,0,0,93
+Claude Haiku 5.5,tsbench,80.31,63.60,1477,830,2912,152
+Claude Haiku 5.5,stepshield_test,62.27,41.45,615,1868,5425,24
+Claude Haiku 5.5,wildguard_response,84.33,69.11,187,44,1332,91
